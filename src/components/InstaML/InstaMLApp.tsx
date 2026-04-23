@@ -377,6 +377,25 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
 export default function InstaMLApp() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
+
+  useEffect(() => {
+    const prevTitle = document.title;
+    document.title = 'InstaML — Your AI Model, Live in Minutes.';
+
+    let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'description');
+      document.head.appendChild(meta);
+    }
+    const prevDesc = meta.getAttribute('content') ?? '';
+    meta.setAttribute('content', 'Deploy any AI model to a live API endpoint in minutes. Fast cold starts, pay-per-token pricing, and 100% India data residency. Built for developers.');
+
+    return () => {
+      document.title = prevTitle;
+      if (meta) meta.setAttribute('content', prevDesc);
+    };
+  }, []);
 const showToast = (e: React.MouseEvent) => {
     e.preventDefault();
     setToastVisible(true);
@@ -768,7 +787,7 @@ const showToast = (e: React.MouseEvent) => {
               width="100%"
               frameBorder="0"
               title="InstaML Waitlist"
-              style={{ display: 'block', height: 150, marginTop: 10 }}
+              style={{ display: 'block', height: 168, marginTop: 10 }}
             />
           </div>
           <p style={{ color: '#3a5a42', fontSize: 12, marginTop: 16 }}>
