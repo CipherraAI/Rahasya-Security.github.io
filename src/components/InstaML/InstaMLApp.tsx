@@ -161,7 +161,7 @@ function TerminalBlock() {
         <span style={{ color: '#4a8a5a', marginLeft: 8, fontSize: 11 }}>instaml — terminal</span>
       </div>
       {/* lines */}
-      <div ref={scrollRef} style={{ padding: '20px 24px', minHeight: 340, maxHeight: 380, overflowY: 'auto' }}>
+      <div ref={scrollRef} className="instaml-terminal-inner" style={{ padding: '20px 24px', minHeight: 340, maxHeight: 380, overflowY: 'auto' }}>
         {lines.map((l, i) => (
           <div key={i} style={{ color: l.color ?? '#6e8f74', lineHeight: 1.7, whiteSpace: 'pre' }}>
             {l.text}
@@ -232,12 +232,12 @@ function FeatureCard({ icon, title, description }: (typeof FEATURES)[0]) {
 
 function SectionTitle({ badge, title, subtitle }: { badge?: string; title: string; subtitle?: string }) {
   return (
-    <div style={{ textAlign: 'center', marginBottom: 56 }}>
+    <div className="instaml-section-title" style={{ textAlign: 'center', marginBottom: 56 }}>
       {badge && <div style={{ marginBottom: 16 }}><Badge>{badge}</Badge></div>}
       <h2 style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 800, color: '#e8f5e9', lineHeight: 1.2, marginBottom: subtitle ? 16 : 0 }}>
         {title}
       </h2>
-      {subtitle && <p style={{ color: '#6e8f74', fontSize: 18, maxWidth: 560, margin: '0 auto', lineHeight: 1.6 }}>{subtitle}</p>}
+      {subtitle && <p className="instaml-subtitle" style={{ color: '#6e8f74', fontSize: 18, maxWidth: 560, margin: '0 auto', lineHeight: 1.6 }}>{subtitle}</p>}
     </div>
   );
 }
@@ -322,6 +322,7 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className="team-card-inner"
       style={{
         background: CARD,
         border: hovered ? `1px solid ${G}` : CARD_BORDER,
@@ -396,10 +397,11 @@ const showToast = (e: React.MouseEvent) => {
   ];
 
   return (
-    <div style={{ background: BG, color: '#c8e6c9', fontFamily: 'Inter, -apple-system, sans-serif', minHeight: '100vh' }}>
+    <div style={{ background: BG, color: '#c8e6c9', fontFamily: 'Inter, -apple-system, sans-serif', minHeight: '100vh', overflowX: 'hidden' }}>
 
-      {/* ── CURSOR BLINK KEYFRAME ── */}
+      {/* ── STYLES ── */}
       <style>{`
+        html, body { overflow-x: hidden; }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
         @keyframes pulse-green { 0%,100%{box-shadow:0 0 0 0 rgba(0,230,118,0.4)} 50%{box-shadow:0 0 0 12px rgba(0,230,118,0)} }
         @keyframes float-up { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
@@ -412,7 +414,18 @@ const showToast = (e: React.MouseEvent) => {
         .instaml-section { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
         .instaml-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
         .instaml-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
-        @media (max-width: 900px) { .instaml-grid-2 { grid-template-columns: 1fr; } .instaml-grid-3 { grid-template-columns: 1fr 1fr; } }
+        /* Prevent grid items from expanding beyond their cell (min-width:auto default causes overflow) */
+        .instaml-grid-2 > *, .instaml-grid-3 > * { min-width: 0; }
+        .instaml-hero-grid { gap: 56px; }
+        .instaml-code-grid { gap: 56px; }
+        .instaml-india-grid { gap: 64px; }
+        @media (max-width: 900px) {
+          .instaml-grid-2 { grid-template-columns: 1fr; }
+          .instaml-grid-3 { grid-template-columns: 1fr 1fr; }
+          .instaml-hero-grid { gap: 32px; }
+          .instaml-code-grid { gap: 32px; }
+          .instaml-india-grid { gap: 32px; }
+        }
         @media (max-width: 600px) { .instaml-grid-3 { grid-template-columns: 1fr; } }
         .instaml-steps { display: flex; gap: 0; }
         @media (max-width: 768px) { .instaml-steps { flex-direction: column; } }
@@ -430,6 +443,29 @@ const showToast = (e: React.MouseEvent) => {
         .instaml-input::placeholder { color: #3a5a42; }
         .instaml-input:focus { border-color: #00e676; }
         .dot-grid { background-image: radial-gradient(circle, rgba(0,230,118,0.12) 1px, transparent 1px); background-size: 32px 32px; }
+
+        /* Desktop: hide hamburger */
+        .show-mobile-only { display: none !important; }
+
+        /* Mobile overrides */
+        @media (max-width: 768px) {
+          .show-mobile-only { display: block !important; }
+          .instaml-hero-section { padding-top: 96px !important; padding-bottom: 40px !important; }
+          .instaml-pad-96 { padding-top: 56px !important; padding-bottom: 56px !important; }
+          .instaml-pad-80 { padding-top: 48px !important; padding-bottom: 48px !important; }
+          .instaml-section { padding: 0 16px; }
+          .instaml-section-title { margin-bottom: 32px !important; }
+          .instaml-subtitle { font-size: 15px !important; }
+          .instaml-hero-btns { flex-direction: column !important; }
+          .instaml-hero-btns > * { width: 100% !important; text-align: center !important; box-sizing: border-box; }
+          .instaml-terminal-inner { min-height: 180px !important; max-height: 220px !important; font-size: 11px !important; padding: 14px 16px !important; }
+          .instaml-terminal-inner > div { white-space: pre-wrap !important; word-break: break-all; }
+          .step-arrow { display: none !important; }
+          .instaml-india-circle { width: 160px !important; height: 160px !important; }
+          .instaml-india-flag { font-size: 64px !important; }
+          .team-card-inner { padding: 24px 20px !important; }
+          .instaml-waitlist-box { padding: 8px 12px 12px !important; }
+        }
       `}</style>
 
       {/* ── HEADER ── */}
@@ -462,6 +498,7 @@ const showToast = (e: React.MouseEvent) => {
 
           {/* Mobile hamburger */}
           <button
+            className="show-mobile-only"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             style={{ background: 'none', border: 'none', color: '#6e8f74', cursor: 'pointer', fontSize: 22 }}
           >
@@ -484,14 +521,14 @@ const showToast = (e: React.MouseEvent) => {
       </header>
 
       {/* ── HERO ── */}
-      <section style={{ paddingTop: 140, paddingBottom: 80, position: 'relative', overflow: 'hidden' }}>
+      <section className="instaml-hero-section" style={{ paddingTop: 140, paddingBottom: 80, position: 'relative', overflow: 'hidden' }}>
         {/* Background glow + drifting orbs */}
         <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse at center top, rgba(0,230,118,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', top: '5%', right: '0%', width: 560, height: 560, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,230,118,0.06) 0%, transparent 65%)', animation: 'orb-drift-1 18s ease-in-out infinite', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '0%', left: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,230,118,0.04) 0%, transparent 65%)', animation: 'orb-drift-2 24s ease-in-out infinite', pointerEvents: 'none' }} />
 
         <div className="instaml-section">
-          <div className="instaml-grid-2" style={{ alignItems: 'center', gap: 56 }}>
+          <div className="instaml-grid-2 instaml-hero-grid" style={{ alignItems: 'center' }}>
             {/* Left: copy — staggered entrance */}
             <motion.div initial="hidden" animate="visible" variants={staggerContainer(0.13)}>
               <motion.div variants={fadeUp} custom={0} style={{ marginBottom: 20 }}>
@@ -508,7 +545,7 @@ const showToast = (e: React.MouseEvent) => {
                 From model weights to a live API endpoint in minutes.
                 Near-instant cold starts, pay-per-token pricing, and 100% India data residency.
               </motion.p>
-              <motion.div variants={fadeUp} custom={0.3} style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+              <motion.div variants={fadeUp} custom={0.3} className="instaml-hero-btns" style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
                 <a href="#waitlist" className="instaml-btn-primary" onClick={e => scrollTo(e, '#waitlist')}>
                   Get Early Access
                 </a>
@@ -526,10 +563,8 @@ const showToast = (e: React.MouseEvent) => {
         </div>
       </section>
 
-      {/* ── STAT BAR ── */}
-
       {/* ── FEATURES ── */}
-      <section id="features" style={{ padding: '96px 0' }}>
+      <section id="features" className="instaml-pad-96" style={{ padding: '96px 0' }}>
         <div className="instaml-section">
           <SectionTitle
             badge="Platform Features"
@@ -547,7 +582,7 @@ const showToast = (e: React.MouseEvent) => {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section id="how-it-works" style={{ padding: '80px 0', background: 'rgba(0,230,118,0.03)', borderTop: `1px solid ${G_BORDER}`, borderBottom: `1px solid ${G_BORDER}` }}>
+      <section id="how-it-works" className="instaml-pad-80" style={{ padding: '80px 0', background: 'rgba(0,230,118,0.03)', borderTop: `1px solid ${G_BORDER}`, borderBottom: `1px solid ${G_BORDER}` }}>
         <div className="instaml-section">
           <SectionTitle
             badge="Workflow"
@@ -579,7 +614,7 @@ const showToast = (e: React.MouseEvent) => {
                   <p style={{ color: '#6e8f74', fontSize: 14, lineHeight: 1.65 }}>{s.body}</p>
                 </div>
                 {i < STEPS.length - 1 && (
-                  <div style={{ display: 'flex', alignItems: 'flex-start', paddingTop: 36, color: '#1e4a2a', fontSize: 24 }}>→</div>
+                  <div className="step-arrow" style={{ display: 'flex', alignItems: 'flex-start', paddingTop: 36, color: '#1e4a2a', fontSize: 24 }}>→</div>
                 )}
               </motion.div>
             ))}
@@ -588,9 +623,9 @@ const showToast = (e: React.MouseEvent) => {
       </section>
 
       {/* ── API CODE EXAMPLE ── */}
-      <section style={{ padding: '96px 0' }}>
+      <section className="instaml-pad-96" style={{ padding: '96px 0' }}>
         <div className="instaml-section">
-          <div className="instaml-grid-2" style={{ alignItems: 'center', gap: 56 }}>
+          <div className="instaml-grid-2 instaml-code-grid" style={{ alignItems: 'center' }}>
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}>
               <SectionTitle
                 badge="Developer API"
@@ -617,17 +652,17 @@ const showToast = (e: React.MouseEvent) => {
       </section>
 
       {/* ── INDIA DATA RESIDENCY ── */}
-      <section id="india" style={{
+      <section id="india" className="instaml-pad-96" style={{
         padding: '96px 0',
         background: 'rgba(0,230,118,0.04)',
         borderTop: `1px solid ${G_BORDER}`,
         borderBottom: `1px solid ${G_BORDER}`,
       }}>
         <div className="instaml-section">
-          <div className="instaml-grid-2" style={{ alignItems: 'center', gap: 64 }}>
+          <div className="instaml-grid-2 instaml-india-grid" style={{ alignItems: 'center' }}>
             {/* Visual */}
             <motion.div style={{ textAlign: 'center' }} initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}>
-              <div style={{
+              <div className="instaml-india-circle" style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -640,7 +675,7 @@ const showToast = (e: React.MouseEvent) => {
                 position: 'relative',
                 animation: 'float-up 4s ease-in-out infinite',
               }}>
-                <span style={{ fontSize: 100 }}>🇮🇳</span>
+                <span className="instaml-india-flag" style={{ fontSize: 100 }}>🇮🇳</span>
                 {/* orbit ping */}
                 <div style={{
                   position: 'absolute',
@@ -679,7 +714,7 @@ const showToast = (e: React.MouseEvent) => {
       </section>
 
       {/* ── TEAM ── */}
-      <section id="team" style={{ padding: '96px 0' }}>
+      <section id="team" className="instaml-pad-96" style={{ padding: '96px 0' }}>
         <div className="instaml-section">
           <SectionTitle
             badge="Founding Team"
@@ -704,11 +739,12 @@ const showToast = (e: React.MouseEvent) => {
       </section>
 
       {/* ── CTA / WAITLIST ── */}
-      <section id="waitlist" style={{
+      <section id="waitlist" className="instaml-pad-96" style={{
         padding: '96px 0',
         background: 'radial-gradient(ellipse at center, rgba(0,230,118,0.12) 0%, transparent 70%)',
         borderTop: `1px solid ${G_BORDER}`,
       }}>
+        <div className="instaml-section">
         <FadeUp style={{ textAlign: 'center' }}>
           <Badge>Early Access</Badge>
           <h2 style={{ fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: 900, color: '#e8f5e9', marginTop: 20, marginBottom: 16, lineHeight: 1.1 }}>
@@ -717,7 +753,7 @@ const showToast = (e: React.MouseEvent) => {
           <p style={{ color: '#6e8f74', fontSize: 18, marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>
             Join the waitlist. We're onboarding developers and teams building on Indian GPUs.
           </p>
-          <div style={{
+          <div className="instaml-waitlist-box" style={{
             maxWidth: 520,
             margin: '0 auto',
             background: 'rgba(13,26,18,0.8)',
@@ -739,6 +775,7 @@ const showToast = (e: React.MouseEvent) => {
             We'll reach out within 24 hours &nbsp;·&nbsp; No spam, ever
           </p>
         </FadeUp>
+        </div>
       </section>
 
       {/* ── FOOTER ── */}
@@ -781,11 +818,14 @@ const showToast = (e: React.MouseEvent) => {
             <div>
               <p style={{ color: G_LIGHT, fontWeight: 600, fontSize: 13, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Company</p>
               {['About Cipherra', 'Blog', 'Careers'].map(l => (
-                <a key={l} href="#" onClick={showToast} style={{ display: 'block', color: '#3a5a42', fontSize: 13, marginBottom: 10, textDecoration: 'none', transition: 'color 0.2s' }}
+                <a key={l}
+                  href={l === 'About Cipherra' ? '#team' : '#'}
+                  onClick={l === 'About Cipherra' ? e => scrollTo(e, '#team') : showToast}
+                  style={{ display: 'block', color: '#3a5a42', fontSize: 13, marginBottom: 10, textDecoration: 'none', transition: 'color 0.2s' }}
                   onMouseEnter={e => (e.currentTarget.style.color = G_LIGHT)}
                   onMouseLeave={e => (e.currentTarget.style.color = '#3a5a42')}>{l}</a>
               ))}
-              <a href="mailto:nithesh2108@gmail.com" style={{ display: 'block', color: '#3a5a42', fontSize: 13, marginBottom: 10, textDecoration: 'none', transition: 'color 0.2s' }}
+              <a href="mailto:contact@cipherra.ai" style={{ display: 'block', color: '#3a5a42', fontSize: 13, marginBottom: 10, textDecoration: 'none', transition: 'color 0.2s' }}
                 onMouseEnter={e => (e.currentTarget.style.color = G_LIGHT)}
                 onMouseLeave={e => (e.currentTarget.style.color = '#3a5a42')}>Contact</a>
             </div>
