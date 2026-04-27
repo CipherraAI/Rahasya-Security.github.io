@@ -59,13 +59,13 @@ export default function Home() {
 
   return (
     <>
-      {/* New blog alert - spacer pushes it below the fixed header (h-20 = 80px) */}
+      {/* indexML announcement banner - spacer pushes it below the fixed header (h-20 = 80px) */}
       <div className="pt-20">
         <div className="bg-cipherra-blue text-white text-center py-3 px-4">
-          <Link to="/blog" className="inline-flex items-center gap-2 font-medium hover:underline underline-offset-2">
-            <span>✨ New blog post — Introduction to Homomorphic Encryption</span>
-            <span className="hidden sm:inline">Read it here →</span>
-          </Link>
+          <a href="https://instaml.cipherra.ai" className="inline-flex items-center gap-2 font-medium hover:underline underline-offset-2">
+            <span>🚀 Introducing InstaML — AI inference on Indian GPUs, live in minutes</span>
+            <span className="hidden sm:inline">Learn more →</span>
+          </a>
         </div>
       </div>
 
