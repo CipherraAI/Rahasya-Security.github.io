@@ -68,7 +68,7 @@ html {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #1e293b 0%, #0126A0 50%, #011a7a 100%);
+  background: linear-gradient(135deg, #69f0ae 0%, #00e676 50%, #00b248 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -99,18 +99,18 @@ html {
 .animated-dot {
   position: absolute;
   border-radius: 50%;
-  background: #0126A0;
-  opacity: 0.6;
+  background: #00e676;
+  opacity: 0.3;
   will-change: transform;
-  box-shadow: 0 0 15px rgba(1, 38, 160, 0.7);
+  box-shadow: 0 0 10px rgba(0, 230, 118, 0.4);
 }
 
 .animated-line {
   position: absolute;
-  background: linear-gradient(90deg, transparent, #0126A0, transparent);
-  opacity: 0.5;
+  background: linear-gradient(90deg, transparent, rgba(0,230,118,0.4), transparent);
+  opacity: 0.3;
   will-change: transform;
-  height: 2px;
+  height: 1px;
 }
 
 /* Custom lighter blur */
