@@ -68,7 +68,7 @@ html {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #69f0ae 0%, #00e676 50%, #00b248 100%);
+  background: linear-gradient(135deg, #6b8fff 0%, #0026a4 50%, #00b248 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -99,7 +99,7 @@ html {
 .animated-dot {
   position: absolute;
   border-radius: 50%;
-  background: #00e676;
+  background: #0026a4;
   opacity: 0.3;
   will-change: transform;
   box-shadow: 0 0 10px rgba(0, 230, 118, 0.4);
@@ -107,7 +107,7 @@ html {
 
 .animated-line {
   position: absolute;
-  background: linear-gradient(90deg, transparent, rgba(0,230,118,0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,38,164,0.50), transparent);
   opacity: 0.3;
   will-change: transform;
   height: 1px;
