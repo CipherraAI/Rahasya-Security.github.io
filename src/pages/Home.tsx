@@ -114,34 +114,23 @@ function FadeUp({
   );
 }
 
-// Typing terminal component
-const YAML_LINES = [
-  { text: '# .github/workflows/eval.yml', color: 'rgba(255,255,255,0.30)' },
-  { text: '' },
-  { text: 'on:', color: G_LIGHT },
-  { text: '  push:', color: 'rgba(255,255,255,0.80)' },
-  { text: "    paths: ['checkpoints/**']", color: 'rgba(255,255,255,0.80)' },
-  { text: '' },
-  { text: 'jobs:', color: G_LIGHT },
-  { text: '  eval:', color: 'rgba(255,255,255,0.80)' },
-  { text: '    steps:', color: 'rgba(255,255,255,0.80)' },
-  { text: '      - uses: cipherra/eval-action@v1', color: G },
-  { text: '        with:', color: 'rgba(255,255,255,0.80)' },
-  { text: '          model: claude-haiku-4-5', color: G_LIGHT },
-  { text: '          tasks: ./eval-suite/', color: G_LIGHT },
-  { text: '          redundancy: 3', color: G_LIGHT },
-  { text: '' },
-  { text: '  ✓  30 runs dispatched', color: G },
-  { text: '  ✓  Diagnostic report ready', color: G },
+const STAT_ITEMS = [
+  { icon: '✓', label: 'runs completed', value: '30', color: G },
+  { icon: '✗', label: 'failures detected', value: '7', color: '#f87171' },
+  { icon: '→', label: 'classified as learnable', value: '5', color: '#fbbf24' },
+  { icon: '⚡', label: 'training job triggered', value: null as null, color: G },
 ];
 
-function TypingTerminal() {
+function StatsPanel() {
   const [visible, setVisible] = useState(0);
+  const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
-    if (visible >= YAML_LINES.length) return;
-    const delay = YAML_LINES[visible].text === '' ? 80 : 110;
-    const t = setTimeout(() => setVisible((v) => v + 1), delay);
+    if (visible < STAT_ITEMS.length) {
+      const t = setTimeout(() => setVisible((v) => v + 1), 620);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setShowResult(true), 900);
     return () => clearTimeout(t);
   }, [visible]);
 
@@ -153,30 +142,73 @@ function TypingTerminal() {
         borderRadius: '12px',
         padding: '20px 24px',
         fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
-        fontSize: '0.78rem',
+        fontSize: '0.82rem',
         lineHeight: 1.7,
         minHeight: '320px',
       }}
     >
-      <div className="flex items-center gap-1.5 mb-4">
+      <div className="flex items-center gap-1.5 mb-5">
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
-        <span style={{ marginLeft: 8, color: 'rgba(255,255,255,0.3)', fontSize: '0.72rem' }}>eval.yml</span>
+        <span style={{ marginLeft: 8, color: 'rgba(255,255,255,0.3)', fontSize: '0.72rem' }}>eval cycle #4 · qwen-2.5-7b-instruct</span>
       </div>
-      {YAML_LINES.slice(0, visible).map((line, i) => (
-        <div key={i} style={{ color: line.color || 'rgba(255,255,255,0.75)', whiteSpace: 'pre' }}>
-          {line.text || ' '}
-        </div>
-      ))}
-      {visible < YAML_LINES.length && (
-        <motion.span
-          animate={{ opacity: [1, 0, 1] }}
-          transition={{ duration: 0.9, repeat: Infinity }}
-          style={{ color: G, fontWeight: 700 }}
+
+      <div className="space-y-2 mb-5">
+        {STAT_ITEMS.slice(0, visible).map((item, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.25 }}
+            className="flex items-center gap-3"
+          >
+            <span style={{ color: item.color, width: 14, flexShrink: 0, textAlign: 'center' as const }}>{item.icon}</span>
+            {item.value && (
+              <span style={{ color: '#fff', fontWeight: 700, minWidth: 24 }}>{item.value}</span>
+            )}
+            <span style={{ color: 'rgba(255,255,255,0.50)' }}>{item.label}</span>
+          </motion.div>
+        ))}
+        {visible < STAT_ITEMS.length && (
+          <motion.span
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ duration: 0.9, repeat: Infinity }}
+            style={{ color: G, fontWeight: 700, display: 'inline-block', marginLeft: 2 }}
+          >
+            ▋
+          </motion.span>
+        )}
+      </div>
+
+      {showResult && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          style={{
+            background: 'rgba(0,230,118,0.06)',
+            border: '1px solid rgba(0,230,118,0.22)',
+            borderRadius: 10,
+            padding: '14px 16px',
+            marginTop: 8,
+          }}
         >
-          ▋
-        </motion.span>
+          <div style={{ color: G_LIGHT, fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: 10 }}>
+            post-training re-eval
+          </div>
+          <div className="flex items-center justify-between" style={{ fontSize: '0.78rem' }}>
+            <div>
+              <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.68rem', marginBottom: 2 }}>before training</div>
+              <div style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 700 }}>76.7%</div>
+            </div>
+            <div style={{ color: G, fontSize: '1.1rem' }}>→</div>
+            <div style={{ textAlign: 'right' as const }}>
+              <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.68rem', marginBottom: 2 }}>after training</div>
+              <div style={{ color: G, fontWeight: 700 }}>90.0% <span style={{ fontSize: '0.7rem' }}>↑ +13.3%</span></div>
+            </div>
+          </div>
+        </motion.div>
       )}
     </div>
   );
@@ -226,10 +258,38 @@ const STEPS = [
 const PROVIDERS = [
   { name: 'Anthropic', tag: 'claude-haiku, claude-sonnet, claude-opus', color: '#d97757' },
   { name: 'OpenAI', tag: 'gpt-4o, o3-mini, o1', color: '#74aa9c' },
+  { name: 'OpenRouter', tag: 'Nemotron, Gemma, Phi-4 — free tier', color: '#6366f1', free: true },
   { name: 'Together AI', tag: 'Llama 3, Qwen 2.5, Mistral', color: '#7c3aed' },
   { name: 'vLLM', tag: 'self-hosted endpoint', color: '#2563eb' },
   { name: 'Ollama', tag: 'local models', color: '#0891b2' },
   { name: 'Any OpenAI-compat', tag: 'custom api_base + BYOK', color: '#059669' },
+];
+
+const SELF_HEAL_STEPS = [
+  {
+    step: '01',
+    icon: '📡',
+    title: 'Failures Ingested',
+    body: 'Pull from eval run outputs or stream in production traces. Any trajectory where the agent fell short — wrong tool call, bad reasoning, task not completed — is ingested.',
+  },
+  {
+    step: '02',
+    icon: '🧠',
+    title: 'Smart Classification',
+    body: 'Failures split into learnable (genuine model behavior gap) vs. noise (env bug, rate limit, config error). Only signal proceeds.',
+  },
+  {
+    step: '03',
+    icon: '⚡',
+    title: 'Training Job Triggered',
+    body: 'Curated failure trajectories are formatted as training data and submitted to your training infra — GRPO, SFT, or DPO.',
+  },
+  {
+    step: '04',
+    icon: '📈',
+    title: 'Checkpoint Re-evaluated',
+    body: 'The new checkpoint is re-evaluated on the exact failure categories that triggered the run. Track improvement over time.',
+  },
 ];
 
 export default function Home() {
@@ -290,8 +350,8 @@ export default function Home() {
                 className="font-extrabold leading-tight mb-6"
                 style={{ fontSize: 'clamp(2.4rem, 5vw, 3.6rem)', color: '#fff' }}
               >
-                Agent Evals at Scale.{' '}
-                <span style={{ color: G }}>Wired Into Your Pipeline.</span>
+                Continuous Evals.{' '}
+                <span style={{ color: G }}>Continuous Improvement.</span>
               </motion.h1>
 
               <motion.p
@@ -300,8 +360,8 @@ export default function Home() {
                 transition={{ duration: 0.55, delay: 0.16 }}
                 style={{ color: 'rgba(255,255,255,0.55)', fontSize: '1.15rem', lineHeight: 1.7, marginBottom: '2.5rem', maxWidth: '520px' }}
               >
-                Run your eval suite on every model checkpoint. Get prioritized diagnostic reports —
-                not just a score. Bring any model. Trigger from GitHub Actions, webhooks, or CLI.
+                Run eval suites against any model. Get prioritized diagnostic reports — not just a score.
+                Failures get classified, learnable ones become training data, and the loop closes automatically.
               </motion.p>
 
               <motion.div
@@ -358,7 +418,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.5 }}
                 className="mt-10 flex flex-wrap gap-6"
               >
-                {['BYOK — any model', 'Harbor task format', 'GitHub Actions ready'].map((feat) => (
+                {['BYOK — any model', 'Harbor task format', 'Self-learning loop'].map((feat) => (
                   <div key={feat} className="flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.82rem' }}>
                     <span style={{ color: G, fontSize: '0.75rem' }}>✓</span>
                     {feat}
@@ -373,7 +433,7 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.65, delay: 0.2 }}
             >
-              <TypingTerminal />
+              <StatsPanel />
             </motion.div>
           </div>
         </div>
@@ -544,11 +604,16 @@ export default function Home() {
                     (e.currentTarget as HTMLElement).style.boxShadow = 'none';
                   }}
                 >
-                  <div
-                    className="text-xs font-bold tracking-wide"
-                    style={{ color: '#fff' }}
-                  >
-                    {p.name}
+                  <div className="flex items-center gap-2">
+                    <div className="text-xs font-bold tracking-wide" style={{ color: '#fff' }}>{p.name}</div>
+                    {(p as any).free && (
+                      <span
+                        className="text-xs font-bold px-1.5 py-0.5 rounded"
+                        style={{ background: 'rgba(0,230,118,0.12)', color: G, border: '1px solid rgba(0,230,118,0.2)', fontSize: '0.65rem', letterSpacing: '0.04em' }}
+                      >
+                        FREE
+                      </span>
+                    )}
                   </div>
                   <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: '0.78rem' }}>{p.tag}</div>
                 </div>
@@ -655,57 +720,85 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── RL + Training Loop callout ──────────────────────── */}
-      <section className="py-16 md:py-20">
+      {/* ── Self-Healing Agents ────────────────────────────── */}
+      <section className="py-20 md:py-28" id="self-healing">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <FadeUp>
+          <FadeUp className="text-center mb-14">
             <div
-              className="rounded-2xl p-8 md:p-12 relative overflow-hidden"
-              style={{
-                background: 'linear-gradient(135deg, rgba(13,26,18,0.9) 0%, rgba(5,11,7,0.95) 100%)',
-                border: '1px solid rgba(0,230,118,0.20)',
-              }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-6"
+              style={{ background: 'rgba(251,191,36,0.08)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.20)' }}
             >
-              {/* glow blob */}
-              <div style={{
-                position: 'absolute', top: -80, right: -80,
-                width: 280, height: 280,
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(0,230,118,0.1) 0%, transparent 70%)',
-                pointerEvents: 'none',
-              }} />
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fbbf24', display: 'inline-block', boxShadow: '0 0 8px #fbbf24' }} />
+              Coming Soon
+            </div>
+            <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>
+              Self-Healing Agents
+            </p>
+            <h2 className="font-bold mb-4" style={{ color: '#fff', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
+              Eval failures become{' '}
+              <span style={{ color: G }}>training signal.</span>
+            </h2>
+            <p className="max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.48)', lineHeight: 1.7, fontSize: '1rem' }}>
+              Pull from eval runs or stream in production traces. Not every failure is worth
+              learning from — Cipherra classifies which ones are genuine model behavior gaps,
+              curates the right trajectories, and automatically triggers a training job.
+            </p>
+          </FadeUp>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center relative z-10">
-                <div>
-                  <div
-                    className="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase mb-4"
-                    style={{ background: G_DIM, color: G, border: `1px solid ${G_BORDER}` }}
-                  >
-                    RL Post-Training
-                  </div>
-                  <h3 className="font-bold mb-4" style={{ color: '#fff', fontSize: 'clamp(1.4rem, 2.5vw, 2rem)' }}>
-                    Close the eval → train → eval loop.
-                  </h3>
-                  <p style={{ color: 'rgba(255,255,255,0.50)', lineHeight: 1.75, fontSize: '0.95rem' }}>
-                    Running GRPO or PPO? Register a webhook on your checkpoint S3/HuggingFace path.
-                    Every new checkpoint automatically triggers an eval job. Track capability curves
-                    across training steps — catch regressions before they compound.
-                  </p>
-                </div>
-                <div className="space-y-3">
-                  {[
-                    'Checkpoint → eval job triggered automatically',
-                    'Track pass rate across training steps',
-                    'Regression detection with configurable thresholds',
-                    'Export trajectories as JSONL for RL training data',
-                  ].map((item) => (
-                    <div key={item} className="flex items-start gap-3">
-                      <span style={{ color: G, flexShrink: 0, marginTop: 1 }}>→</span>
-                      <span style={{ color: 'rgba(255,255,255,0.60)', fontSize: '0.9rem' }}>{item}</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+            {SELF_HEAL_STEPS.map((step, i) => (
+              <FadeUp key={step.step} delay={i * 0.09}>
+                <div
+                  className="p-6 h-full flex flex-col transition-all"
+                  style={CARD}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = G_BORDER;
+                    (e.currentTarget as HTMLElement).style.boxShadow = G_GLOW;
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,230,118,0.15)';
+                    (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                  }}
+                >
+                  <div className="flex items-center justify-between mb-5">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+                      style={{ background: G_DIM, border: `1px solid ${G_BORDER}` }}
+                    >
+                      {step.icon}
                     </div>
-                  ))}
+                    <div className="text-xs font-bold tracking-widest" style={{ color: G, fontFamily: 'monospace' }}>{step.step}</div>
+                  </div>
+                  <h3 className="font-bold text-sm mb-2" style={{ color: '#fff' }}>{step.title}</h3>
+                  <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.8rem', lineHeight: 1.65, flexGrow: 1 }}>{step.body}</p>
                 </div>
-              </div>
+              </FadeUp>
+            ))}
+          </div>
+
+          <FadeUp delay={0.2}>
+            <div className="max-w-3xl mx-auto text-center py-6">
+              <p className="font-bold" style={{ color: '#fff', fontSize: 'clamp(1.15rem, 2.2vw, 1.5rem)', lineHeight: 1.5 }}>
+                After every training run,{' '}
+                <span style={{ color: G }}>know if your model actually got better.</span>
+              </p>
+              <p className="mt-3" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                Re-eval runs automatically on the new checkpoint against the exact failure categories that triggered training.
+                No manual testing. No guessing. A clear signal every cycle.
+              </p>
+            </div>
+          </FadeUp>
+
+          <FadeUp delay={0.3}>
+            <div
+              className="max-w-2xl mx-auto p-5 rounded-xl text-center"
+              style={{ background: G_DIM, border: `1px solid ${G_BORDER}` }}
+            >
+              <p style={{ color: G_LIGHT, fontSize: '0.875rem', lineHeight: 1.6 }}>
+                <strong style={{ color: G }}>Works across eval and production.</strong>{' '}
+                Pipe in eval run results for model testing, or connect your production trace pipeline.
+                Failures that matter get fed back into the next training run — automatically.
+              </p>
             </div>
           </FadeUp>
         </div>
