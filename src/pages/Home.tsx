@@ -260,8 +260,7 @@ const PROVIDERS = [
   { name: 'OpenAI', tag: 'gpt-4o, o3-mini, o1', color: '#74aa9c' },
   { name: 'OpenRouter', tag: 'Nemotron, Gemma, Phi-4 — free tier', color: '#6366f1', free: true },
   { name: 'Together AI', tag: 'Llama 3, Qwen 2.5, Mistral', color: '#7c3aed' },
-  { name: 'vLLM', tag: 'self-hosted endpoint', color: '#2563eb' },
-  { name: 'Ollama', tag: 'local models', color: '#0891b2' },
+  { name: 'vLLM / Ollama', tag: 'self-hosted & local models', color: '#2563eb' },
   { name: 'Any OpenAI-compat', tag: 'custom api_base + BYOK', color: '#059669' },
 ];
 
