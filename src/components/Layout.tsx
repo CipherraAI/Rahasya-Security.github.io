@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-const G = '#00e676';
+const G = '#0026a4';
 
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -138,7 +138,7 @@ export default function Layout() {
   };
 
   const navLinkStyle = {
-    color: 'rgba(255,255,255,0.65)',
+    color: 'rgba(13,18,48,0.65)',
     fontSize: '0.875rem',
     fontWeight: 500,
     transition: 'color 0.2s',
@@ -146,14 +146,14 @@ export default function Layout() {
   };
 
   return (
-    <div className="antialiased relative" style={{ background: '#050b07', minHeight: '100vh' }}>
+    <div className="antialiased relative" style={{ background: '#f7f9ff', minHeight: '100vh' }}>
       <div id="animated-background" ref={backgroundRef} />
 
       <header
         className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg"
         style={{
-          background: 'rgba(5, 11, 7, 0.92)',
-          borderBottom: '1px solid rgba(0,230,118,0.12)',
+          background: 'rgba(247, 249, 255, 0.97)',
+          borderBottom: '1px solid rgba(0,38,164,0.15)',
         }}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -168,7 +168,7 @@ export default function Layout() {
                   onClick={(e) => handleNavClick(e, '#how-it-works')}
                   style={navLinkStyle}
                   onMouseEnter={(e) => (e.currentTarget.style.color = G)}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.65)')}
                 >
                   How It Works
                 </a>
@@ -179,7 +179,7 @@ export default function Layout() {
                   onClick={(e) => handleNavClick(e, '#integrations')}
                   style={navLinkStyle}
                   onMouseEnter={(e) => (e.currentTarget.style.color = G)}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.65)')}
                 >
                   Integrations
                 </a>
@@ -190,7 +190,7 @@ export default function Layout() {
                   onClick={(e) => handleNavClick(e, '#byom')}
                   style={navLinkStyle}
                   onMouseEnter={(e) => (e.currentTarget.style.color = G)}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.65)')}
                 >
                   Models
                 </a>
@@ -203,15 +203,15 @@ export default function Layout() {
                   className="ml-2 px-5 py-2 rounded-full text-sm font-semibold transition-all"
                   style={{
                     background: G,
-                    color: '#050b07',
-                    boxShadow: '0 0 18px rgba(0,230,118,0.3)',
+                    color: '#ffffff',
+                    boxShadow: '0 4px 14px rgba(0,38,164,0.20)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 28px rgba(0,230,118,0.5)';
+                    e.currentTarget.style.boxShadow = '0 0 28px rgba(0,38,164,0.55)';
                     e.currentTarget.style.transform = 'translateY(-1px)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 18px rgba(0,230,118,0.3)';
+                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,38,164,0.20)';
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
@@ -222,7 +222,7 @@ export default function Layout() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2"
-              style={{ color: 'rgba(255,255,255,0.7)' }}
+              style={{ color: 'rgba(13,18,48,0.70)' }}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -232,18 +232,18 @@ export default function Layout() {
         </div>
         <div
           className={`${mobileMenuOpen ? '' : 'hidden'} md:hidden`}
-          style={{ background: 'rgba(5,11,7,0.98)', borderTop: '1px solid rgba(0,230,118,0.12)' }}
+          style={{ background: 'rgba(247, 249, 255, 0.99)', borderTop: '1px solid rgba(0,38,164,0.15)' }}
         >
           <div className="max-w-7xl mx-auto px-6 py-4 space-y-3">
-            <a href="#how-it-works" onClick={(e) => handleNavClick(e, '#how-it-works')} style={{ color: 'rgba(255,255,255,0.7)', display: 'block', padding: '8px 0' }}>How It Works</a>
-            <a href="#integrations" onClick={(e) => handleNavClick(e, '#integrations')} style={{ color: 'rgba(255,255,255,0.7)', display: 'block', padding: '8px 0' }}>Integrations</a>
-            <a href="#byom" onClick={(e) => handleNavClick(e, '#byom')} style={{ color: 'rgba(255,255,255,0.7)', display: 'block', padding: '8px 0' }}>Models</a>
+            <a href="#how-it-works" onClick={(e) => handleNavClick(e, '#how-it-works')} style={{ color: 'rgba(13,18,48,0.70)', display: 'block', padding: '8px 0' }}>How It Works</a>
+            <a href="#integrations" onClick={(e) => handleNavClick(e, '#integrations')} style={{ color: 'rgba(13,18,48,0.70)', display: 'block', padding: '8px 0' }}>Integrations</a>
+            <a href="#byom" onClick={(e) => handleNavClick(e, '#byom')} style={{ color: 'rgba(13,18,48,0.70)', display: 'block', padding: '8px 0' }}>Models</a>
             <a
               href="https://app.cipherra.ai"
               target="_blank"
               rel="noopener noreferrer"
               className="block px-6 py-2.5 text-center rounded-full font-semibold"
-              style={{ background: G, color: '#050b07' }}
+              style={{ background: G, color: '#ffffff' }}
             >
               Try it →
             </a>
@@ -255,7 +255,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="py-16 relative z-10" style={{ background: '#020805', borderTop: '1px solid rgba(0,230,118,0.1)' }}>
+      <footer className="py-16 relative z-10" style={{ background: '#eef2ff', borderTop: '1px solid rgba(0,38,164,0.12)' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-12">
             <div>
@@ -264,37 +264,37 @@ export default function Layout() {
                   <img src="/Cipherra_logo.jpeg" alt="Cipherra Logo" className="h-7 w-auto" />
                 </div>
               </div>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', lineHeight: 1.65 }}>
+              <p style={{ color: 'rgba(13,18,48,0.50)', fontSize: '0.85rem', lineHeight: 1.65 }}>
                 Infrastructure for continuous evals of AI agents. Run at scale. Get actionable diagnostics.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.9)' }}>Product</h4>
+              <h4 className="font-semibold mb-4" style={{ color: 'rgba(13,18,48,0.90)' }}>Product</h4>
               <ul className="space-y-3">
-                <li><a href="#how-it-works" onClick={(e) => handleNavClick(e, '#how-it-works')} style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>How It Works</a></li>
-                <li><a href="#integrations" onClick={(e) => handleNavClick(e, '#integrations')} style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>Integrations</a></li>
-                <li><a href="#byom" onClick={(e) => handleNavClick(e, '#byom')} style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>Model Support</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); showToast(); }} style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>Documentation</a></li>
+                <li><a href="#how-it-works" onClick={(e) => handleNavClick(e, '#how-it-works')} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>How It Works</a></li>
+                <li><a href="#integrations" onClick={(e) => handleNavClick(e, '#integrations')} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Integrations</a></li>
+                <li><a href="#byom" onClick={(e) => handleNavClick(e, '#byom')} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Model Support</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); showToast(); }} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Documentation</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.9)' }}>Company</h4>
+              <h4 className="font-semibold mb-4" style={{ color: 'rgba(13,18,48,0.90)' }}>Company</h4>
               <ul className="space-y-3">
-                <li><a href="https://instaml.cipherra.ai" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>InstaML</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); showToast(); }} style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>Careers</a></li>
+                <li><a href="https://instaml.cipherra.ai" style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>InstaML</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); showToast(); }} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Careers</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.9)' }}>Contact</h4>
+              <h4 className="font-semibold mb-4" style={{ color: 'rgba(13,18,48,0.90)' }}>Contact</h4>
               <ul className="space-y-3">
-                <li><a href="mailto:nithesh@cipherra.ai,dhruv@cipherra.ai" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>Email</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); showToast(); }} style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>LinkedIn</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); showToast(); }} style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>Twitter</a></li>
+                <li><a href="mailto:nithesh@cipherra.ai,dhruv@cipherra.ai" style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Email</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); showToast(); }} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>LinkedIn</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); showToast(); }} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Twitter</a></li>
               </ul>
             </div>
           </div>
-          <div className="pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
-            <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.875rem' }}>© 2026 Cipherra. All rights reserved.</p>
+          <div className="pt-8" style={{ borderTop: '1px solid rgba(13,18,48,0.06)', textAlign: 'center' }}>
+            <p style={{ color: 'rgba(13,18,48,0.35)', fontSize: '0.875rem' }}>© 2026 Cipherra. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -304,7 +304,7 @@ export default function Layout() {
         className="fixed top-5 right-5 px-6 py-4 rounded-full font-semibold shadow-2xl z-50"
         style={{
           background: G,
-          color: '#050b07',
+          color: '#ffffff',
           transform: 'translateX(400px)',
           transition: 'transform 0.3s',
         }}

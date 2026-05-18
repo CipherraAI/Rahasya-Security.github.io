@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
-const G = '#00e676';
-const G_LIGHT = '#69f0ae';
-const G_DIM = 'rgba(0,230,118,0.10)';
-const G_BORDER = 'rgba(0,230,118,0.20)';
-const G_GLOW = '0 0 24px rgba(0,230,118,0.25)';
+const G = '#0026a4';
+const G_LIGHT = '#0026a4';
+const G_DIM = 'rgba(0,38,164,0.12)';
+const G_BORDER = 'rgba(0,38,164,0.22)';
+const G_GLOW = '0 4px 16px rgba(0,38,164,0.18)';
 const CARD: React.CSSProperties = {
-  background: 'rgba(13,26,18,0.80)',
-  border: '1px solid rgba(0,230,118,0.15)',
+  background: '#ffffff',
+  border: '1px solid rgba(0,38,164,0.18)',
   borderRadius: '16px',
 };
 
@@ -36,8 +36,8 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: 'rgba(13,26,18,0.80)',
-        border: `1px solid ${hovered ? G : 'rgba(0,230,118,0.15)'}`,
+        background: '#ffffff',
+        border: `1px solid ${hovered ? G : 'rgba(0,38,164,0.18)'}`,
         borderRadius: 20,
         padding: '36px 32px',
         display: 'flex',
@@ -45,7 +45,7 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
         alignItems: 'center',
         textAlign: 'center',
         transition: 'all 0.25s ease',
-        boxShadow: hovered ? '0 0 32px rgba(0,230,118,0.2), 0 12px 40px rgba(0,0,0,0.5)' : '0 4px 20px rgba(0,0,0,0.3)',
+        boxShadow: hovered ? '0 0 32px rgba(0,38,164,0.22), 0 12px 40px rgba(0,0,0,0.5)' : '0 4px 20px rgba(0,0,0,0.3)',
         transform: hovered ? 'translateY(-6px)' : 'none',
       }}
     >
@@ -53,8 +53,8 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
         width: 112, height: 112,
         borderRadius: '50%',
         overflow: 'hidden',
-        border: `3px solid ${hovered ? G : 'rgba(0,230,118,0.2)'}`,
-        boxShadow: hovered ? '0 0 24px rgba(0,230,118,0.3)' : '0 0 12px rgba(0,230,118,0.1)',
+        border: `3px solid ${hovered ? G : 'rgba(0,38,164,0.22)'}`,
+        boxShadow: hovered ? '0 0 24px rgba(0,38,164,0.40)' : '0 0 12px rgba(0,38,164,0.12)',
         marginBottom: 20,
         transition: 'all 0.25s ease',
         flexShrink: 0,
@@ -62,11 +62,11 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
         <img src={photo} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-        <h3 style={{ color: '#fff', fontWeight: 800, fontSize: 20 }}>{name}</h3>
+        <h3 style={{ color: '#0d1230', fontWeight: 800, fontSize: 20 }}>{name}</h3>
         <a href={linkedin} target="_blank" rel="noopener noreferrer"
-          style={{ display: 'flex', flexShrink: 0, color: 'rgba(255,255,255,0.35)', transition: 'color 0.2s' }}
+          style={{ display: 'flex', flexShrink: 0, color: 'rgba(13,18,48,0.45)', transition: 'color 0.2s' }}
           onMouseEnter={e => (e.currentTarget.style.color = '#0a66c2')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(13,18,48,0.45)')}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
@@ -74,7 +74,7 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
         </a>
       </div>
       <p style={{ color: G, fontSize: 13, fontWeight: 600, marginBottom: 16, letterSpacing: '0.02em' }}>{role}</p>
-      <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, lineHeight: 1.7 }}>{bio}</p>
+      <p style={{ color: 'rgba(13,18,48,0.55)', fontSize: 14, lineHeight: 1.7 }}>{bio}</p>
     </div>
   );
 }
@@ -115,10 +115,10 @@ function FadeUp({
 }
 
 const STAT_ITEMS = [
-  { icon: '✓', label: 'runs completed', value: '30', color: G },
+  { icon: '✓', label: 'runs completed', value: '30', color: '#6b8fff' },
   { icon: '✗', label: 'failures detected', value: '7', color: '#f87171' },
   { icon: '→', label: 'classified as learnable', value: '5', color: '#fbbf24' },
-  { icon: '⚡', label: 'training job triggered', value: null as null, color: G },
+  { icon: '⚡', label: 'training job triggered', value: null as null, color: '#6b8fff' },
 ];
 
 function StatsPanel() {
@@ -137,8 +137,8 @@ function StatsPanel() {
   return (
     <div
       style={{
-        background: 'rgba(5,11,7,0.95)',
-        border: '1px solid rgba(0,230,118,0.20)',
+        background: 'rgba(5, 8, 15, 0.95)',
+        border: '1px solid rgba(0,38,164,0.22)',
         borderRadius: '12px',
         padding: '20px 24px',
         fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
@@ -174,7 +174,7 @@ function StatsPanel() {
           <motion.span
             animate={{ opacity: [1, 0, 1] }}
             transition={{ duration: 0.9, repeat: Infinity }}
-            style={{ color: G, fontWeight: 700, display: 'inline-block', marginLeft: 2 }}
+            style={{ color: '#6b8fff', fontWeight: 700, display: 'inline-block', marginLeft: 2 }}
           >
             ▋
           </motion.span>
@@ -187,25 +187,25 @@ function StatsPanel() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           style={{
-            background: 'rgba(0,230,118,0.06)',
-            border: '1px solid rgba(0,230,118,0.22)',
+            background: 'rgba(0,38,164,0.08)',
+            border: '1px solid rgba(0,38,164,0.25)',
             borderRadius: 10,
             padding: '14px 16px',
             marginTop: 8,
           }}
         >
-          <div style={{ color: G_LIGHT, fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: 10 }}>
+          <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: 10 }}>
             post-training re-eval
           </div>
           <div className="flex items-center justify-between" style={{ fontSize: '0.78rem' }}>
             <div>
-              <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.68rem', marginBottom: 2 }}>before training</div>
-              <div style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 700 }}>76.7%</div>
+              <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: '0.68rem', marginBottom: 2 }}>before training</div>
+              <div style={{ color: 'rgba(255,255,255,0.70)', fontWeight: 700 }}>76.7%</div>
             </div>
-            <div style={{ color: G, fontSize: '1.1rem' }}>→</div>
+            <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '1.1rem' }}>→</div>
             <div style={{ textAlign: 'right' as const }}>
-              <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.68rem', marginBottom: 2 }}>after training</div>
-              <div style={{ color: G, fontWeight: 700 }}>90.0% <span style={{ fontSize: '0.7rem' }}>↑ +13.3%</span></div>
+              <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: '0.68rem', marginBottom: 2 }}>after training</div>
+              <div style={{ color: '#6b8fff', fontWeight: 700 }}>90.0% <span style={{ fontSize: '0.7rem' }}>↑ +13.3%</span></div>
             </div>
           </div>
         </motion.div>
@@ -306,7 +306,7 @@ export default function Home() {
             transform: 'translateX(-50%)',
             width: '900px',
             height: '500px',
-            background: 'radial-gradient(ellipse at center top, rgba(0,230,118,0.07) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at center top, rgba(0,38,164,0.09) 0%, transparent 70%)',
             pointerEvents: 'none',
           }}
         />
@@ -347,7 +347,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.08 }}
                 className="font-extrabold leading-tight mb-6"
-                style={{ fontSize: 'clamp(2.4rem, 5vw, 3.6rem)', color: '#fff' }}
+                style={{ fontSize: 'clamp(2.4rem, 5vw, 3.6rem)', color: '#0d1230' }}
               >
                 Continuous Evals.{' '}
                 <span style={{ color: G }}>Continuous Improvement.</span>
@@ -357,7 +357,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.16 }}
-                style={{ color: 'rgba(255,255,255,0.55)', fontSize: '1.15rem', lineHeight: 1.7, marginBottom: '2.5rem', maxWidth: '520px' }}
+                style={{ color: 'rgba(13,18,48,0.65)', fontSize: '1.15rem', lineHeight: 1.7, marginBottom: '2.5rem', maxWidth: '520px' }}
               >
                 Run eval suites against any model. Get prioritized diagnostic reports — not just a score.
                 Failures get classified, learnable ones become training data, and the loop closes automatically.
@@ -376,11 +376,11 @@ export default function Home() {
                   className="px-7 py-3.5 rounded-full font-semibold text-base text-center transition-all"
                   style={{
                     background: G,
-                    color: '#050b07',
+                    color: '#ffffff',
                     boxShadow: G_GLOW,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 36px rgba(0,230,118,0.45)';
+                    e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,38,164,0.28)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
                   }}
                   onMouseLeave={(e) => {
@@ -395,16 +395,16 @@ export default function Home() {
                   className="px-7 py-3.5 rounded-full font-semibold text-base text-center transition-all"
                   style={{
                     background: 'transparent',
-                    color: 'rgba(255,255,255,0.75)',
-                    border: '1px solid rgba(255,255,255,0.15)',
+                    color: 'rgba(13,18,48,0.75)',
+                    border: '1px solid rgba(0,38,164,0.25)',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = G_BORDER;
                     e.currentTarget.style.color = G_LIGHT;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
-                    e.currentTarget.style.color = 'rgba(255,255,255,0.75)';
+                    e.currentTarget.style.borderColor = 'rgba(0,38,164,0.25)';
+                    e.currentTarget.style.color = 'rgba(13,18,48,0.75)';
                   }}
                 >
                   Get Early Access
@@ -418,7 +418,7 @@ export default function Home() {
                 className="mt-10 flex flex-wrap gap-6"
               >
                 {['BYOK — any model', 'Harbor task format', 'Self-learning loop'].map((feat) => (
-                  <div key={feat} className="flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.82rem' }}>
+                  <div key={feat} className="flex items-center gap-2" style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.82rem' }}>
                     <span style={{ color: G, fontSize: '0.75rem' }}>✓</span>
                     {feat}
                   </div>
@@ -461,13 +461,13 @@ export default function Home() {
                     (e.currentTarget as HTMLElement).style.boxShadow = G_GLOW;
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,230,118,0.15)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,38,164,0.18)';
                     (e.currentTarget as HTMLElement).style.boxShadow = 'none';
                   }}
                 >
                   <div className="text-3xl mb-4">{p.icon}</div>
-                  <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>{p.title}</h3>
-                  <p style={{ color: 'rgba(255,255,255,0.52)', lineHeight: 1.7, fontSize: '0.9rem' }}>{p.body}</p>
+                  <h3 className="font-bold text-lg mb-3" style={{ color: '#0d1230' }}>{p.title}</h3>
+                  <p style={{ color: 'rgba(13,18,48,0.60)', lineHeight: 1.7, fontSize: '0.9rem' }}>{p.body}</p>
                 </div>
               </FadeUp>
             ))}
@@ -480,10 +480,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-16">
             <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>How it works</p>
-            <h2 className="font-bold" style={{ color: '#fff', fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)' }}>
+            <h2 className="font-bold" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)' }}>
               Submit → Run → Diagnose
             </h2>
-            <p className="mt-4 max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.48)', fontSize: '1rem', lineHeight: 1.7 }}>
+            <p className="mt-4 max-w-xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', fontSize: '1rem', lineHeight: 1.7 }}>
               Three steps from checkpoint to actionable insight. No infra to manage. No harness internals to learn.
             </p>
           </FadeUp>
@@ -505,8 +505,8 @@ export default function Home() {
                   >
                     {step.num}
                   </div>
-                  <h3 className="font-bold text-lg mb-3" style={{ color: '#fff' }}>{step.title}</h3>
-                  <p style={{ color: 'rgba(255,255,255,0.50)', lineHeight: 1.7, fontSize: '0.88rem' }}>{step.body}</p>
+                  <h3 className="font-bold text-lg mb-3" style={{ color: '#0d1230' }}>{step.title}</h3>
+                  <p style={{ color: 'rgba(13,18,48,0.60)', lineHeight: 1.7, fontSize: '0.88rem' }}>{step.body}</p>
                 </div>
               </FadeUp>
             ))}
@@ -532,10 +532,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-14">
             <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>The platform</p>
-            <h2 className="font-bold mb-4" style={{ color: '#fff', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
+            <h2 className="font-bold mb-4" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
               Submit a job. See results in minutes.
             </h2>
-            <p className="max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.48)', lineHeight: 1.7, fontSize: '1rem' }}>
+            <p className="max-w-xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', lineHeight: 1.7, fontSize: '1rem' }}>
               A web dashboard and REST API. Upload your task bundle, pick your model, set redundancy — then watch runs execute and results come in live.
             </p>
           </FadeUp>
@@ -544,14 +544,14 @@ export default function Home() {
             <div
               className="rounded-2xl overflow-hidden"
               style={{
-                border: '1px solid rgba(0,230,118,0.18)',
-                boxShadow: '0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,230,118,0.05)',
+                border: '1px solid rgba(0,38,164,0.22)',
+                boxShadow: '0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,38,164,0.07)',
               }}
             >
               {/* fake browser chrome */}
               <div
                 className="flex items-center gap-2 px-4 py-3"
-                style={{ background: 'rgba(13,26,18,0.95)', borderBottom: '1px solid rgba(0,230,118,0.10)' }}
+                style={{ background: 'rgba(8,14,36,0.95)', borderBottom: '1px solid rgba(0,38,164,0.12)' }}
               >
                 <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
                 <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
@@ -579,10 +579,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-14">
             <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>Bring Your Own Model</p>
-            <h2 className="font-bold mb-4" style={{ color: '#fff', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
+            <h2 className="font-bold mb-4" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
               Your model endpoint. Our infrastructure.
             </h2>
-            <p className="max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.48)', lineHeight: 1.7, fontSize: '1rem' }}>
+            <p className="max-w-xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', lineHeight: 1.7, fontSize: '1rem' }}>
               BYOK — bring your own API key. Works with any OpenAI-compatible endpoint.
               Hosted APIs, self-hosted vLLM, local Ollama — anything with an HTTP interface.
             </p>
@@ -599,22 +599,22 @@ export default function Home() {
                     (e.currentTarget as HTMLElement).style.boxShadow = G_GLOW;
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,230,118,0.15)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,38,164,0.18)';
                     (e.currentTarget as HTMLElement).style.boxShadow = 'none';
                   }}
                 >
                   <div className="flex items-center gap-2">
-                    <div className="text-xs font-bold tracking-wide" style={{ color: '#fff' }}>{p.name}</div>
+                    <div className="text-xs font-bold tracking-wide" style={{ color: '#0d1230' }}>{p.name}</div>
                     {(p as any).free && (
                       <span
                         className="text-xs font-bold px-1.5 py-0.5 rounded"
-                        style={{ background: 'rgba(0,230,118,0.12)', color: G, border: '1px solid rgba(0,230,118,0.2)', fontSize: '0.65rem', letterSpacing: '0.04em' }}
+                        style={{ background: 'rgba(0,38,164,0.15)', color: G, border: '1px solid rgba(0,38,164,0.22)', fontSize: '0.65rem', letterSpacing: '0.04em' }}
                       >
                         FREE
                       </span>
                     )}
                   </div>
-                  <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: '0.78rem' }}>{p.tag}</div>
+                  <div style={{ color: 'rgba(13,18,48,0.50)', fontSize: '0.78rem' }}>{p.tag}</div>
                 </div>
               </FadeUp>
             ))}
@@ -643,13 +643,13 @@ export default function Home() {
               <div
                 className="rounded-2xl overflow-hidden"
                 style={{
-                  border: '1px solid rgba(0,230,118,0.18)',
+                  border: '1px solid rgba(0,38,164,0.22)',
                   boxShadow: '0 0 40px rgba(0,0,0,0.5)',
                 }}
               >
                 <div
                   className="flex items-center gap-2 px-4 py-3"
-                  style={{ background: 'rgba(13,26,18,0.95)', borderBottom: '1px solid rgba(0,230,118,0.10)' }}
+                  style={{ background: 'rgba(8,14,36,0.95)', borderBottom: '1px solid rgba(0,38,164,0.12)' }}
                 >
                   <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
                   <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
@@ -674,11 +674,11 @@ export default function Home() {
               <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>
                 Diagnostic reports
               </p>
-              <h2 className="font-bold mb-6" style={{ color: '#fff', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
+              <h2 className="font-bold mb-6" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
                 Not just a score.{' '}
                 <span style={{ color: G }}>An action plan.</span>
               </h2>
-              <p className="mb-8" style={{ color: 'rgba(255,255,255,0.50)', lineHeight: 1.75, fontSize: '1rem' }}>
+              <p className="mb-8" style={{ color: 'rgba(13,18,48,0.60)', lineHeight: 1.75, fontSize: '1rem' }}>
                 Every completed job produces a prioritized diagnostic report. Failures are classified
                 by root cause — config, API, or model behavior. Issues are sorted by severity and
                 fixability, with specific remediation steps you can act on immediately.
@@ -709,7 +709,7 @@ export default function Home() {
                     />
                     <div>
                       <span className="text-xs font-bold tracking-widest" style={{ color: item.color }}>{item.label}</span>
-                      <p style={{ color: 'rgba(255,255,255,0.50)', fontSize: '0.875rem', lineHeight: 1.6, marginTop: 2 }}>{item.desc}</p>
+                      <p style={{ color: 'rgba(13,18,48,0.60)', fontSize: '0.875rem', lineHeight: 1.6, marginTop: 2 }}>{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -733,11 +733,11 @@ export default function Home() {
             <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>
               Self-Healing Agents
             </p>
-            <h2 className="font-bold mb-4" style={{ color: '#fff', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
+            <h2 className="font-bold mb-4" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
               Eval failures become{' '}
               <span style={{ color: G }}>training signal.</span>
             </h2>
-            <p className="max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.48)', lineHeight: 1.7, fontSize: '1rem' }}>
+            <p className="max-w-2xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', lineHeight: 1.7, fontSize: '1rem' }}>
               Pull from eval runs or stream in production traces. Not every failure is worth
               learning from — Cipherra classifies which ones are genuine model behavior gaps,
               curates the right trajectories, and automatically triggers a training job.
@@ -755,7 +755,7 @@ export default function Home() {
                     (e.currentTarget as HTMLElement).style.boxShadow = G_GLOW;
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,230,118,0.15)';
+                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,38,164,0.18)';
                     (e.currentTarget as HTMLElement).style.boxShadow = 'none';
                   }}
                 >
@@ -768,8 +768,8 @@ export default function Home() {
                     </div>
                     <div className="text-xs font-bold tracking-widest" style={{ color: G, fontFamily: 'monospace' }}>{step.step}</div>
                   </div>
-                  <h3 className="font-bold text-sm mb-2" style={{ color: '#fff' }}>{step.title}</h3>
-                  <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.8rem', lineHeight: 1.65, flexGrow: 1 }}>{step.body}</p>
+                  <h3 className="font-bold text-sm mb-2" style={{ color: '#0d1230' }}>{step.title}</h3>
+                  <p style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.8rem', lineHeight: 1.65, flexGrow: 1 }}>{step.body}</p>
                 </div>
               </FadeUp>
             ))}
@@ -777,11 +777,11 @@ export default function Home() {
 
           <FadeUp delay={0.2}>
             <div className="max-w-3xl mx-auto text-center py-6">
-              <p className="font-bold" style={{ color: '#fff', fontSize: 'clamp(1.15rem, 2.2vw, 1.5rem)', lineHeight: 1.5 }}>
+              <p className="font-bold" style={{ color: '#0d1230', fontSize: 'clamp(1.15rem, 2.2vw, 1.5rem)', lineHeight: 1.5 }}>
                 After every training run,{' '}
                 <span style={{ color: G }}>know if your model actually got better.</span>
               </p>
-              <p className="mt-3" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+              <p className="mt-3" style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.9rem', lineHeight: 1.6 }}>
                 Re-eval runs automatically on the new checkpoint against the exact failure categories that triggered training.
                 No manual testing. No guessing. A clear signal every cycle.
               </p>
@@ -808,10 +808,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-14">
             <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>Founding Team</p>
-            <h2 className="font-bold mb-4" style={{ color: '#fff', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
+            <h2 className="font-bold mb-4" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
               Built by people who've done this before
             </h2>
-            <p className="max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.48)', lineHeight: 1.7, fontSize: '1rem' }}>
+            <p className="max-w-xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', lineHeight: 1.7, fontSize: '1rem' }}>
               We've worked inside the systems we're replacing — at Qualcomm, Microsoft, and IIT Madras.
             </p>
           </FadeUp>
@@ -832,17 +832,17 @@ export default function Home() {
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(ellipse at center, rgba(0,230,118,0.06) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at center, rgba(0,38,164,0.08) 0%, transparent 70%)',
             pointerEvents: 'none',
           }}
         />
         <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center relative z-10">
           <FadeUp>
-            <h2 className="font-bold mb-4" style={{ color: '#fff', fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
+            <h2 className="font-bold mb-4" style={{ color: '#0d1230', fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
               Start evaluating your agents{' '}
               <span style={{ color: G }}>continuously.</span>
             </h2>
-            <p className="mb-10 max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.48)', lineHeight: 1.7, fontSize: '1.05rem' }}>
+            <p className="mb-10 max-w-xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', lineHeight: 1.7, fontSize: '1.05rem' }}>
               Free tier — 5 jobs, up to 50 tasks each, redundancy up to 3.
               Bring your own API key. No credit card required.
             </p>
@@ -851,8 +851,8 @@ export default function Home() {
           <FadeUp delay={0.1}>
             <div
               style={{
-                background: 'rgba(13,26,18,0.8)',
-                border: '1px solid rgba(0,230,118,0.2)',
+                background: '#ffffff',
+                border: '1px solid rgba(0,38,164,0.22)',
                 borderRadius: 16,
                 padding: '8px 24px 16px',
                 backdropFilter: 'blur(12px)',
