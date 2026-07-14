@@ -39,26 +39,81 @@ const ICONS = {
   fix: <><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2 2.6-2.6Z" /></>,
 };
 
-/* ── Hero coordination animation ─────────────────────────── */
-const LOG = [
-  { agent: 'A', color: '#6b8fff', label: 'claims', target: 'auth.py:login()', ok: true },
-  { agent: 'B', color: '#fbbf24', label: 'asks A before editing', target: 'auth.py', ok: true },
-  { agent: 'B', color: '#6b8fff', label: 'recalls signature', target: 'shared memory', ok: true },
-  { agent: '✓', color: '#34d399', label: 'merge clean, compiles', target: '', ok: true },
+/* ── Hero agent-to-agent chat ────────────────────────────── */
+type Msg = { from: 'A' | 'B' | 'sys'; tag?: string; text: React.ReactNode };
+const Mono: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <code style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace", fontSize: '0.82em', color: '#cdd9ff' }}>{children}</code>
+);
+const THREAD: Msg[] = [
+  { from: 'A', tag: 'request', text: <>You own <Mono>auth.py</Mono>. Can you make <Mono>login()</Mono> accept an OAuth token?</> },
+  { from: 'B', tag: 'claim', text: <>On it. Claiming <Mono>auth.py:login()</Mono>.</> },
+  { from: 'B', tag: 'result', text: <>Done. <Mono>login(token) → Session</Mono>. Saved the new signature to shared memory.</> },
+  { from: 'A', tag: 'recall', text: <>Recalled it. Wiring my caller to match the new signature.</> },
+  { from: 'sys', text: <>Patches merged clean · compiles ✓</> },
 ];
 
-function CoordinationPanel() {
-  const [step, setStep] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setStep((s) => (s >= LOG.length ? 0 : s + 1)), 1150);
-    return () => clearInterval(id);
-  }, []);
+const AGENTS = {
+  A: { name: 'Agent A', color: '#6b8fff', bg: 'rgba(107,143,255,0.14)', border: 'rgba(107,143,255,0.30)' },
+  B: { name: 'Agent B', color: '#fbbf24', bg: 'rgba(251,191,36,0.14)', border: 'rgba(251,191,36,0.30)' },
+};
 
-  const files = [
-    { name: 'auth.py', owner: step >= 1 ? 'A' : null },
-    { name: 'api.py', owner: 'B' },
-    { name: 'utils.py', owner: 'shared' },
-  ];
+function Avatar({ who }: { who: 'A' | 'B' }) {
+  const a = AGENTS[who];
+  return (
+    <span className="flex items-center justify-center shrink-0 rounded-full font-bold"
+      style={{ width: 26, height: 26, fontSize: '0.72rem', color: '#0a1030', background: a.color }}>
+      {who}
+    </span>
+  );
+}
+
+function TypingDots({ who }: { who: 'A' | 'B' }) {
+  const a = AGENTS[who];
+  const right = who === 'B';
+  return (
+    <div className={`flex items-end gap-2 ${right ? 'flex-row-reverse' : ''}`}>
+      <Avatar who={who} />
+      <div className="flex items-center gap-1 rounded-2xl px-3 py-2.5"
+        style={{ background: a.bg, border: `1px solid ${a.border}`, borderBottomLeftRadius: right ? 16 : 4, borderBottomRightRadius: right ? 4 : 16 }}>
+        {[0, 1, 2].map((i) => (
+          <motion.span key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: a.color, display: 'inline-block' }}
+            animate={{ opacity: [0.3, 1, 0.3], y: [0, -2, 0] }}
+            transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.15 }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CoordinationPanel() {
+  const [shown, setShown] = useState(0);
+  const [typing, setTyping] = useState<'A' | 'B' | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const timers: number[] = [];
+    const wait = (ms: number, fn: () => void) => timers.push(window.setTimeout(() => { if (!cancelled) fn(); }, ms));
+
+    const run = (i: number) => {
+      if (i >= THREAD.length) {
+        wait(3000, () => { setShown(0); setTyping(null); run(0); });
+        return;
+      }
+      const msg = THREAD[i];
+      if (msg.from === 'sys') {
+        wait(600, () => { setShown(i + 1); wait(900, () => run(i + 1)); });
+      } else {
+        setTyping(msg.from);
+        wait(1000, () => {
+          setTyping(null);
+          setShown(i + 1);
+          wait(750, () => run(i + 1));
+        });
+      }
+    };
+    run(0);
+    return () => { cancelled = true; timers.forEach(clearTimeout); };
+  }, []);
 
   return (
     <div
@@ -66,77 +121,56 @@ function CoordinationPanel() {
         background: 'linear-gradient(160deg, #0a1030 0%, #05081c 100%)',
         border: '1px solid rgba(107,143,255,0.22)',
         borderRadius: 18,
-        padding: '18px 20px 20px',
         boxShadow: '0 30px 70px rgba(0,38,164,0.28)',
-        fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace",
+        overflow: 'hidden',
       }}
     >
-      <div className="flex items-center gap-1.5 mb-4">
+      {/* title bar */}
+      <div className="flex items-center gap-1.5 px-5 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
-        <span style={{ marginLeft: 8, color: 'rgba(255,255,255,0.35)', fontSize: '0.7rem' }}>
-          cipherra · coordination layer
+        <span className="mx-auto flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem' }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399' }} />
+          cipherra · shared coordination layer
         </span>
       </div>
 
-      {/* agents */}
-      <div className="flex gap-2 mb-3">
-        {[
-          { id: 'Agent A', c: '#6b8fff' },
-          { id: 'Agent B', c: '#fbbf24' },
-        ].map((a) => (
-          <div key={a.id} className="flex items-center gap-2 px-2.5 py-1 rounded-md"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: a.c }} />
-            <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.72rem' }}>{a.id}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* shared codebase */}
-      <div className="rounded-lg mb-3 p-2.5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-        <div style={{ color: 'rgba(255,255,255,0.30)', fontSize: '0.62rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-          shared codebase
-        </div>
-        {files.map((f) => (
-          <div key={f.name} className="flex items-center justify-between py-1" style={{ fontSize: '0.74rem' }}>
-            <span style={{ color: 'rgba(255,255,255,0.60)' }}>{f.name}</span>
-            {f.owner === 'A' && <span style={{ color: '#6b8fff' }}>◆ owned by A</span>}
-            {f.owner === 'B' && <span style={{ color: '#fbbf24' }}>◆ owned by B</span>}
-            {f.owner === 'shared' && <span style={{ color: '#34d399' }}>◇ shared memory</span>}
-            {f.owner === null && <span style={{ color: 'rgba(255,255,255,0.25)' }}>unclaimed</span>}
-          </div>
-        ))}
-      </div>
-
-      {/* log */}
-      <div className="space-y-1.5" style={{ minHeight: 108 }}>
-        {LOG.slice(0, step).map((l, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -6 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.25 }}
-            className="flex items-center gap-2"
-            style={{ fontSize: '0.74rem' }}
-          >
-            <span style={{
-              color: l.color, fontWeight: 700, minWidth: 16, textAlign: 'center',
-            }}>{l.agent}</span>
-            <span style={{ color: 'rgba(255,255,255,0.60)' }}>{l.label}</span>
-            {l.target && <span style={{ color: 'rgba(255,255,255,0.85)' }}>{l.target}</span>}
-          </motion.div>
-        ))}
-        {step < LOG.length && (
-          <motion.span
-            animate={{ opacity: [1, 0.2, 1] }}
-            transition={{ duration: 0.9, repeat: Infinity }}
-            style={{ color: '#6b8fff', fontSize: '0.74rem', display: 'inline-block' }}
-          >
-            ▋
-          </motion.span>
-        )}
+      {/* chat thread (newest anchored to bottom) */}
+      <div className="flex flex-col justify-end gap-3 px-5 py-5" style={{ height: 344 }}>
+        {THREAD.slice(0, shown).map((m, i) => {
+          if (m.from === 'sys') {
+            return (
+              <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }} className="flex justify-center">
+                <span className="flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{
+                  background: 'rgba(52,211,153,0.14)', border: '1px solid rgba(52,211,153,0.35)',
+                  color: '#6ee7b7', fontSize: '0.74rem', fontWeight: 600,
+                }}>{m.text}</span>
+              </motion.div>
+            );
+          }
+          const a = AGENTS[m.from];
+          const right = m.from === 'B';
+          return (
+            <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }} className={`flex items-end gap-2 ${right ? 'flex-row-reverse' : ''}`}>
+              <Avatar who={m.from} />
+              <div className="rounded-2xl px-3.5 py-2.5" style={{
+                maxWidth: '82%', background: a.bg, border: `1px solid ${a.border}`,
+                borderBottomLeftRadius: right ? 16 : 4, borderBottomRightRadius: right ? 4 : 16,
+              }}>
+                {m.tag && (
+                  <div className="mb-1 font-semibold uppercase" style={{ color: a.color, fontSize: '0.6rem', letterSpacing: '0.08em' }}>
+                    {m.tag}
+                  </div>
+                )}
+                <div style={{ color: 'rgba(255,255,255,0.90)', fontSize: '0.82rem', lineHeight: 1.5 }}>{m.text}</div>
+              </div>
+            </motion.div>
+          );
+        })}
+        {typing && <TypingDots who={typing} />}
       </div>
     </div>
   );
