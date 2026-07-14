@@ -46,7 +46,7 @@ const Mono: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 const THREAD: Msg[] = [
   { from: 'A', tag: 'request', text: <>You own <Mono>auth.py</Mono>. Can you make <Mono>login()</Mono> accept an OAuth token?</> },
-  { from: 'B', tag: 'claim', text: <>On it. Claiming <Mono>auth.py:login()</Mono>.</> },
+  { from: 'B', tag: 'acknowledge', text: <>On it. Claiming <Mono>auth.py:login()</Mono>.</> },
   { from: 'B', tag: 'result', text: <>Done. <Mono>login(token) → Session</Mono>. Saved the new signature to shared memory.</> },
   { from: 'A', tag: 'recall', text: <>Recalled it. Wiring my caller to match the new signature.</> },
   { from: 'sys', text: <>Patches merged clean · compiles ✓</> },
@@ -137,7 +137,7 @@ function CoordinationPanel() {
       </div>
 
       {/* chat thread (newest anchored to bottom) */}
-      <div className="flex flex-col justify-end gap-3 px-5 py-5" style={{ height: 344 }}>
+      <div className="flex flex-col justify-end gap-3 px-5 py-5" style={{ height: 430 }}>
         {THREAD.slice(0, shown).map((m, i) => {
           if (m.from === 'sys') {
             return (
