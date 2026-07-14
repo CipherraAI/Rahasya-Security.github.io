@@ -263,7 +263,7 @@ export default function Layout() {
                 </div>
               </div>
               <p style={{ color: 'rgba(13,18,48,0.50)', fontSize: '0.85rem', lineHeight: 1.65 }}>
-                The coordination layer for teams of AI coding agents. Shared memory, ownership, and structured hand-offs — so agents work one codebase without colliding.
+                The coordination layer for teams of AI coding agents. Shared memory, ownership, and structured hand-offs, so agents work one codebase without colliding.
               </p>
             </div>
             <div>
