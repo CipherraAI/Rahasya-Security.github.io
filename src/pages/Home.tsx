@@ -176,6 +176,156 @@ function CoordinationPanel() {
   );
 }
 
+/* ── Shared dark-panel primitives ────────────────────────── */
+const AG: Record<string, string> = { A: '#6b8fff', B: '#fbbf24', C: '#a78bfa' };
+const monoFont: React.CSSProperties = { fontFamily: "'JetBrains Mono','Fira Code',monospace" };
+const panelStyle: React.CSSProperties = {
+  background: 'linear-gradient(160deg, #0a1030 0%, #05081c 100%)',
+  border: '1px solid rgba(107,143,255,0.22)',
+  borderRadius: 18,
+  boxShadow: '0 30px 70px rgba(0,38,164,0.28)',
+  overflow: 'hidden',
+};
+function PanelBar({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-1.5 px-5 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+      <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
+      <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
+      <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
+      <span className="mx-auto" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem' }}>{label}</span>
+    </div>
+  );
+}
+function Letter({ who, dim }: { who: string; dim?: boolean }) {
+  return (
+    <span className="flex items-center justify-center rounded-full font-bold shrink-0"
+      style={{ width: 22, height: 22, fontSize: '0.66rem', color: '#0a1030', background: AG[who], opacity: dim ? 0.3 : 1, transition: 'opacity 0.3s' }}>
+      {who}
+    </span>
+  );
+}
+
+/* ── Bidding / ownership auction ─────────────────────────── */
+function BiddingPanel() {
+  const TOTAL = 9;
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setStep((s) => (s >= TOTAL ? 0 : s + 1)), 950);
+    return () => clearInterval(id);
+  }, []);
+  const regions = [
+    { file: 'auth.py', bidsAt: 1, bidders: ['A', 'B'], owner: 'A', allocAt: 5 },
+    { file: 'api.py', bidsAt: 2, bidders: ['B', 'C'], owner: 'B', allocAt: 6 },
+    { file: 'utils.py', bidsAt: 3, bidders: ['A', 'C'], owner: 'C', allocAt: 7 },
+  ];
+  const allocating = step >= 4 && step < 8;
+  const done = step >= 8;
+  return (
+    <div style={panelStyle}>
+      <PanelBar label="orchestrator · ownership auction" />
+      <div className="px-5 py-5" style={{ minHeight: 296 }}>
+        <div className="flex items-center gap-2 mb-4" style={{ fontSize: '0.72rem' }}>
+          <motion.span animate={{ opacity: done ? 1 : [1, 0.3, 1] }} transition={{ duration: 1, repeat: done ? 0 : Infinity }}
+            style={{ width: 7, height: 7, borderRadius: '50%', background: done ? '#34d399' : '#6b8fff', display: 'inline-block' }} />
+          <span style={{ color: 'rgba(255,255,255,0.55)' }}>
+            {done ? 'all regions assigned · no overlap' : allocating ? 'orchestrator allocating…' : 'collecting bids…'}
+          </span>
+        </div>
+        <div className="space-y-2.5">
+          {regions.map((r) => {
+            const allocated = step >= r.allocAt;
+            const bidding = step >= r.bidsAt && !allocated;
+            return (
+              <div key={r.file} className="flex items-center justify-between rounded-lg px-3 py-2.5"
+                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                <span style={{ ...monoFont, color: 'rgba(255,255,255,0.80)', fontSize: '0.8rem' }}>{r.file}</span>
+                {allocated ? (
+                  <motion.span initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center gap-1.5 rounded-full px-2.5 py-1"
+                    style={{ background: `${AG[r.owner]}22`, border: `1px solid ${AG[r.owner]}55`, fontSize: '0.7rem', color: '#fff' }}>
+                    <Letter who={r.owner} /> owns ✓
+                  </motion.span>
+                ) : bidding ? (
+                  <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-1.5">
+                    {r.bidders.map((b) => <Letter key={b} who={b} />)}
+                    <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: '0.68rem' }}>bidding</span>
+                  </motion.div>
+                ) : (
+                  <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.7rem' }}>waiting</span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Shared memory reuse ─────────────────────────────────── */
+function MemoryPanel() {
+  const TOTAL = 5;
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setStep((s) => (s >= TOTAL ? 0 : s + 1)), 1100);
+    return () => clearInterval(id);
+  }, []);
+  const entries = [
+    { at: 1, by: 'A', text: 'login() → Session' },
+    { at: 2, by: 'B', text: 'JWT ttl = 900s' },
+  ];
+  const recallAt = 3;
+  const noteAt = 4;
+  return (
+    <div style={panelStyle}>
+      <PanelBar label="shared memory" />
+      <div className="px-5 py-5 flex flex-col" style={{ minHeight: 296 }}>
+        <div style={{ color: 'rgba(255,255,255,0.30)', fontSize: '0.62rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>
+          recorded insights
+        </div>
+        <div className="space-y-2.5 mb-4">
+          {entries.map((e, i) => {
+            if (step < e.at) return <div key={i} style={{ height: 42 }} />;
+            const highlight = i === 0 && step >= recallAt;
+            return (
+              <motion.div key={i} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-2.5 rounded-lg px-3 py-2.5"
+                style={{
+                  background: highlight ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${highlight ? 'rgba(52,211,153,0.40)' : 'rgba(255,255,255,0.07)'}`,
+                  transition: 'background 0.3s, border-color 0.3s',
+                }}>
+                <Letter who={e.by} />
+                <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.7rem' }}>wrote</span>
+                <span style={{ ...monoFont, color: 'rgba(255,255,255,0.85)', fontSize: '0.78rem' }}>{e.text}</span>
+                {highlight && <span className="ml-auto" style={{ color: '#6ee7b7', fontSize: '0.64rem', fontWeight: 700, letterSpacing: '0.05em' }}>REUSED</span>}
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {step >= recallAt && (
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2.5">
+            <Letter who="C" />
+            <span style={{ color: 'rgba(255,255,255,0.60)', fontSize: '0.78rem' }}>
+              recalls <span style={{ ...monoFont, color: '#cdd9ff' }}>login()</span> instead of re-deriving it
+            </span>
+          </motion.div>
+        )}
+
+        {step >= noteAt && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-auto pt-4">
+            <span className="flex items-center gap-2 rounded-full px-3 py-1.5 w-fit"
+              style={{ background: 'rgba(52,211,153,0.12)', border: '1px solid rgba(52,211,153,0.35)', color: '#6ee7b7', fontSize: '0.72rem', fontWeight: 600 }}>
+              2 insights shared · 0 re-derived
+            </span>
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ── Team ────────────────────────────────────────────────── */
 const TEAM = [
   {
@@ -439,6 +589,51 @@ export default function Home() {
               </div>
             </div>
           </FadeUp>
+        </div>
+      </section>
+
+      {/* Coordination in action */}
+      <section className="py-20 md:py-28 relative z-10" id="in-action">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <FadeUp className="text-center mb-16">
+            <Eyebrow>Coordination in action</Eyebrow>
+            <h2 className="font-bold mb-4" style={h2Style}>Watch the layer at work</h2>
+            <p className="max-w-2xl mx-auto" style={leadStyle}>
+              From the first task assignment to reusing a teammate's work, coordination happens in the open.
+            </p>
+          </FadeUp>
+
+          {/* Row 1: ownership auction */}
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-16 md:mb-24">
+            <FadeUp>
+              <Eyebrow>Ownership auction</Eyebrow>
+              <h3 className="font-bold mb-4" style={{ color: HEADING, fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)', lineHeight: 1.2 }}>
+                Agents bid, the orchestrator allocates
+              </h3>
+              <p style={leadStyle}>
+                Before any code is written, agents bid for the regions they want to work on. The orchestrator resolves the overlaps and hands each region a single owner, so no two agents ever write the same code.
+              </p>
+            </FadeUp>
+            <FadeUp delay={0.15}>
+              <BiddingPanel />
+            </FadeUp>
+          </div>
+
+          {/* Row 2: shared memory (alternate) */}
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            <FadeUp className="lg:order-2">
+              <Eyebrow>Shared memory</Eyebrow>
+              <h3 className="font-bold mb-4" style={{ color: HEADING, fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)', lineHeight: 1.2 }}>
+                Reuse work instead of redoing it
+              </h3>
+              <p style={leadStyle}>
+                When one agent derives a fact, a signature, or a gotcha, it records it once. Teammates recall it on demand instead of re-deriving, cutting the redundant exploration that slows multi-agent runs down.
+              </p>
+            </FadeUp>
+            <FadeUp delay={0.15} className="lg:order-1">
+              <MemoryPanel />
+            </FadeUp>
+          </div>
         </div>
       </section>
 
