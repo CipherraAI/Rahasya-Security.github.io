@@ -175,31 +175,30 @@ export default function Layout() {
               </li>
               <li>
                 <a
-                  href="#integrations"
-                  onClick={(e) => handleNavClick(e, '#integrations')}
+                  href="#results"
+                  onClick={(e) => handleNavClick(e, '#results')}
                   style={navLinkStyle}
                   onMouseEnter={(e) => (e.currentTarget.style.color = G)}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.65)')}
                 >
-                  Integrations
+                  Results
                 </a>
               </li>
               <li>
                 <a
-                  href="#byom"
-                  onClick={(e) => handleNavClick(e, '#byom')}
+                  href="#use-cases"
+                  onClick={(e) => handleNavClick(e, '#use-cases')}
                   style={navLinkStyle}
                   onMouseEnter={(e) => (e.currentTarget.style.color = G)}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.65)')}
                 >
-                  Models
+                  Use Cases
                 </a>
               </li>
               <li>
                 <a
-                  href="https://app.cipherra.ai"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#contact"
+                  onClick={(e) => handleNavClick(e, '#contact')}
                   className="ml-2 px-5 py-2 rounded-full text-sm font-semibold transition-all"
                   style={{
                     background: G,
@@ -215,7 +214,7 @@ export default function Layout() {
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  Try it →
+                  Get Early Access
                 </a>
               </li>
             </ul>
@@ -236,16 +235,15 @@ export default function Layout() {
         >
           <div className="max-w-7xl mx-auto px-6 py-4 space-y-3">
             <a href="#how-it-works" onClick={(e) => handleNavClick(e, '#how-it-works')} style={{ color: 'rgba(13,18,48,0.70)', display: 'block', padding: '8px 0' }}>How It Works</a>
-            <a href="#integrations" onClick={(e) => handleNavClick(e, '#integrations')} style={{ color: 'rgba(13,18,48,0.70)', display: 'block', padding: '8px 0' }}>Integrations</a>
-            <a href="#byom" onClick={(e) => handleNavClick(e, '#byom')} style={{ color: 'rgba(13,18,48,0.70)', display: 'block', padding: '8px 0' }}>Models</a>
+            <a href="#results" onClick={(e) => handleNavClick(e, '#results')} style={{ color: 'rgba(13,18,48,0.70)', display: 'block', padding: '8px 0' }}>Results</a>
+            <a href="#use-cases" onClick={(e) => handleNavClick(e, '#use-cases')} style={{ color: 'rgba(13,18,48,0.70)', display: 'block', padding: '8px 0' }}>Use Cases</a>
             <a
-              href="https://app.cipherra.ai"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#contact"
+              onClick={(e) => handleNavClick(e, '#contact')}
               className="block px-6 py-2.5 text-center rounded-full font-semibold"
               style={{ background: G, color: '#ffffff' }}
             >
-              Try it →
+              Get Early Access
             </a>
           </div>
         </div>
@@ -265,15 +263,15 @@ export default function Layout() {
                 </div>
               </div>
               <p style={{ color: 'rgba(13,18,48,0.50)', fontSize: '0.85rem', lineHeight: 1.65 }}>
-                Infrastructure for continuous evals of AI agents. Run at scale. Get actionable diagnostics.
+                The coordination layer for teams of AI coding agents. Shared memory, ownership, and structured hand-offs — so agents work one codebase without colliding.
               </p>
             </div>
             <div>
               <h4 className="font-semibold mb-4" style={{ color: 'rgba(13,18,48,0.90)' }}>Product</h4>
               <ul className="space-y-3">
                 <li><a href="#how-it-works" onClick={(e) => handleNavClick(e, '#how-it-works')} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>How It Works</a></li>
-                <li><a href="#integrations" onClick={(e) => handleNavClick(e, '#integrations')} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Integrations</a></li>
-                <li><a href="#byom" onClick={(e) => handleNavClick(e, '#byom')} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Model Support</a></li>
+                <li><a href="#results" onClick={(e) => handleNavClick(e, '#results')} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Results</a></li>
+                <li><a href="#use-cases" onClick={(e) => handleNavClick(e, '#use-cases')} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Use Cases</a></li>
                 <li><a href="#" onClick={(e) => { e.preventDefault(); showToast(); }} style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.875rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = G)} onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(13,18,48,0.55)')}>Documentation</a></li>
               </ul>
             </div>
