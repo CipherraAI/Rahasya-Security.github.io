@@ -351,8 +351,8 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: '#ffffff',
-        border: `1px solid ${hovered ? G : 'rgba(0,38,164,0.12)'}`,
+        background: 'rgba(255,255,255,0.05)',
+        border: `1px solid ${hovered ? 'rgba(107,143,255,0.55)' : 'rgba(255,255,255,0.12)'}`,
         borderRadius: 20,
         padding: '36px 32px',
         display: 'flex',
@@ -360,32 +360,32 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
         alignItems: 'center',
         textAlign: 'center',
         transition: 'all 0.25s ease',
-        boxShadow: hovered ? '0 20px 50px rgba(0,38,164,0.14)' : '0 1px 3px rgba(13,18,48,0.05)',
+        boxShadow: hovered ? '0 20px 50px rgba(0,38,164,0.35)' : '0 1px 3px rgba(0,0,0,0.20)',
         transform: hovered ? 'translateY(-6px)' : 'none',
       }}
     >
       <div style={{
         width: 112, height: 112, borderRadius: '50%', overflow: 'hidden',
-        border: `3px solid ${hovered ? G : 'rgba(0,38,164,0.18)'}`,
-        boxShadow: hovered ? '0 0 24px rgba(0,38,164,0.35)' : '0 0 12px rgba(0,38,164,0.10)',
+        border: `3px solid ${hovered ? '#8ab0ff' : 'rgba(255,255,255,0.20)'}`,
+        boxShadow: hovered ? '0 0 24px rgba(107,143,255,0.45)' : '0 0 12px rgba(107,143,255,0.15)',
         marginBottom: 20, transition: 'all 0.25s ease', flexShrink: 0,
       }}>
         <img src={photo} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-        <h3 style={{ color: HEADING, fontWeight: 800, fontSize: 20 }}>{name}</h3>
+        <h3 style={{ color: '#ffffff', fontWeight: 800, fontSize: 20 }}>{name}</h3>
         <a href={linkedin} target="_blank" rel="noopener noreferrer"
-          style={{ display: 'flex', flexShrink: 0, color: 'rgba(13,18,48,0.45)', transition: 'color 0.2s' }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#0a66c2')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(13,18,48,0.45)')}
+          style={{ display: 'flex', flexShrink: 0, color: 'rgba(255,255,255,0.50)', transition: 'color 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#8ab0ff')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.50)')}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
           </svg>
         </a>
       </div>
-      <p style={{ color: G, fontSize: 13, fontWeight: 600, marginBottom: 16, letterSpacing: '0.02em' }}>{role}</p>
-      <p style={{ color: 'rgba(13,18,48,0.55)', fontSize: 14, lineHeight: 1.7 }}>{bio}</p>
+      <p style={{ color: '#8ab0ff', fontSize: 13, fontWeight: 600, marginBottom: 16, letterSpacing: '0.02em' }}>{role}</p>
+      <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: 14, lineHeight: 1.7 }}>{bio}</p>
     </div>
   );
 }
@@ -532,13 +532,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-20 md:py-28 relative z-10" id="how-it-works">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      {/* How it works (dark band) */}
+      <section className="py-20 md:py-28 relative overflow-hidden z-10" id="how-it-works"
+        style={{ background: 'linear-gradient(160deg, #05081c 0%, #0c1233 100%)' }}>
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse 45% 45% at 12% 8%, rgba(107,143,255,0.18) 0%, transparent 60%),' +
+            'radial-gradient(ellipse 45% 45% at 90% 92%, rgba(0,38,164,0.30) 0%, transparent 60%)',
+        }} />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <FadeUp className="text-center mb-16">
-            <Eyebrow>How it works</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>A coordination layer agents share</h2>
-            <p className="max-w-2xl mx-auto" style={leadStyle}>
+            <Eyebrow light>How it works</Eyebrow>
+            <h2 className="font-bold mb-4" style={{ color: '#ffffff', fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 }}>A coordination layer agents share</h2>
+            <p className="max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontSize: '1.05rem' }}>
               Cipherra borrows the model of cache coherence, how CPU cores share memory without corrupting it, and applies it to agents sharing a codebase. It's model-agnostic and drops in as a shared service the agents talk to.
             </p>
           </FadeUp>
@@ -550,10 +557,11 @@ export default function Home() {
               { icon: ICONS.merge, title: 'New-symbol coordination', body: 'Catches the case where two agents independently add the same new function or symbol (a clean git merge that fails to compile) and routes them to reuse one definition.' },
             ].map((step, i) => (
               <FadeUp key={step.title} delay={i * 0.08}>
-                <div className={`${cardClass} p-8 h-full`}>
+                <div className="group rounded-2xl p-8 h-full border border-white/10 transition-all duration-300 hover:-translate-y-1.5 hover:border-[rgba(107,143,255,0.45)] hover:shadow-[0_20px_50px_rgba(0,38,164,0.35)]"
+                  style={{ background: 'rgba(255,255,255,0.05)' }}>
                   <IconChip><Svg>{step.icon}</Svg></IconChip>
-                  <h3 className="text-xl font-bold mb-3" style={{ color: HEADING }}>{step.title}</h3>
-                  <p style={{ color: BODY, lineHeight: 1.7, fontSize: '0.95rem' }}>{step.body}</p>
+                  <h3 className="text-xl font-bold mb-3" style={{ color: '#ffffff' }}>{step.title}</h3>
+                  <p style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontSize: '0.95rem' }}>{step.body}</p>
                 </div>
               </FadeUp>
             ))}
@@ -562,10 +570,10 @@ export default function Home() {
           {/* Structured hand-offs pipeline */}
           <FadeUp delay={0.1}>
             <div className="max-w-5xl mx-auto rounded-2xl p-8 md:p-10"
-              style={{ background: 'rgba(0,38,164,0.04)', border: '1px solid rgba(0,38,164,0.14)' }}>
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)' }}>
               <div className="text-center mb-8">
-                <h3 className="text-xl font-bold mb-2" style={{ color: HEADING }}>Structured hand-offs</h3>
-                <p className="max-w-xl mx-auto" style={{ color: BODY, fontSize: '0.95rem', lineHeight: 1.65 }}>
+                <h3 className="text-xl font-bold mb-2" style={{ color: '#ffffff' }}>Structured hand-offs</h3>
+                <p className="max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.95rem', lineHeight: 1.65 }}>
                   Each role's findings pass automatically to the next through the shared layer.
                 </p>
               </div>
@@ -577,11 +585,11 @@ export default function Home() {
                         style={{ background: ACCENT_GRAD, boxShadow: '0 10px 24px rgba(0,38,164,0.30)' }}>
                         <Svg>{s.icon}</Svg>
                       </div>
-                      <span className="font-semibold text-sm" style={{ color: HEADING }}>{s.label}</span>
+                      <span className="font-semibold text-sm" style={{ color: '#ffffff' }}>{s.label}</span>
                     </div>
                     {i < PIPELINE.length - 1 && (
                       <svg className="rotate-90 sm:rotate-0 mx-1" width="34" height="18" viewBox="0 0 34 18" fill="none">
-                        <path d="M2 9h28m0 0-6-6m6 6-6 6" stroke={G} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.55" />
+                        <path d="M2 9h28m0 0-6-6m6 6-6 6" stroke="#8ab0ff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
                       </svg>
                     )}
                   </div>
@@ -724,13 +732,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Team */}
-      <section className="py-20 md:py-28 relative z-10" id="team">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      {/* Team (dark band) */}
+      <section className="py-20 md:py-28 relative overflow-hidden z-10" id="team"
+        style={{ background: 'linear-gradient(160deg, #05081c 0%, #0c1233 100%)' }}>
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse 45% 45% at 88% 8%, rgba(107,143,255,0.16) 0%, transparent 60%),' +
+            'radial-gradient(ellipse 45% 45% at 8% 92%, rgba(0,38,164,0.28) 0%, transparent 60%)',
+        }} />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <FadeUp className="text-center mb-14">
-            <Eyebrow>Founding Team</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>Built by people who've done this before</h2>
-            <p className="max-w-xl mx-auto" style={leadStyle}>
+            <Eyebrow light>Founding Team</Eyebrow>
+            <h2 className="font-bold mb-4" style={{ color: '#ffffff', fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 }}>Built by people who've done this before</h2>
+            <p className="max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontSize: '1.05rem' }}>
               We've worked inside the systems we're replacing, at Qualcomm, Microsoft, and IIT Madras.
             </p>
           </FadeUp>
