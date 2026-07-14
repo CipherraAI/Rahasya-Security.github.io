@@ -6,15 +6,143 @@ const G = '#0026a4';
 const G_LIGHT = '#0026a4';
 const HEADING = '#0d1230';
 const BODY = 'rgba(13,18,48,0.60)';
+const ACCENT_GRAD = 'linear-gradient(135deg, #0026a4 0%, #3b6fff 100%)';
 
 const cardClass =
-  'bg-white rounded-2xl border border-[rgba(0,38,164,0.10)] shadow-[0_1px_3px_rgba(13,18,48,0.04)] ' +
-  'transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(0,38,164,0.35)] ' +
-  'hover:shadow-[0_16px_44px_rgba(0,38,164,0.10)]';
+  'group bg-white rounded-2xl border border-[rgba(0,38,164,0.10)] shadow-[0_1px_3px_rgba(13,18,48,0.05)] ' +
+  'transition-all duration-300 hover:-translate-y-1.5 hover:border-[rgba(0,38,164,0.35)] ' +
+  'hover:shadow-[0_20px_50px_rgba(0,38,164,0.14)]';
 
-const iconChipClass =
-  'w-11 h-11 rounded-xl flex items-center justify-center mb-5 text-xl bg-cipherra-blue-light';
+/* ── SVG icon system ─────────────────────────────────────── */
+function Svg({ children }: { children: React.ReactNode }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+      {children}
+    </svg>
+  );
+}
+const ICONS = {
+  duplicate: <><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></>,
+  collision: <><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z" /></>,
+  warn: <><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" /><path d="M12 9v4M12 17h.01" /></>,
+  plug: <><path d="M12 22v-5M9 8V2M15 8V2M6 8h12v2a6 6 0 0 1-12 0V8Z" /></>,
+  memory: <><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5v14a9 3 0 0 0 18 0V5" /><path d="M3 12a9 3 0 0 0 18 0" /></>,
+  lock: <><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>,
+  merge: <><circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M6 9v3a9 9 0 0 0 9 9" /></>,
+  platform: <><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></>,
+  cube: <><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5M12 22V12" /></>,
+  route: <><circle cx="6" cy="19" r="3" /><circle cx="18" cy="5" r="3" /><path d="M12 19h4.5a2.5 2.5 0 0 0 0-5h-8a2.5 2.5 0 0 1 0-5H9" /></>,
+  plan: <><path d="M9 11H3v10h6V11ZM21 3h-6v18h6V3ZM15 7H9v14h6V7Z" /></>,
+  code: <><path d="m8 6-6 6 6 6M16 6l6 6-6 6" /></>,
+  review: <><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>,
+  fix: <><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2 2.6-2.6Z" /></>,
+};
 
+/* ── Hero coordination animation ─────────────────────────── */
+const LOG = [
+  { agent: 'A', color: '#6b8fff', label: 'claims', target: 'auth.py:login()', ok: true },
+  { agent: 'B', color: '#fbbf24', label: 'asks A before editing', target: 'auth.py', ok: true },
+  { agent: 'B', color: '#6b8fff', label: 'recalls signature', target: 'shared memory', ok: true },
+  { agent: '✓', color: '#34d399', label: 'merge clean, compiles', target: '', ok: true },
+];
+
+function CoordinationPanel() {
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setStep((s) => (s >= LOG.length ? 0 : s + 1)), 1150);
+    return () => clearInterval(id);
+  }, []);
+
+  const files = [
+    { name: 'auth.py', owner: step >= 1 ? 'A' : null },
+    { name: 'api.py', owner: 'B' },
+    { name: 'utils.py', owner: 'shared' },
+  ];
+
+  return (
+    <div
+      style={{
+        background: 'linear-gradient(160deg, #0a1030 0%, #05081c 100%)',
+        border: '1px solid rgba(107,143,255,0.22)',
+        borderRadius: 18,
+        padding: '18px 20px 20px',
+        boxShadow: '0 30px 70px rgba(0,38,164,0.28)',
+        fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace",
+      }}
+    >
+      <div className="flex items-center gap-1.5 mb-4">
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
+        <span style={{ marginLeft: 8, color: 'rgba(255,255,255,0.35)', fontSize: '0.7rem' }}>
+          cipherra · coordination layer
+        </span>
+      </div>
+
+      {/* agents */}
+      <div className="flex gap-2 mb-3">
+        {[
+          { id: 'Agent A', c: '#6b8fff' },
+          { id: 'Agent B', c: '#fbbf24' },
+        ].map((a) => (
+          <div key={a.id} className="flex items-center gap-2 px-2.5 py-1 rounded-md"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: a.c }} />
+            <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.72rem' }}>{a.id}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* shared codebase */}
+      <div className="rounded-lg mb-3 p-2.5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div style={{ color: 'rgba(255,255,255,0.30)', fontSize: '0.62rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+          shared codebase
+        </div>
+        {files.map((f) => (
+          <div key={f.name} className="flex items-center justify-between py-1" style={{ fontSize: '0.74rem' }}>
+            <span style={{ color: 'rgba(255,255,255,0.60)' }}>{f.name}</span>
+            {f.owner === 'A' && <span style={{ color: '#6b8fff' }}>◆ owned by A</span>}
+            {f.owner === 'B' && <span style={{ color: '#fbbf24' }}>◆ owned by B</span>}
+            {f.owner === 'shared' && <span style={{ color: '#34d399' }}>◇ shared memory</span>}
+            {f.owner === null && <span style={{ color: 'rgba(255,255,255,0.25)' }}>unclaimed</span>}
+          </div>
+        ))}
+      </div>
+
+      {/* log */}
+      <div className="space-y-1.5" style={{ minHeight: 108 }}>
+        {LOG.slice(0, step).map((l, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -6 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.25 }}
+            className="flex items-center gap-2"
+            style={{ fontSize: '0.74rem' }}
+          >
+            <span style={{
+              color: l.color, fontWeight: 700, minWidth: 16, textAlign: 'center',
+            }}>{l.agent}</span>
+            <span style={{ color: 'rgba(255,255,255,0.60)' }}>{l.label}</span>
+            {l.target && <span style={{ color: 'rgba(255,255,255,0.85)' }}>{l.target}</span>}
+          </motion.div>
+        ))}
+        {step < LOG.length && (
+          <motion.span
+            animate={{ opacity: [1, 0.2, 1] }}
+            transition={{ duration: 0.9, repeat: Infinity }}
+            style={{ color: '#6b8fff', fontSize: '0.74rem', display: 'inline-block' }}
+          >
+            ▋
+          </motion.span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── Team ────────────────────────────────────────────────── */
 const TEAM = [
   {
     name: 'Dhruv Chopra',
@@ -48,19 +176,15 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
         alignItems: 'center',
         textAlign: 'center',
         transition: 'all 0.25s ease',
-        boxShadow: hovered ? '0 16px 44px rgba(0,38,164,0.12)' : '0 1px 3px rgba(13,18,48,0.04)',
+        boxShadow: hovered ? '0 20px 50px rgba(0,38,164,0.14)' : '0 1px 3px rgba(13,18,48,0.05)',
         transform: hovered ? 'translateY(-6px)' : 'none',
       }}
     >
       <div style={{
-        width: 112, height: 112,
-        borderRadius: '50%',
-        overflow: 'hidden',
+        width: 112, height: 112, borderRadius: '50%', overflow: 'hidden',
         border: `3px solid ${hovered ? G : 'rgba(0,38,164,0.18)'}`,
         boxShadow: hovered ? '0 0 24px rgba(0,38,164,0.35)' : '0 0 12px rgba(0,38,164,0.10)',
-        marginBottom: 20,
-        transition: 'all 0.25s ease',
-        flexShrink: 0,
+        marginBottom: 20, transition: 'all 0.25s ease', flexShrink: 0,
       }}>
         <img src={photo} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
       </div>
@@ -72,7 +196,7 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
           onMouseLeave={e => (e.currentTarget.style.color = 'rgba(13,18,48,0.45)')}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
           </svg>
         </a>
       </div>
@@ -82,64 +206,60 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
   );
 }
 
+/* ── Motion + layout helpers ─────────────────────────────── */
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
   visible: (delay = 0) => ({
-    opacity: 1,
-    y: 0,
+    opacity: 1, y: 0,
     transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as any, delay },
   }),
 };
-
-function FadeUp({
-  children,
-  delay = 0,
-  style,
-  className,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-  style?: React.CSSProperties;
-  className?: string;
+function FadeUp({ children, delay = 0, style, className }: {
+  children: React.ReactNode; delay?: number; style?: React.CSSProperties; className?: string;
 }) {
   return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-50px' }}
-      custom={delay}
-      variants={fadeUp}
-      style={style}
-      className={className}
-    >
+    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }}
+      custom={delay} variants={fadeUp} style={style} className={className}>
       {children}
     </motion.div>
   );
 }
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
+function Eyebrow({ children, light }: { children: React.ReactNode; light?: boolean }) {
   return (
-    <p className="font-semibold uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>
+    <p className="font-semibold uppercase tracking-widest text-xs mb-4"
+      style={{ color: light ? '#8ab0ff' : G_LIGHT }}>
       {children}
     </p>
+  );
+}
+function IconChip({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 text-white transition-transform duration-300 group-hover:scale-110"
+      style={{ background: ACCENT_GRAD, boxShadow: '0 8px 20px rgba(0,38,164,0.30)' }}>
+      {children}
+    </div>
   );
 }
 
 const h2Style: React.CSSProperties = { color: HEADING, fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 };
 const leadStyle: React.CSSProperties = { color: BODY, lineHeight: 1.7, fontSize: '1.05rem' };
+const PIPELINE = [
+  { icon: ICONS.plan, label: 'Planner' },
+  { icon: ICONS.code, label: 'Coders' },
+  { icon: ICONS.review, label: 'Reviewer' },
+  { icon: ICONS.fix, label: 'Fixer' },
+];
 
 export default function Home() {
   const location = useLocation();
 
-  // When navigating with a hash (e.g. /#how-it-works), scroll to that section
   useEffect(() => {
     if (location.hash) {
       const el = document.querySelector(location.hash);
       if (el) {
         const headerOffset = 80;
-        const elementPosition = el.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        const top = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top, behavior: 'smooth' });
       }
     }
   }, [location.pathname, location.hash]);
@@ -147,48 +267,45 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative pt-40 pb-24 md:pt-48 md:pb-32 overflow-hidden z-10" id="hero">
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,38,164,0.07) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
-        />
+      <section className="relative pt-36 pb-20 md:pt-44 md:pb-28 overflow-hidden z-10" id="hero">
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse 70% 55% at 80% 0%, rgba(59,111,255,0.14) 0%, transparent 60%),' +
+            'radial-gradient(ellipse 60% 50% at 10% 20%, rgba(0,38,164,0.08) 0%, transparent 55%)',
+        }} />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="grid lg:grid-cols-2 gap-14 items-center">
             <FadeUp>
-              <div
-                className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full text-sm font-medium"
-                style={{ background: 'rgba(0,38,164,0.07)', color: G, border: '1px solid rgba(0,38,164,0.15)' }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: G }}></span>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-7 rounded-full text-sm font-medium"
+                style={{ background: 'rgba(0,38,164,0.07)', color: G, border: '1px solid rgba(0,38,164,0.15)' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: G }} />
                 Coordination layer for multi-agent coding
               </div>
-              <h1 className="font-extrabold mb-6 tracking-tight" style={{ color: HEADING, fontSize: 'clamp(2.6rem, 6vw, 4.5rem)', lineHeight: 1.05 }}>
-                Multiple coding agents. One codebase.<br />
+              <h1 className="font-extrabold mb-6 tracking-tight"
+                style={{ color: HEADING, fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.06 }}>
+                Multiple coding agents. One codebase.{' '}
                 <span className="gradient-text">Zero merge chaos.</span>
               </h1>
-              <p className="mx-auto mb-10" style={{ color: BODY, fontSize: '1.2rem', lineHeight: 1.7, maxWidth: '640px' }}>
+              <p className="mb-9" style={{ color: BODY, fontSize: '1.15rem', lineHeight: 1.7, maxWidth: 560 }}>
                 When several AI agents edit the same repository in parallel, they duplicate work, overwrite each other, and produce patches that don't merge. Cipherra gives them a shared coordination layer: ownership, shared memory, and structured hand-offs, so a team of agents behaves like a coordinated engineering team instead of colliding individuals.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a
-                  href="#contact"
+              <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+                <a href="#contact"
                   className="px-7 py-3.5 rounded-full text-white font-semibold text-base transition-all hover:-translate-y-0.5"
-                  style={{ background: G, boxShadow: '0 6px 20px rgba(0,38,164,0.25)' }}
-                >
+                  style={{ background: ACCENT_GRAD, boxShadow: '0 8px 24px rgba(0,38,164,0.30)' }}>
                   Get Early Access
                 </a>
-                <a
-                  href="#how-it-works"
+                <a href="#how-it-works"
                   className="px-7 py-3.5 rounded-full font-semibold text-base transition-all"
-                  style={{ background: '#ffffff', color: G, border: '1px solid rgba(0,38,164,0.25)' }}
-                >
+                  style={{ background: '#ffffff', color: G, border: '1px solid rgba(0,38,164,0.25)' }}>
                   See How It Works
                 </a>
               </div>
+            </FadeUp>
+
+            <FadeUp delay={0.15}>
+              <CoordinationPanel />
             </FadeUp>
           </div>
         </div>
@@ -199,9 +316,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-14">
             <Eyebrow>The problem</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>
-              More agents shouldn't mean more chaos
-            </h2>
+            <h2 className="font-bold mb-4" style={h2Style}>More agents shouldn't mean more chaos</h2>
             <p className="max-w-2xl mx-auto" style={leadStyle}>
               Frontier coding runs multiple agents in parallel, but they have no way to coordinate on shared code. Adding more agents often makes runs worse, not better. Coordination, not raw model power, is the bottleneck.
             </p>
@@ -209,18 +324,23 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
             {[
-              { icon: '🔁', title: 'Duplicated effort', body: 'Agents re-derive the same facts and re-read the same files, over and over.' },
-              { icon: '💥', title: 'Collisions', body: 'Two agents edit the same function; their patches conflict at merge time.' },
-              { icon: '🧩', title: 'Silent build breaks', body: 'Each adds the same new helper; the merge is "clean" but doesn\'t compile.' },
-              { icon: '🔌', title: 'Interface mismatches', body: 'One agent expects a signature the other never delivered.' },
+              { icon: ICONS.duplicate, title: 'Duplicated effort', body: 'Agents re-derive the same facts and re-read the same files, over and over.' },
+              { icon: ICONS.collision, title: 'Collisions', body: 'Two agents edit the same function; their patches conflict at merge time.' },
+              { icon: ICONS.warn, title: 'Silent build breaks', body: 'Each adds the same new helper; the merge is "clean" but doesn\'t compile.' },
+              { icon: ICONS.plug, title: 'Interface mismatches', body: 'One agent expects a signature the other never delivered.' },
             ].map((p, i) => (
               <FadeUp key={p.title} delay={i * 0.08}>
-                <div className={`${cardClass} p-6`}>
-                  <div className="flex items-center gap-3 mb-2.5">
-                    <span className={iconChipClass} style={{ marginBottom: 0, width: 38, height: 38 }}>{p.icon}</span>
-                    <h4 className="text-lg font-bold" style={{ color: HEADING }}>{p.title}</h4>
+                <div className={`${cardClass} p-6 h-full`} style={{ color: G }}>
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 text-white"
+                      style={{ background: ACCENT_GRAD, boxShadow: '0 6px 16px rgba(0,38,164,0.28)' }}>
+                      <Svg>{p.icon}</Svg>
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold mb-1.5" style={{ color: HEADING }}>{p.title}</h4>
+                      <p style={{ color: BODY, fontSize: '0.92rem', lineHeight: 1.65 }}>{p.body}</p>
+                    </div>
                   </div>
-                  <p style={{ color: BODY, fontSize: '0.92rem', lineHeight: 1.65 }}>{p.body}</p>
                 </div>
               </FadeUp>
             ))}
@@ -233,58 +353,77 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-16">
             <Eyebrow>How it works</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>
-              A coordination layer agents share
-            </h2>
+            <h2 className="font-bold mb-4" style={h2Style}>A coordination layer agents share</h2>
             <p className="max-w-2xl mx-auto" style={leadStyle}>
               Cipherra borrows the model of cache coherence, how CPU cores share memory without corrupting it, and applies it to agents sharing a codebase. It's model-agnostic and drops in as a shared service the agents talk to.
             </p>
           </FadeUp>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
             {[
-              {
-                icon: '🧠',
-                title: 'Shared memory',
-                body: 'An agent records a derived insight (a signature, a contract, a gotcha) and teammates recall exactly what they need instead of re-deriving it. Stale premises are invalidated automatically.',
-              },
-              {
-                icon: '🔑',
-                title: 'Ownership',
-                body: 'An agent claims a code region before editing it. If it\'s unowned, it becomes the sole writer; if a teammate owns it, the agent asks instead of editing, so patches merge cleanly by construction. Overlap is detected by symbol containment, so genuinely separate work stays parallel.',
-              },
-              {
-                icon: '✨',
-                title: 'New-symbol coordination',
-                body: 'Catches the case where two agents independently add the same new function or symbol (a clean git merge that fails to compile) and routes them to reuse one definition.',
-              },
-              {
-                icon: '🤝',
-                title: 'Structured hand-offs',
-                body: 'Planner → coders → reviewer → fixer, with each role\'s findings automatically passed to the next through the shared layer.',
-              },
+              { icon: ICONS.memory, title: 'Shared memory', body: 'An agent records a derived insight (a signature, a contract, a gotcha) and teammates recall exactly what they need instead of re-deriving it. Stale premises are invalidated automatically.' },
+              { icon: ICONS.lock, title: 'Ownership', body: 'An agent claims a code region before editing it. If it\'s unowned, it becomes the sole writer; if a teammate owns it, the agent asks instead of editing, so patches merge cleanly by construction.' },
+              { icon: ICONS.merge, title: 'New-symbol coordination', body: 'Catches the case where two agents independently add the same new function or symbol (a clean git merge that fails to compile) and routes them to reuse one definition.' },
             ].map((step, i) => (
               <FadeUp key={step.title} delay={i * 0.08}>
                 <div className={`${cardClass} p-8 h-full`}>
-                  <div className={iconChipClass}>{step.icon}</div>
+                  <IconChip><Svg>{step.icon}</Svg></IconChip>
                   <h3 className="text-xl font-bold mb-3" style={{ color: HEADING }}>{step.title}</h3>
                   <p style={{ color: BODY, lineHeight: 1.7, fontSize: '0.95rem' }}>{step.body}</p>
                 </div>
               </FadeUp>
             ))}
           </div>
+
+          {/* Structured hand-offs pipeline */}
+          <FadeUp delay={0.1}>
+            <div className="max-w-5xl mx-auto rounded-2xl p-8 md:p-10"
+              style={{ background: 'rgba(0,38,164,0.04)', border: '1px solid rgba(0,38,164,0.14)' }}>
+              <div className="text-center mb-8">
+                <h3 className="text-xl font-bold mb-2" style={{ color: HEADING }}>Structured hand-offs</h3>
+                <p className="max-w-xl mx-auto" style={{ color: BODY, fontSize: '0.95rem', lineHeight: 1.65 }}>
+                  Each role's findings pass automatically to the next through the shared layer.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-1">
+                {PIPELINE.map((s, i) => (
+                  <div key={s.label} className="flex items-center gap-3 sm:gap-1">
+                    <div className="flex flex-col items-center gap-2 px-2">
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white"
+                        style={{ background: ACCENT_GRAD, boxShadow: '0 10px 24px rgba(0,38,164,0.30)' }}>
+                        <Svg>{s.icon}</Svg>
+                      </div>
+                      <span className="font-semibold text-sm" style={{ color: HEADING }}>{s.label}</span>
+                    </div>
+                    {i < PIPELINE.length - 1 && (
+                      <svg className="rotate-90 sm:rotate-0 mx-1" width="34" height="18" viewBox="0 0 34 18" fill="none">
+                        <path d="M2 9h28m0 0-6-6m6 6-6 6" stroke={G} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.55" />
+                      </svg>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeUp>
         </div>
       </section>
 
-      {/* Results */}
-      <section className="py-20 md:py-28 relative z-10" id="results">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      {/* Results (dark band) */}
+      <section className="py-20 md:py-28 relative overflow-hidden z-10" id="results"
+        style={{ background: 'linear-gradient(150deg, #030b2e 0%, #0026a4 100%)' }}>
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse 50% 50% at 85% 15%, rgba(107,143,255,0.30) 0%, transparent 60%),' +
+            'radial-gradient(ellipse 45% 45% at 10% 90%, rgba(52,211,153,0.14) 0%, transparent 60%)',
+        }} />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <FadeUp className="text-center mb-14">
-            <Eyebrow>Results</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>
+            <Eyebrow light>Results</Eyebrow>
+            <h2 className="font-bold mb-4" style={{ color: '#ffffff', fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 }}>
               Coordination, not model size, closes the gap
             </h2>
-            <p className="max-w-2xl mx-auto" style={leadStyle}>
+            <p className="max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontSize: '1.05rem' }}>
               Evaluated on CooperBench, a multi-agent software-engineering benchmark where two agents implement different features in the same codebase that conflict without coordination.
             </p>
           </FadeUp>
@@ -296,24 +435,30 @@ export default function Home() {
               { stat: '50% fewer', label: 'Steps to solution', body: 'Reaches the same results with half the redundant exploration.' },
             ].map((s, i) => (
               <FadeUp key={s.label} delay={i * 0.1}>
-                <div className={`${cardClass} p-8 text-center h-full`}>
-                  <div className="text-4xl md:text-[2.6rem] font-extrabold gradient-text mb-2 leading-none">{s.stat}</div>
-                  <div className="font-semibold mb-1.5" style={{ color: HEADING }}>{s.label}</div>
-                  <p style={{ color: BODY, fontSize: '0.9rem', lineHeight: 1.6 }}>{s.body}</p>
+                <div className="rounded-2xl p-8 text-center h-full transition-all duration-300 hover:-translate-y-1.5"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)', backdropFilter: 'blur(6px)' }}>
+                  <div className="font-extrabold mb-2 leading-none"
+                    style={{
+                      fontSize: 'clamp(2rem, 4vw, 2.7rem)',
+                      background: 'linear-gradient(135deg, #ffffff 0%, #8ab0ff 100%)',
+                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                    }}>
+                    {s.stat}
+                  </div>
+                  <div className="font-semibold mb-1.5" style={{ color: '#ffffff' }}>{s.label}</div>
+                  <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: '0.9rem', lineHeight: 1.6 }}>{s.body}</p>
                 </div>
               </FadeUp>
             ))}
           </div>
 
           <FadeUp delay={0.1}>
-            <div
-              className="max-w-3xl mx-auto rounded-2xl p-8 text-center"
-              style={{ background: 'rgba(0,38,164,0.05)', border: '1px solid rgba(0,38,164,0.18)' }}
-            >
-              <p className="font-bold mb-2" style={{ color: HEADING, fontSize: 'clamp(1.15rem, 2.2vw, 1.45rem)', lineHeight: 1.4 }}>
+            <div className="max-w-3xl mx-auto rounded-2xl p-8 text-center"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(107,143,255,0.30)' }}>
+              <p className="font-bold mb-2" style={{ color: '#ffffff', fontSize: 'clamp(1.15rem, 2.2vw, 1.5rem)', lineHeight: 1.4 }}>
                 Flash-class models, frontier-class results.
               </p>
-              <p style={{ color: BODY, lineHeight: 1.7, fontSize: '1rem' }}>
+              <p style={{ color: 'rgba(255,255,255,0.68)', lineHeight: 1.7, fontSize: '1rem' }}>
                 With strong coordination, teams of fast flash models reach results on par with frontier models. Coordination, not raw scale, closes the gap. We also built a generic plan → code → review → fix pipeline that officially resolves real open-source bug-fix tasks a single agent fails to complete.
               </p>
             </div>
@@ -326,9 +471,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-16">
             <Eyebrow>Use cases</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>
-              Who it's for
-            </h2>
+            <h2 className="font-bold mb-4" style={h2Style}>Who it's for</h2>
             <p className="max-w-2xl mx-auto" style={leadStyle}>
               A coordination primitive for anyone running more than one agent on a codebase.
             </p>
@@ -336,13 +479,13 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {[
-              { icon: '🛠️', title: 'Multi-agent coding platforms & IDE agents', body: 'Running several agents on one repo without them stepping on each other.' },
-              { icon: '🧱', title: 'Agent framework builders', body: 'Who need a coordination primitive (ownership plus shared memory) rather than reinventing it.' },
-              { icon: '🧭', title: 'Long-horizon SWE tasks', body: 'Decomposed across specialized agents: planner, coders, reviewer, and fixer.' },
+              { icon: ICONS.platform, title: 'Multi-agent coding platforms & IDE agents', body: 'Running several agents on one repo without them stepping on each other.' },
+              { icon: ICONS.cube, title: 'Agent framework builders', body: 'Who need a coordination primitive (ownership plus shared memory) rather than reinventing it.' },
+              { icon: ICONS.route, title: 'Long-horizon SWE tasks', body: 'Decomposed across specialized agents: planner, coders, reviewer, and fixer.' },
             ].map((u, i) => (
               <FadeUp key={u.title} delay={i * 0.1}>
                 <div className={`${cardClass} p-8 h-full`}>
-                  <div className={iconChipClass}>{u.icon}</div>
+                  <IconChip><Svg>{u.icon}</Svg></IconChip>
                   <h4 className="text-lg font-bold mb-3" style={{ color: HEADING }}>{u.title}</h4>
                   <p style={{ color: BODY, lineHeight: 1.7, fontSize: '0.95rem' }}>{u.body}</p>
                 </div>
@@ -357,14 +500,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-14">
             <Eyebrow>Founding Team</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>
-              Built by people who've done this before
-            </h2>
+            <h2 className="font-bold mb-4" style={h2Style}>Built by people who've done this before</h2>
             <p className="max-w-xl mx-auto" style={leadStyle}>
               We've worked inside the systems we're replacing, at Qualcomm, Microsoft, and IIT Madras.
             </p>
           </FadeUp>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8" style={{ maxWidth: 760, margin: '0 auto' }}>
             {TEAM.map((member, i) => (
               <FadeUp key={member.name} delay={i * 0.12}>
@@ -377,41 +517,27 @@ export default function Home() {
 
       {/* CTA / Contact */}
       <section className="py-24 md:py-32 relative overflow-hidden z-10" id="contact">
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'radial-gradient(ellipse at center, rgba(0,38,164,0.07) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
-        />
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse at center, rgba(0,38,164,0.09) 0%, transparent 70%)',
+        }} />
         <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center relative z-10">
           <FadeUp>
             <h2 className="font-bold mb-4" style={{ color: HEADING, fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-              Give your agents a way to{' '}
-              <span style={{ color: G }}>work together.</span>
+              Give your agents a way to <span style={{ color: G }}>work together.</span>
             </h2>
             <p className="mb-10 max-w-xl mx-auto" style={leadStyle}>
               We're working with early partners running multiple agents on real codebases. Get early access and help shape the coordination layer.
             </p>
           </FadeUp>
-
           <FadeUp delay={0.1}>
-            <div
-              style={{
-                background: '#ffffff',
-                border: '1px solid rgba(0,38,164,0.18)',
-                borderRadius: 16,
-                padding: '8px 24px 16px',
-                backdropFilter: 'blur(12px)',
-              }}
-            >
+            <div style={{
+              background: '#ffffff', border: '1px solid rgba(0,38,164,0.18)', borderRadius: 16,
+              padding: '8px 24px 16px', boxShadow: '0 20px 50px rgba(0,38,164,0.10)',
+            }}>
               <iframe
                 src="https://tally.so/embed/ja0baa?alignLeft=1&hideTitle=1&transparentBackground=1"
-                loading="lazy"
-                width="100%"
-                frameBorder="0"
-                title="Cipherra Early Access"
+                loading="lazy" width="100%" frameBorder="0" title="Cipherra Early Access"
                 style={{ display: 'block', height: 168, marginTop: 10 }}
               />
             </div>
