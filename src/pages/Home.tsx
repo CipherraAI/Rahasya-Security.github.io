@@ -461,11 +461,6 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-14 items-center">
             <FadeUp>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-7 rounded-full text-sm font-medium"
-                style={{ background: 'rgba(0,38,164,0.07)', color: G, border: '1px solid rgba(0,38,164,0.15)' }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: G }} />
-                Coordination layer for multi-agent coding
-              </div>
               <h1 className="font-extrabold mb-6 tracking-tight"
                 style={{ color: HEADING, fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.06 }}>
                 Multiple coding agents. One codebase.{' '}
