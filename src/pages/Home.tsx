@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
+
+declare global {
+  interface Window {
+    gsap: any;
+    ScrollTrigger: any;
+  }
+}
 
 const G = '#0026a4';
 const G_LIGHT = '#0026a4';
-const G_DIM = 'rgba(0,38,164,0.12)';
-const G_BORDER = 'rgba(0,38,164,0.22)';
-const G_GLOW = '0 4px 16px rgba(0,38,164,0.18)';
-const CARD: React.CSSProperties = {
-  background: '#ffffff',
-  border: '1px solid rgba(0,38,164,0.18)',
-  borderRadius: '16px',
-};
 
 const TEAM = [
   {
@@ -45,7 +45,7 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
         alignItems: 'center',
         textAlign: 'center',
         transition: 'all 0.25s ease',
-        boxShadow: hovered ? '0 0 32px rgba(0,38,164,0.22), 0 12px 40px rgba(0,0,0,0.5)' : '0 4px 20px rgba(0,0,0,0.3)',
+        boxShadow: hovered ? '0 0 32px rgba(0,38,164,0.22), 0 12px 40px rgba(0,0,0,0.12)' : '0 4px 20px rgba(0,0,0,0.08)',
         transform: hovered ? 'translateY(-6px)' : 'none',
       }}
     >
@@ -114,697 +114,284 @@ function FadeUp({
   );
 }
 
-const STAT_ITEMS = [
-  { icon: '✓', label: 'runs completed', value: '30', color: '#6b8fff' },
-  { icon: '✗', label: 'failures detected', value: '7', color: '#f87171' },
-  { icon: '→', label: 'classified as learnable', value: '5', color: '#fbbf24' },
-  { icon: '⚡', label: 'training job triggered', value: null as null, color: '#6b8fff' },
-];
-
-function StatsPanel() {
-  const [visible, setVisible] = useState(0);
-  const [showResult, setShowResult] = useState(false);
-
-  useEffect(() => {
-    if (visible < STAT_ITEMS.length) {
-      const t = setTimeout(() => setVisible((v) => v + 1), 620);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => setShowResult(true), 900);
-    return () => clearTimeout(t);
-  }, [visible]);
-
-  return (
-    <div
-      style={{
-        background: 'rgba(5, 8, 15, 0.95)',
-        border: '1px solid rgba(0,38,164,0.22)',
-        borderRadius: '12px',
-        padding: '20px 24px',
-        fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
-        fontSize: '0.82rem',
-        lineHeight: 1.7,
-        minHeight: '320px',
-      }}
-    >
-      <div className="flex items-center gap-1.5 mb-5">
-        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
-        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
-        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
-        <span style={{ marginLeft: 8, color: 'rgba(255,255,255,0.3)', fontSize: '0.72rem' }}>eval cycle #4 · qwen-2.5-7b-instruct</span>
-      </div>
-
-      <div className="space-y-2 mb-5">
-        {STAT_ITEMS.slice(0, visible).map((item, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.25 }}
-            className="flex items-center gap-3"
-          >
-            <span style={{ color: item.color, width: 14, flexShrink: 0, textAlign: 'center' as const }}>{item.icon}</span>
-            {item.value && (
-              <span style={{ color: '#fff', fontWeight: 700, minWidth: 24 }}>{item.value}</span>
-            )}
-            <span style={{ color: 'rgba(255,255,255,0.50)' }}>{item.label}</span>
-          </motion.div>
-        ))}
-        {visible < STAT_ITEMS.length && (
-          <motion.span
-            animate={{ opacity: [1, 0, 1] }}
-            transition={{ duration: 0.9, repeat: Infinity }}
-            style={{ color: '#6b8fff', fontWeight: 700, display: 'inline-block', marginLeft: 2 }}
-          >
-            ▋
-          </motion.span>
-        )}
-      </div>
-
-      {showResult && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          style={{
-            background: 'rgba(0,38,164,0.08)',
-            border: '1px solid rgba(0,38,164,0.25)',
-            borderRadius: 10,
-            padding: '14px 16px',
-            marginTop: 8,
-          }}
-        >
-          <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: 10 }}>
-            post-training re-eval
-          </div>
-          <div className="flex items-center justify-between" style={{ fontSize: '0.78rem' }}>
-            <div>
-              <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: '0.68rem', marginBottom: 2 }}>before training</div>
-              <div style={{ color: 'rgba(255,255,255,0.70)', fontWeight: 700 }}>76.7%</div>
-            </div>
-            <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '1.1rem' }}>→</div>
-            <div style={{ textAlign: 'right' as const }}>
-              <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: '0.68rem', marginBottom: 2 }}>after training</div>
-              <div style={{ color: '#6b8fff', fontWeight: 700 }}>90.0% <span style={{ fontSize: '0.7rem' }}>↑ +13.3%</span></div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </div>
-  );
-}
-
-// Diagnostic report terminal
-
-const PROBLEMS = [
-  {
-    icon: '🎲',
-    title: 'Evals are flaky',
-    body: 'A failed eval run might mean your model regressed — or it might mean a rate limit, a misconfigured step limit, or a broken task environment. Without redundancy and failure classification, you can\'t tell the difference.',
-  },
-  {
-    icon: '🔧',
-    title: 'Manual pipelines don\'t scale',
-    body: 'You\'re scripting eval runs yourself against lm-eval-harness or custom tasks — no standardization, no CI trigger, no redundancy across non-deterministic runs.',
-  },
-  {
-    icon: '❓',
-    title: 'Raw scores don\'t explain failures',
-    body: 'When a task fails, you read through trajectory JSON files manually. Hours of work. Deep familiarity with harness internals required. No systematic remediation.',
-  },
-];
-
-const STEPS = [
-  {
-    num: '01',
-    icon: '📦',
-    title: 'Submit a Job',
-    body: 'Upload a Harbor-format task bundle. Set your model config, redundancy N, and step limits. Submit via API, CLI, or dashboard.',
-  },
-  {
-    num: '02',
-    icon: '⚙️',
-    title: 'Runs Execute at Scale',
-    body: 'N containers run independently per task using your model endpoint. Results are averaged and score variance is surfaced across redundant runs.',
-  },
-  {
-    num: '03',
-    icon: '📊',
-    title: 'Get Your Diagnostic Report',
-    body: 'Every failure is classified by root cause — config, API, or model behavior. Issues ranked by severity and fixability with specific remediation steps.',
-  },
-];
-
-const PROVIDERS = [
-  { name: 'Anthropic', tag: 'claude-haiku, claude-sonnet, claude-opus', color: '#d97757' },
-  { name: 'OpenAI', tag: 'gpt-4o, o3-mini, o1', color: '#74aa9c' },
-  { name: 'OpenRouter', tag: 'Nemotron, Gemma, Phi-4 — free tier', color: '#6366f1', free: true },
-  { name: 'Together AI', tag: 'Llama 3, Qwen 2.5, Mistral', color: '#7c3aed' },
-  { name: 'vLLM / Ollama', tag: 'self-hosted & local models', color: '#2563eb' },
-  { name: 'Any OpenAI-compat', tag: 'custom api_base + BYOK', color: '#059669' },
-];
-
-const SELF_HEAL_STEPS = [
-  {
-    step: '01',
-    icon: '📡',
-    title: 'Failures Ingested',
-    body: 'Pull from eval run outputs or stream in production traces. Any trajectory where the agent fell short — wrong tool call, bad reasoning, task not completed — is ingested.',
-  },
-  {
-    step: '02',
-    icon: '🧠',
-    title: 'Smart Classification',
-    body: 'Failures split into learnable (genuine model behavior gap) vs. noise (env bug, rate limit, config error). Only signal proceeds.',
-  },
-  {
-    step: '03',
-    icon: '⚡',
-    title: 'Training Job Triggered',
-    body: 'Curated failure trajectories are formatted as training data and submitted to your training infra — GRPO, SFT, or DPO.',
-  },
-  {
-    step: '04',
-    icon: '📈',
-    title: 'Checkpoint Re-evaluated',
-    body: 'The new checkpoint is re-evaluated on the exact failure categories that triggered the run. Track improvement over time.',
-  },
-];
-
 export default function Home() {
+  const location = useLocation();
+
+  // When navigating with a hash (e.g. /#how-it-works), scroll to that section
+  useEffect(() => {
+    if (location.hash) {
+      const el = document.querySelector(location.hash);
+      if (el) {
+        const headerOffset = 80;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      }
+    }
+  }, [location.pathname, location.hash]);
+
+  // GSAP scroll-triggered animations for cards (Layout loads GSAP)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (window.gsap && window.ScrollTrigger) {
+        const cards = document.querySelectorAll('.glass-card, .reveal-card');
+        cards.forEach((card, index) => {
+          const rect = (card as HTMLElement).getBoundingClientRect();
+          const isInViewport = rect.top < window.innerHeight * 0.95 && rect.bottom > 0;
+          if (isInViewport) {
+            window.gsap.set(card, { opacity: 1, y: 0 });
+          } else {
+            window.gsap.set(card, { opacity: 0, y: 50 });
+            window.gsap.to(card, {
+              opacity: 1,
+              y: 0,
+              duration: 0.3,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 95%',
+                toggleActions: 'play none none none',
+                once: true,
+              },
+              delay: index * 0.1,
+            });
+          }
+        });
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="relative pt-36 pb-24 md:pt-44 md:pb-32 overflow-hidden" id="hero">
-        {/* Subtle green radial glow behind hero */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '0',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '900px',
-            height: '500px',
-            background: 'radial-gradient(ellipse at center top, rgba(0,38,164,0.09) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
-        />
-
+      {/* Hero Section */}
+      <section className="relative pt-40 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-gradient-to-br from-white/40 via-cipherra-blue-lighter/40 to-white/40 backdrop-blur-xs z-10" id="hero">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left: copy */}
-            <div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-8"
-                  style={{
-                    background: G_DIM,
-                    border: `1px solid ${G_BORDER}`,
-                    color: G_LIGHT,
-                  }}
-                >
-                  <span
-                    style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: '50%',
-                      background: G,
-                      display: 'inline-block',
-                      boxShadow: `0 0 8px ${G}`,
-                    }}
-                  />
-                  Now in early access · Free tier available
-                </div>
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 28 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.08 }}
-                className="font-extrabold leading-tight mb-6"
-                style={{ fontSize: 'clamp(2.4rem, 5vw, 3.6rem)', color: '#0d1230' }}
-              >
-                Continuous Evals.{' '}
-                <span style={{ color: G }}>Continuous Improvement.</span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.16 }}
-                style={{ color: 'rgba(13,18,48,0.65)', fontSize: '1.15rem', lineHeight: 1.7, marginBottom: '2.5rem', maxWidth: '520px' }}
-              >
-                Run eval suites against any model. Get prioritized diagnostic reports — not just a score.
-                Failures get classified, learnable ones become training data, and the loop closes automatically.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.24 }}
-                className="flex flex-col sm:flex-row gap-4"
-              >
-                <a
-                  href="https://app.cipherra.ai"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-7 py-3.5 rounded-full font-semibold text-base text-center transition-all"
-                  style={{
-                    background: G,
-                    color: '#ffffff',
-                    boxShadow: G_GLOW,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,38,164,0.28)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = G_GLOW;
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                >
-                  Try it →
-                </a>
-                <a
-                  href="#contact"
-                  className="px-7 py-3.5 rounded-full font-semibold text-base text-center transition-all"
-                  style={{
-                    background: 'transparent',
-                    color: 'rgba(13,18,48,0.75)',
-                    border: '1px solid rgba(0,38,164,0.25)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = G_BORDER;
-                    e.currentTarget.style.color = G_LIGHT;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(0,38,164,0.25)';
-                    e.currentTarget.style.color = 'rgba(13,18,48,0.75)';
-                  }}
-                >
-                  Get Early Access
-                </a>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                className="mt-10 flex flex-wrap gap-6"
-              >
-                {['BYOK — any model', 'Harbor task format', 'Self-learning loop'].map((feat) => (
-                  <div key={feat} className="flex items-center gap-2" style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.82rem' }}>
-                    <span style={{ color: G, fontSize: '0.75rem' }}>✓</span>
-                    {feat}
-                  </div>
-                ))}
-              </motion.div>
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full bg-cipherra-blue-light text-cipherra-blue text-sm font-semibold">
+              <span className="w-2 h-2 rounded-full bg-cipherra-blue animate-pulse"></span>
+              Coordination layer for multi-agent coding
             </div>
-
-            {/* Right: typing terminal */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.65, delay: 0.2 }}
-            >
-              <StatsPanel />
-            </motion.div>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
+              <span className="text-gray-900">Multiple coding agents. One codebase.</span><br />
+              <span className="gradient-text">Zero merge chaos.</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+              When several AI agents edit the same repository in parallel, they duplicate work, overwrite each other, and produce patches that don't merge. Cipherra gives them a shared coordination layer — ownership, shared memory, and structured hand-offs — so a team of agents behaves like a coordinated engineering team instead of colliding individuals.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <a href="#contact" className="px-8 py-4 bg-cipherra-blue text-white font-semibold rounded-full hover:bg-cipherra-blue-dark transition-all shadow-xl shadow-cipherra-blue/30 hover:shadow-2xl hover:shadow-cipherra-blue/40 hover:-translate-y-1 text-lg">
+                Get Early Access
+              </a>
+              <a href="#how-it-works" className="px-8 py-4 bg-white text-cipherra-blue font-semibold rounded-full border-2 border-cipherra-blue hover:bg-cipherra-blue-light transition-all text-lg">
+                See How It Works
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Problem Strip ──────────────────────────────────── */}
-      <section className="py-20 md:py-24" id="problem">
+      {/* Problem Section */}
+      <section className="py-24 md:py-32 bg-white/40 backdrop-blur-xs relative z-10" id="problem">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <FadeUp>
-            <p
-              className="text-center mb-12 font-medium uppercase tracking-widest text-xs"
-              style={{ color: G_LIGHT }}
-            >
-              The problem with AI agent evaluation today
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              More agents shouldn't mean more chaos
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Frontier coding runs multiple agents in parallel — but they have no way to coordinate on shared code. Adding <em>more</em> agents often makes runs <span className="font-semibold text-gray-800">worse</span>, not better. Coordination — not raw model power — is the bottleneck.
             </p>
-          </FadeUp>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="reveal-card bg-white rounded-2xl p-6 border border-gray-200 shadow-md">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">🔁</span>
+                <h4 className="text-lg font-bold text-gray-900">Duplicated effort</h4>
+              </div>
+              <p className="text-gray-600 leading-relaxed text-sm">Agents re-derive the same facts and re-read the same files, over and over.</p>
+            </div>
+            <div className="reveal-card bg-white rounded-2xl p-6 border border-gray-200 shadow-md">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">💥</span>
+                <h4 className="text-lg font-bold text-gray-900">Collisions</h4>
+              </div>
+              <p className="text-gray-600 leading-relaxed text-sm">Two agents edit the same function; their patches conflict at merge time.</p>
+            </div>
+            <div className="reveal-card bg-white rounded-2xl p-6 border border-gray-200 shadow-md">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">🧩</span>
+                <h4 className="text-lg font-bold text-gray-900">Silent build breaks</h4>
+              </div>
+              <p className="text-gray-600 leading-relaxed text-sm">Each adds the same new helper; the merge is "clean" but doesn't compile.</p>
+            </div>
+            <div className="reveal-card bg-white rounded-2xl p-6 border border-gray-200 shadow-md">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">🔌</span>
+                <h4 className="text-lg font-bold text-gray-900">Interface mismatches</h4>
+              </div>
+              <p className="text-gray-600 leading-relaxed text-sm">One agent expects a signature the other never delivered.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works / Solution Section */}
+      <section className="py-24 md:py-32 bg-gradient-to-b from-white/40 to-gray-50/40 backdrop-blur-xs relative z-10" id="how-it-works">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              A coordination layer agents share
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Cipherra borrows the model of <span className="font-semibold text-gray-800">cache coherence</span> — how CPU cores share memory without corrupting it — and applies it to agents sharing a codebase. It's model-agnostic and drops in as a shared service the agents talk to.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="glass-card rounded-3xl p-8 shadow-xl card-hover">
+              <div className="w-16 h-16 bg-gradient-to-br from-cipherra-blue to-cipherra-blue-dark rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <span className="text-3xl">🧠</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Shared memory</h3>
+              <p className="text-gray-600 leading-relaxed">
+                An agent records a derived insight — a signature, a contract, a gotcha — and teammates <span className="font-semibold text-gray-800">recall</span> exactly what they need instead of re-deriving it. Stale premises are invalidated automatically.
+              </p>
+            </div>
+
+            <div className="glass-card rounded-3xl p-8 shadow-xl card-hover">
+              <div className="w-16 h-16 bg-gradient-to-br from-cipherra-blue to-cipherra-blue-dark rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <span className="text-3xl">🔑</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Ownership</h3>
+              <p className="text-gray-600 leading-relaxed">
+                An agent <span className="font-semibold text-gray-800">claims</span> a code region before editing it. If it's unowned, it becomes the sole writer; if a teammate owns it, the agent <span className="font-semibold text-gray-800">asks</span> instead of editing — so patches merge cleanly by construction. Overlap is detected by symbol containment, so genuinely-separate work stays parallel.
+              </p>
+            </div>
+
+            <div className="glass-card rounded-3xl p-8 shadow-xl card-hover">
+              <div className="w-16 h-16 bg-gradient-to-br from-cipherra-blue to-cipherra-blue-dark rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <span className="text-3xl">✨</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">New-symbol coordination</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Catches the case where two agents independently add the <span className="font-semibold text-gray-800">same</span> new function or symbol — a clean git merge that fails to compile — and routes them to reuse one definition.
+              </p>
+            </div>
+
+            <div className="glass-card rounded-3xl p-8 shadow-xl card-hover">
+              <div className="w-16 h-16 bg-gradient-to-br from-cipherra-blue to-cipherra-blue-dark rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <span className="text-3xl">🤝</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Structured hand-offs</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Planner → coders → reviewer → fixer, with each role's findings automatically passed to the next through the shared layer.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Results Section */}
+      <section className="py-24 md:py-32 bg-white/40 backdrop-blur-xs relative z-10" id="results">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Coordination, not model size, closes the gap
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Evaluated on <span className="font-semibold text-gray-800">CooperBench</span>, a multi-agent software-engineering benchmark where two agents implement different features in the same codebase, using a deliberately weak/small model — so the gains come from coordination, not model strength.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-5xl mx-auto mb-10">
+            <div className="glass-card rounded-3xl p-8 shadow-xl text-center card-hover">
+              <div className="text-5xl font-extrabold gradient-text mb-2">56% → 78%</div>
+              <div className="text-gray-900 font-semibold mb-1">Clean-merge rate</div>
+              <p className="text-gray-600 text-sm">Merge conflicts cut roughly in half.</p>
+            </div>
+            <div className="glass-card rounded-3xl p-8 shadow-xl text-center card-hover">
+              <div className="text-5xl font-extrabold gradient-text mb-2">30% → 38%</div>
+              <div className="text-gray-900 font-semibold mb-1">Task success rate</div>
+              <p className="text-gray-600 text-sm">On a matched 50-task set, both arms measured identically.</p>
+            </div>
+            <div className="glass-card rounded-3xl p-8 shadow-xl text-center card-hover">
+              <div className="text-5xl font-extrabold gradient-text mb-2">Fewer</div>
+              <div className="text-gray-900 font-semibold mb-1">Wasted steps</div>
+              <p className="text-gray-600 text-sm">Coordinated agents reach solutions with substantially less redundant exploration.</p>
+            </div>
+          </div>
+
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="text-gray-700 leading-relaxed mb-4">
+              We also built a generic <span className="font-semibold text-gray-900">plan → code → review → fix</span> multi-agent pipeline that officially resolves real open-source bug-fix tasks a single agent fails to complete.
+            </p>
+            <p className="text-sm text-gray-500 italic">
+              These are research-benchmark results on small models, chosen to isolate the value of coordination. They are not production customer results.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Use cases Section */}
+      <section className="py-24 md:py-32 bg-gradient-to-b from-white/40 to-gray-50/40 backdrop-blur-xs relative z-10" id="use-cases">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Who it's for
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              A coordination primitive for anyone running more than one agent on a codebase
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PROBLEMS.map((p, i) => (
-              <FadeUp key={p.title} delay={i * 0.1}>
-                <div
-                  className="p-7 h-full transition-all"
-                  style={{ ...CARD, cursor: 'default' }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = G_BORDER;
-                    (e.currentTarget as HTMLElement).style.boxShadow = G_GLOW;
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,38,164,0.18)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-                  }}
-                >
-                  <div className="text-3xl mb-4">{p.icon}</div>
-                  <h3 className="font-bold text-lg mb-3" style={{ color: '#0d1230' }}>{p.title}</h3>
-                  <p style={{ color: 'rgba(13,18,48,0.60)', lineHeight: 1.7, fontSize: '0.9rem' }}>{p.body}</p>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── How It Works ───────────────────────────────────── */}
-      <section className="py-20 md:py-28" id="how-it-works">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <FadeUp className="text-center mb-16">
-            <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>How it works</p>
-            <h2 className="font-bold" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)' }}>
-              Submit → Run → Diagnose
-            </h2>
-            <p className="mt-4 max-w-xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', fontSize: '1rem', lineHeight: 1.7 }}>
-              Three steps from checkpoint to actionable insight. No infra to manage. No harness internals to learn.
-            </p>
-          </FadeUp>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-
-            {STEPS.map((step, i) => (
-              <FadeUp key={step.num} delay={i * 0.12}>
-                <div className="p-8 text-center transition-all" style={CARD}>
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-6"
-                    style={{ background: G_DIM, border: `1px solid ${G_BORDER}` }}
-                  >
-                    {step.icon}
-                  </div>
-                  <div
-                    className="text-xs font-bold mb-2 tracking-widest"
-                    style={{ color: G, fontFamily: 'monospace' }}
-                  >
-                    {step.num}
-                  </div>
-                  <h3 className="font-bold text-lg mb-3" style={{ color: '#0d1230' }}>{step.title}</h3>
-                  <p style={{ color: 'rgba(13,18,48,0.60)', lineHeight: 1.7, fontSize: '0.88rem' }}>{step.body}</p>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-
-          {/* Redundancy callout */}
-          <FadeUp delay={0.3} className="mt-10">
-            <div
-              className="max-w-2xl mx-auto p-5 rounded-xl text-center"
-              style={{ background: G_DIM, border: `1px solid ${G_BORDER}` }}
-            >
-              <span style={{ color: G_LIGHT, fontSize: '0.88rem' }}>
-                <strong style={{ color: G }}>Redundancy is built in.</strong> Run the same task N times independently.
-                LLM outputs are non-deterministic — a task that passes 1/5 runs is diagnosed differently from one that passes 0/5.
-              </span>
-            </div>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ── Platform Preview ───────────────────────────────── */}
-      <section className="py-20 md:py-28" id="integrations">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <FadeUp className="text-center mb-14">
-            <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>The platform</p>
-            <h2 className="font-bold mb-4" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
-              Submit a job. See results in minutes.
-            </h2>
-            <p className="max-w-xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', lineHeight: 1.7, fontSize: '1rem' }}>
-              A web dashboard and REST API. Upload your task bundle, pick your model, set redundancy — then watch runs execute and results come in live.
-            </p>
-          </FadeUp>
-
-          <FadeUp delay={0.1}>
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{
-                border: '1px solid rgba(0,38,164,0.22)',
-                boxShadow: '0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,38,164,0.07)',
-              }}
-            >
-              {/* fake browser chrome */}
-              <div
-                className="flex items-center gap-2 px-4 py-3"
-                style={{ background: 'rgba(8,14,36,0.95)', borderBottom: '1px solid rgba(0,38,164,0.12)' }}
-              >
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
-                <div
-                  className="ml-3 px-3 py-1 rounded text-xs"
-                  style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)', fontFamily: 'monospace' }}
-                >
-                  app.cipherra.ai/jobs
-                </div>
+            <div className="reveal-card bg-white rounded-2xl p-8 border border-gray-200 shadow-md hover:shadow-xl hover:border-cipherra-blue/30 transition-all card-hover">
+              <div className="w-12 h-12 bg-cipherra-blue-light rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">🛠️</span>
               </div>
-              <img
-                src="/dashboard.png"
-                alt="Cipherra eval jobs dashboard"
-                className="w-full block"
-                style={{ display: 'block' }}
-              />
+              <h4 className="text-xl font-bold text-gray-900 mb-3">Multi-agent coding platforms & IDE agents</h4>
+              <p className="text-gray-600 leading-relaxed text-sm">Running several agents on one repo without them stepping on each other.</p>
             </div>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ── BYOM ───────────────────────────────────────────── */}
-      <section className="py-20 md:py-28" id="byom">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <FadeUp className="text-center mb-14">
-            <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>Bring Your Own Model</p>
-            <h2 className="font-bold mb-4" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
-              Your model endpoint. Our infrastructure.
-            </h2>
-            <p className="max-w-xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', lineHeight: 1.7, fontSize: '1rem' }}>
-              BYOK — bring your own API key. Works with any OpenAI-compatible endpoint.
-              Hosted APIs, self-hosted vLLM, local Ollama — anything with an HTTP interface.
-            </p>
-          </FadeUp>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mb-12">
-            {PROVIDERS.map((p, i) => (
-              <FadeUp key={p.name} delay={i * 0.07}>
-                <div
-                  className="p-5 flex flex-col gap-2 transition-all"
-                  style={{ ...CARD }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = G_BORDER;
-                    (e.currentTarget as HTMLElement).style.boxShadow = G_GLOW;
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,38,164,0.18)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="text-xs font-bold tracking-wide" style={{ color: '#0d1230' }}>{p.name}</div>
-                    {(p as any).free && (
-                      <span
-                        className="text-xs font-bold px-1.5 py-0.5 rounded"
-                        style={{ background: 'rgba(0,38,164,0.15)', color: G, border: '1px solid rgba(0,38,164,0.22)', fontSize: '0.65rem', letterSpacing: '0.04em' }}
-                      >
-                        FREE
-                      </span>
-                    )}
-                  </div>
-                  <div style={{ color: 'rgba(13,18,48,0.50)', fontSize: '0.78rem' }}>{p.tag}</div>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-
-          <FadeUp>
-            <div
-              className="max-w-2xl mx-auto p-5 rounded-xl text-center"
-              style={{ background: G_DIM, border: `1px solid ${G_BORDER}` }}
-            >
-              <p style={{ color: G_LIGHT, fontSize: '0.875rem', lineHeight: 1.6 }}>
-                <strong style={{ color: G }}>Fine-tuning on Llama or Qwen?</strong>{' '}
-                Point your vLLM endpoint at Cipherra. Eval every GRPO/PPO/DPO checkpoint without touching your training loop.
-              </p>
-            </div>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ── Diagnostic Reports ─────────────────────────────── */}
-      <section className="py-20 md:py-28" id="diagnostics">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left: real screenshot */}
-            <FadeUp>
-              <div
-                className="rounded-2xl overflow-hidden"
-                style={{
-                  border: '1px solid rgba(0,38,164,0.22)',
-                  boxShadow: '0 0 40px rgba(0,0,0,0.5)',
-                }}
-              >
-                <div
-                  className="flex items-center gap-2 px-4 py-3"
-                  style={{ background: 'rgba(8,14,36,0.95)', borderBottom: '1px solid rgba(0,38,164,0.12)' }}
-                >
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
-                  <div
-                    className="ml-3 px-3 py-1 rounded text-xs"
-                    style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)', fontFamily: 'monospace' }}
-                  >
-                    app.cipherra.ai/jobs/ecdeca88…
-                  </div>
-                </div>
-                <img
-                  src="/job-detail.png"
-                  alt="Cipherra diagnostic report"
-                  className="w-full block"
-                />
+            <div className="reveal-card bg-white rounded-2xl p-8 border border-gray-200 shadow-md hover:shadow-xl hover:border-cipherra-blue/30 transition-all card-hover">
+              <div className="w-12 h-12 bg-cipherra-blue-light rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">🧱</span>
               </div>
-            </FadeUp>
-
-            {/* Right: copy */}
-            <FadeUp delay={0.15}>
-              <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>
-                Diagnostic reports
-              </p>
-              <h2 className="font-bold mb-6" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
-                Not just a score.{' '}
-                <span style={{ color: G }}>An action plan.</span>
-              </h2>
-              <p className="mb-8" style={{ color: 'rgba(13,18,48,0.60)', lineHeight: 1.75, fontSize: '1rem' }}>
-                Every completed job produces a prioritized diagnostic report. Failures are classified
-                by root cause — config, API, or model behavior. Issues are sorted by severity and
-                fixability, with specific remediation steps you can act on immediately.
-              </p>
-
-              <div className="space-y-5">
-                {[
-                  {
-                    color: '#f87171',
-                    label: 'CRITICAL',
-                    desc: 'Config or API issues — wrong step limits, auth failures, rate limits. Fix before re-running.',
-                  },
-                  {
-                    color: '#fbbf24',
-                    label: 'LIKELY',
-                    desc: 'High-confidence behavioral patterns — high variance, context exceeded, consistent failure point.',
-                  },
-                  {
-                    color: '#60a5fa',
-                    label: 'POSSIBLE',
-                    desc: 'Patterns worth reviewing — potential task config bugs, edge-case model behaviors.',
-                  },
-                ].map((item) => (
-                  <div key={item.label} className="flex gap-4">
-                    <div
-                      className="w-2 rounded-full flex-shrink-0 mt-1"
-                      style={{ background: item.color, height: '100%', minHeight: 16, alignSelf: 'stretch' }}
-                    />
-                    <div>
-                      <span className="text-xs font-bold tracking-widest" style={{ color: item.color }}>{item.label}</span>
-                      <p style={{ color: 'rgba(13,18,48,0.60)', fontSize: '0.875rem', lineHeight: 1.6, marginTop: 2 }}>{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
+              <h4 className="text-xl font-bold text-gray-900 mb-3">Agent framework builders</h4>
+              <p className="text-gray-600 leading-relaxed text-sm">Who need a coordination primitive — ownership plus shared memory — rather than reinventing it.</p>
+            </div>
+            <div className="reveal-card bg-white rounded-2xl p-8 border border-gray-200 shadow-md hover:shadow-xl hover:border-cipherra-blue/30 transition-all card-hover">
+              <div className="w-12 h-12 bg-cipherra-blue-light rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">🧭</span>
               </div>
-            </FadeUp>
+              <h4 className="text-xl font-bold text-gray-900 mb-3">Long-horizon SWE tasks</h4>
+              <p className="text-gray-600 leading-relaxed text-sm">Decomposed across specialized agents — planner, coders, reviewer, fixer.</p>
+            </div>
+          </div>
+
+          {/* Roadmap */}
+          <div className="mt-20 max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-cipherra-blue-light text-cipherra-blue text-sm font-semibold mb-3">Where we're headed</span>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900">Roadmap</h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="glass-card rounded-2xl p-6 shadow-lg">
+                <p className="text-gray-700 leading-relaxed text-sm">Coordination for larger, long-horizon tasks — many files, many agents.</p>
+              </div>
+              <div className="glass-card rounded-2xl p-6 shadow-lg">
+                <p className="text-gray-700 leading-relaxed text-sm">Stronger models as executors under the same coordination layer.</p>
+              </div>
+              <div className="glass-card rounded-2xl p-6 shadow-lg">
+                <p className="text-gray-700 leading-relaxed text-sm">Deeper integration hooks for popular agent frameworks.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Self-Healing Agents ────────────────────────────── */}
-      <section className="py-20 md:py-28" id="self-healing">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <FadeUp className="text-center mb-14">
-            <div
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-6"
-              style={{ background: 'rgba(251,191,36,0.08)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.20)' }}
-            >
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fbbf24', display: 'inline-block', boxShadow: '0 0 8px #fbbf24' }} />
-              Coming Soon
-            </div>
-            <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>
-              Self-Healing Agents
-            </p>
-            <h2 className="font-bold mb-4" style={{ color: '#0d1230', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)' }}>
-              Eval failures become{' '}
-              <span style={{ color: G }}>training signal.</span>
-            </h2>
-            <p className="max-w-2xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', lineHeight: 1.7, fontSize: '1rem' }}>
-              Pull from eval runs or stream in production traces. Not every failure is worth
-              learning from — Cipherra classifies which ones are genuine model behavior gaps,
-              curates the right trajectories, and automatically triggers a training job.
-            </p>
-          </FadeUp>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-            {SELF_HEAL_STEPS.map((step, i) => (
-              <FadeUp key={step.step} delay={i * 0.09}>
-                <div
-                  className="p-6 h-full flex flex-col transition-all"
-                  style={CARD}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = G_BORDER;
-                    (e.currentTarget as HTMLElement).style.boxShadow = G_GLOW;
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,38,164,0.18)';
-                    (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-5">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-                      style={{ background: G_DIM, border: `1px solid ${G_BORDER}` }}
-                    >
-                      {step.icon}
-                    </div>
-                    <div className="text-xs font-bold tracking-widest" style={{ color: G, fontFamily: 'monospace' }}>{step.step}</div>
-                  </div>
-                  <h3 className="font-bold text-sm mb-2" style={{ color: '#0d1230' }}>{step.title}</h3>
-                  <p style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.8rem', lineHeight: 1.65, flexGrow: 1 }}>{step.body}</p>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-
-          <FadeUp delay={0.2}>
-            <div className="max-w-3xl mx-auto text-center py-6">
-              <p className="font-bold" style={{ color: '#0d1230', fontSize: 'clamp(1.15rem, 2.2vw, 1.5rem)', lineHeight: 1.5 }}>
-                After every training run,{' '}
-                <span style={{ color: G }}>know if your model actually got better.</span>
-              </p>
-              <p className="mt-3" style={{ color: 'rgba(13,18,48,0.55)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-                Re-eval runs automatically on the new checkpoint against the exact failure categories that triggered training.
-                No manual testing. No guessing. A clear signal every cycle.
-              </p>
-            </div>
-          </FadeUp>
-
-          <FadeUp delay={0.3}>
-            <div
-              className="max-w-2xl mx-auto p-5 rounded-xl text-center"
-              style={{ background: G_DIM, border: `1px solid ${G_BORDER}` }}
-            >
-              <p style={{ color: G_LIGHT, fontSize: '0.875rem', lineHeight: 1.6 }}>
-                <strong style={{ color: G }}>Works across eval and production.</strong>{' '}
-                Pipe in eval run results for model testing, or connect your production trace pipeline.
-                Failures that matter get fed back into the next training run — automatically.
-              </p>
-            </div>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ── Team ───────────────────────────────────────────── */}
-      <section className="py-20 md:py-28" id="team">
+      {/* Team Section (preserved from prior site) */}
+      <section className="py-20 md:py-28 relative z-10" id="team">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-14">
             <p className="font-medium uppercase tracking-widest text-xs mb-4" style={{ color: G_LIGHT }}>Founding Team</p>
@@ -826,8 +413,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA ────────────────────────────────────────────── */}
-      <section className="py-24 md:py-32 relative overflow-hidden" id="contact">
+      {/* CTA / Contact Section (preserved Tally form) */}
+      <section className="py-24 md:py-32 relative overflow-hidden z-10" id="contact">
         <div
           style={{
             position: 'absolute',
@@ -839,12 +426,12 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center relative z-10">
           <FadeUp>
             <h2 className="font-bold mb-4" style={{ color: '#0d1230', fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-              Start evaluating your agents{' '}
-              <span style={{ color: G }}>continuously.</span>
+              Give your agents a way to{' '}
+              <span style={{ color: G }}>work together.</span>
             </h2>
             <p className="mb-10 max-w-xl mx-auto" style={{ color: 'rgba(13,18,48,0.58)', lineHeight: 1.7, fontSize: '1.05rem' }}>
-              Free tier — 5 jobs, up to 50 tasks each, redundancy up to 3.
-              Bring your own API key. No credit card required.
+              We're working with early partners running multiple agents on real codebases.
+              Get early access and help shape the coordination layer.
             </p>
           </FadeUp>
 
