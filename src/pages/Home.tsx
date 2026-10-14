@@ -474,7 +474,7 @@ export default function Home() {
               lead="Turn labeled spatial intent and requirements into supported plan geometry, then review allocation and circulation before continuing in CAD." />
             <FadeUp>
               <Transformation arrow="Generate CAD"
-                before={<Frame src="/work/bubble-diagram.webp" alt="Labeled bubble diagram for a retail plan" label="Supported bubble input" paper aspect="1 / 1" />}
+                before={<Frame src="/work/bubble-diagram.webp" alt="Hand-sketched bubble diagram for a two-gallery mall: atrium plaza, showrooms, shops, corridors and cores" label="Bubble diagram" aspect="1 / 1" />}
                 after={<Frame src="/work/generated-plan.webp" alt="Generated retail floor plan in CAD" label="Generated CAD plan" labelColor={GREEN} paper aspect="1 / 1" />} />
             </FadeUp>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
@@ -497,7 +497,7 @@ export default function Home() {
               ))}
             </div>
             <p className="mt-6" style={noteStyle}>
-              Works from labeled CAD bubbles, requirements, and reviewed decisions. Checks and advisories support review; they do not establish code compliance.
+              Sketch shown for illustration: generation works from the same zoning drawn as labeled CAD bubbles, plus requirements and reviewed decisions. Checks and advisories support review; they do not establish code compliance.
             </p>
           </div>
 
