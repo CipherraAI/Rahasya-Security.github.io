@@ -1,327 +1,228 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
-const G = '#0026a4';
-const G_LIGHT = '#0026a4';
-const HEADING = '#0d1230';
-const BODY = 'rgba(13,18,48,0.60)';
-const ACCENT_GRAD = 'linear-gradient(135deg, #0026a4 0%, #3b6fff 100%)';
-
-const cardClass =
-  'group bg-white rounded-2xl border border-[rgba(0,38,164,0.10)] shadow-[0_1px_3px_rgba(13,18,48,0.05)] ' +
-  'transition-all duration-300 hover:-translate-y-1.5 hover:border-[rgba(0,38,164,0.35)] ' +
-  'hover:shadow-[0_20px_50px_rgba(0,38,164,0.14)]';
+/* ── Palette (matches the architecture pitch deck) ───────── */
+const BG = '#090f25';
+const SURFACE = '#121d37';
+const LINE = '#263957';
+const ACCENT = '#6b8fff';
+const MUTED = '#a6b4d2';
+const TEXT = '#f4f7ff';
+const GREEN = '#69e6ae';
+const ACCENT_GRAD = 'linear-gradient(135deg, #3b6fff 0%, #6b8fff 100%)';
 
 /* ── SVG icon system ─────────────────────────────────────── */
-function Svg({ children }: { children: React.ReactNode }) {
+function Svg({ children, size = 22 }: { children: React.ReactNode; size?: number }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
       strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
       {children}
     </svg>
   );
 }
 const ICONS = {
-  duplicate: <><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></>,
-  collision: <><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z" /></>,
-  warn: <><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" /><path d="M12 9v4M12 17h.01" /></>,
-  plug: <><path d="M12 22v-5M9 8V2M15 8V2M6 8h12v2a6 6 0 0 1-12 0V8Z" /></>,
-  memory: <><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5v14a9 3 0 0 0 18 0V5" /><path d="M3 12a9 3 0 0 0 18 0" /></>,
-  lock: <><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>,
-  merge: <><circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M6 9v3a9 9 0 0 0 9 9" /></>,
-  platform: <><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></>,
-  cube: <><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5M12 22V12" /></>,
-  route: <><circle cx="6" cy="19" r="3" /><circle cx="18" cy="5" r="3" /><path d="M12 19h4.5a2.5 2.5 0 0 0 0-5h-8a2.5 2.5 0 0 1 0-5H9" /></>,
-  plan: <><path d="M9 11H3v10h6V11ZM21 3h-6v18h6V3ZM15 7H9v14h6V7Z" /></>,
-  code: <><path d="m8 6-6 6 6 6M16 6l6 6-6 6" /></>,
-  review: <><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>,
-  fix: <><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2 2.6-2.6Z" /></>,
+  chat: <><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></>,
+  drawing: <><path d="M3 21h18" /><path d="M5 21V7l7-4 7 4v14" /><path d="M9 21v-6h6v6" /></>,
+  review: <><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></>,
+  schedule: <><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 10h18M9 4v17" /></>,
+  check: <><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>,
+  layers: <><path d="m12 2 10 5-10 5L2 7l10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></>,
+  play: <><path d="M6 4l14 8-14 8V4Z" /></>,
 };
 
-/* ── Hero agent-to-agent chat ────────────────────────────── */
-type Msg = { from: 'A' | 'B' | 'sys'; tag?: string; text: React.ReactNode };
-const Mono: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <code style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace", fontSize: '0.82em', color: '#cdd9ff' }}>{children}</code>
-);
-const THREAD: Msg[] = [
-  { from: 'A', tag: 'request', text: <>You own <Mono>auth.py</Mono>. Can you make <Mono>login()</Mono> accept an OAuth token?</> },
-  { from: 'B', tag: 'acknowledge', text: <>On it. Claiming <Mono>auth.py:login()</Mono>.</> },
-  { from: 'B', tag: 'result', text: <>Done. <Mono>login(token) → Session</Mono>. Saved the new signature to shared memory.</> },
-  { from: 'A', tag: 'recall', text: <>Recalled it. Wiring my caller to match the new signature.</> },
-  { from: 'sys', text: <>Patches merged clean · compiles ✓</> },
-];
-
-const AGENTS = {
-  A: { name: 'Agent A', color: '#6b8fff', bg: 'rgba(107,143,255,0.14)', border: 'rgba(107,143,255,0.30)' },
-  B: { name: 'Agent B', color: '#fbbf24', bg: 'rgba(251,191,36,0.14)', border: 'rgba(251,191,36,0.30)' },
+/* ── Motion + layout helpers ─────────────────────────────── */
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: (delay = 0) => ({
+    opacity: 1, y: 0,
+    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as any, delay },
+  }),
 };
-
-function Avatar({ who }: { who: 'A' | 'B' }) {
-  const a = AGENTS[who];
+function FadeUp({ children, delay = 0, style, className }: {
+  children: React.ReactNode; delay?: number; style?: React.CSSProperties; className?: string;
+}) {
   return (
-    <span className="flex items-center justify-center shrink-0 rounded-full font-bold"
-      style={{ width: 26, height: 26, fontSize: '0.72rem', color: '#0a1030', background: a.color }}>
-      {who}
-    </span>
+    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }}
+      custom={delay} variants={fadeUp} style={style} className={className}>
+      {children}
+    </motion.div>
+  );
+}
+function Eyebrow({ children, color = ACCENT }: { children: React.ReactNode; color?: string }) {
+  return (
+    <p className="font-semibold uppercase tracking-widest text-xs mb-4" style={{ color }}>
+      {children}
+    </p>
   );
 }
 
-function TypingDots({ who }: { who: 'A' | 'B' }) {
-  const a = AGENTS[who];
-  const right = who === 'B';
+const h2Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 };
+const h3Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.5rem, 2.6vw, 2rem)', lineHeight: 1.2 };
+const leadStyle: React.CSSProperties = { color: MUTED, lineHeight: 1.7, fontSize: '1.05rem' };
+const noteStyle: React.CSSProperties = { color: 'rgba(166,180,210,0.70)', fontSize: '0.82rem', lineHeight: 1.6 };
+
+/* ── Framed image (deck-style panel) ─────────────────────── */
+function Frame({ src, alt, label, labelColor = ACCENT, paper, aspect = '4 / 3', fit }: {
+  src: string; alt: string; label?: string; labelColor?: string;
+  paper?: boolean; aspect?: string; fit?: 'cover' | 'contain';
+}) {
   return (
-    <div className={`flex items-end gap-2 ${right ? 'flex-row-reverse' : ''}`}>
-      <Avatar who={who} />
-      <div className="flex items-center gap-1 rounded-2xl px-3 py-2.5"
-        style={{ background: a.bg, border: `1px solid ${a.border}`, borderBottomLeftRadius: right ? 16 : 4, borderBottomRightRadius: right ? 4 : 16 }}>
-        {[0, 1, 2].map((i) => (
-          <motion.span key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: a.color, display: 'inline-block' }}
-            animate={{ opacity: [0.3, 1, 0.3], y: [0, -2, 0] }}
-            transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.15 }} />
+    <div className="h-full flex flex-col">
+      {label && (
+        <div className="font-semibold mb-2.5" style={{ color: labelColor, fontSize: '0.8rem', letterSpacing: '0.01em' }}>
+          {label}
+        </div>
+      )}
+      <div className="rounded-2xl overflow-hidden" style={{
+        background: SURFACE, border: `1px solid ${LINE}`, padding: paper ? 14 : 0,
+        boxShadow: '0 24px 60px rgba(0,0,0,0.35)',
+      }}>
+        <div style={{ aspectRatio: aspect, background: paper ? '#ffffff' : BG, borderRadius: paper ? 8 : 0, overflow: 'hidden' }}>
+          <img src={src} alt={alt} loading="lazy" style={{
+            width: '100%', height: '100%', display: 'block',
+            objectFit: fit ?? (paper ? 'contain' : 'cover'),
+            padding: paper ? 10 : 0,
+          }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StepArrow({ label }: { label: string }) {
+  return (
+    <div className="flex lg:flex-col items-center justify-center gap-3 py-2 lg:py-0">
+      <div className="flex items-center justify-center rounded-full rotate-90 lg:rotate-0"
+        style={{ width: 52, height: 52, border: `1px solid ${LINE}`, background: SURFACE, color: ACCENT }}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 12h14m0 0-6-6m6 6-6 6" />
+        </svg>
+      </div>
+      <span className="text-center font-semibold" style={{ color: MUTED, fontSize: '0.72rem', lineHeight: 1.3, maxWidth: 80 }}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+/* Before → after row */
+function Transformation({ before, after, arrow }: {
+  before: React.ReactNode; after: React.ReactNode; arrow: string;
+}) {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-4 lg:gap-6 items-center">
+      {before}
+      <StepArrow label={arrow} />
+      {after}
+    </div>
+  );
+}
+
+/* ── Hero: cycling stage showcase ────────────────────────── */
+const STAGES = [
+  { key: 'bubble', label: 'Bubble diagram', caption: 'Spatial planning intent', src: '/work/bubble-diagram.webp', paper: true },
+  { key: 'cad', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
+  { key: 'render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
+  { key: 'enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
+  { key: 'walk', label: 'Walkthrough', caption: 'Reviewed visual sequence', src: '/work/walkthrough-poster.webp' },
+];
+
+function StageShowcase() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused) return;
+    const id = window.setInterval(() => setActive((a) => (a + 1) % STAGES.length), 3200);
+    return () => clearInterval(id);
+  }, [paused]);
+  const s = STAGES[active];
+
+  return (
+    <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}
+      style={{
+        background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`,
+        border: `1px solid ${LINE}`, borderRadius: 20, overflow: 'hidden',
+        boxShadow: '0 30px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(107,143,255,0.06)',
+      }}>
+      <div className="relative" style={{ aspectRatio: '16 / 10', background: s.paper ? '#ffffff' : BG }}>
+        <AnimatePresence mode="wait">
+          <motion.img key={s.key} src={s.src} alt={`${s.label}: ${s.caption}`}
+            initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{
+              position: 'absolute', inset: 0, width: '100%', height: '100%',
+              objectFit: s.paper ? 'contain' : 'cover', padding: s.paper ? 14 : 0,
+            }} />
+        </AnimatePresence>
+        <div className="absolute left-4 bottom-4 rounded-full px-3.5 py-1.5 flex items-center gap-2"
+          style={{ background: 'rgba(9,15,37,0.82)', border: `1px solid ${LINE}`, backdropFilter: 'blur(6px)' }}>
+          <span style={{ width: 7, height: 7, borderRadius: '50%', background: GREEN }} />
+          <span style={{ color: TEXT, fontSize: '0.75rem', fontWeight: 600 }}>{s.label}</span>
+          <span className="hidden sm:inline" style={{ color: MUTED, fontSize: '0.75rem' }}>· {s.caption}</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-5" style={{ borderTop: `1px solid ${LINE}` }}>
+        {STAGES.map((st, i) => (
+          <button key={st.key} onClick={() => setActive(i)}
+            className="relative px-1 py-3 text-center transition-colors text-[0.6rem] sm:text-[0.7rem]"
+            style={{
+              color: i === active ? TEXT : 'rgba(166,180,210,0.65)',
+              fontWeight: 600, lineHeight: 1.25,
+              borderLeft: i ? `1px solid ${LINE}` : 'none',
+              background: i === active ? 'rgba(107,143,255,0.10)' : 'transparent',
+            }}>
+            {i === active && (
+              <motion.span layoutId="stage-bar" className="absolute left-0 right-0 top-0"
+                style={{ height: 2, background: ACCENT }} />
+            )}
+            {st.label}
+          </button>
         ))}
       </div>
     </div>
   );
 }
 
-function CoordinationPanel() {
-  const [shown, setShown] = useState(0);
-  const [typing, setTyping] = useState<'A' | 'B' | null>(null);
+/* ── Before / after slider (render → enhanced) ───────────── */
+function CompareSlider({ before, after, beforeLabel, afterLabel }: {
+  before: string; after: string; beforeLabel: string; afterLabel: string;
+}) {
+  const [pos, setPos] = useState(50);
+  const ref = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
 
-  useEffect(() => {
-    let cancelled = false;
-    const timers: number[] = [];
-    const wait = (ms: number, fn: () => void) => timers.push(window.setTimeout(() => { if (!cancelled) fn(); }, ms));
-
-    const run = (i: number) => {
-      if (i >= THREAD.length) {
-        wait(3000, () => { setShown(0); setTyping(null); run(0); });
-        return;
-      }
-      const msg = THREAD[i];
-      if (msg.from === 'sys') {
-        wait(600, () => { setShown(i + 1); wait(900, () => run(i + 1)); });
-      } else {
-        setTyping(msg.from);
-        wait(1000, () => {
-          setTyping(null);
-          setShown(i + 1);
-          wait(750, () => run(i + 1));
-        });
-      }
-    };
-    run(0);
-    return () => { cancelled = true; timers.forEach(clearTimeout); };
-  }, []);
+  const move = (clientX: number) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setPos(Math.max(0, Math.min(100, ((clientX - r.left) / r.width) * 100)));
+  };
 
   return (
-    <div
-      style={{
-        background: 'linear-gradient(160deg, #0a1030 0%, #05081c 100%)',
-        border: '1px solid rgba(107,143,255,0.22)',
-        borderRadius: 18,
-        boxShadow: '0 30px 70px rgba(0,38,164,0.28)',
-        overflow: 'hidden',
-      }}
-    >
-      {/* title bar */}
-      <div className="flex items-center gap-1.5 px-5 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
-        <span className="mx-auto flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem' }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399' }} />
-          cipherra · shared coordination layer
-        </span>
-      </div>
-
-      {/* chat thread (newest anchored to bottom) */}
-      <div className="flex flex-col justify-end gap-3 px-5 py-5" style={{ height: 430 }}>
-        {THREAD.slice(0, shown).map((m, i) => {
-          if (m.from === 'sys') {
-            return (
-              <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }} className="flex justify-center">
-                <span className="flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{
-                  background: 'rgba(52,211,153,0.14)', border: '1px solid rgba(52,211,153,0.35)',
-                  color: '#6ee7b7', fontSize: '0.74rem', fontWeight: 600,
-                }}>{m.text}</span>
-              </motion.div>
-            );
-          }
-          const a = AGENTS[m.from];
-          const right = m.from === 'B';
-          return (
-            <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }} className={`flex items-end gap-2 ${right ? 'flex-row-reverse' : ''}`}>
-              <Avatar who={m.from} />
-              <div className="rounded-2xl px-3.5 py-2.5" style={{
-                maxWidth: '82%', background: a.bg, border: `1px solid ${a.border}`,
-                borderBottomLeftRadius: right ? 16 : 4, borderBottomRightRadius: right ? 4 : 16,
-              }}>
-                {m.tag && (
-                  <div className="mb-1 font-semibold uppercase" style={{ color: a.color, fontSize: '0.6rem', letterSpacing: '0.08em' }}>
-                    {m.tag}
-                  </div>
-                )}
-                <div style={{ color: 'rgba(255,255,255,0.90)', fontSize: '0.82rem', lineHeight: 1.5 }}>{m.text}</div>
-              </div>
-            </motion.div>
-          );
-        })}
-        {typing && <TypingDots who={typing} />}
-      </div>
-    </div>
-  );
-}
-
-/* ── Shared dark-panel primitives ────────────────────────── */
-const AG: Record<string, string> = { A: '#6b8fff', B: '#fbbf24', C: '#a78bfa' };
-const monoFont: React.CSSProperties = { fontFamily: "'JetBrains Mono','Fira Code',monospace" };
-const panelStyle: React.CSSProperties = {
-  background: 'linear-gradient(160deg, #0a1030 0%, #05081c 100%)',
-  border: '1px solid rgba(107,143,255,0.22)',
-  borderRadius: 18,
-  boxShadow: '0 30px 70px rgba(0,38,164,0.28)',
-  overflow: 'hidden',
-};
-function PanelBar({ label }: { label: string }) {
-  return (
-    <div className="flex items-center gap-1.5 px-5 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-      <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
-      <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
-      <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
-      <span className="mx-auto" style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem' }}>{label}</span>
-    </div>
-  );
-}
-function Letter({ who, dim }: { who: string; dim?: boolean }) {
-  return (
-    <span className="flex items-center justify-center rounded-full font-bold shrink-0"
-      style={{ width: 22, height: 22, fontSize: '0.66rem', color: '#0a1030', background: AG[who], opacity: dim ? 0.3 : 1, transition: 'opacity 0.3s' }}>
-      {who}
-    </span>
-  );
-}
-
-/* ── Bidding / ownership auction ─────────────────────────── */
-function BiddingPanel() {
-  const TOTAL = 9;
-  const [step, setStep] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setStep((s) => (s >= TOTAL ? 0 : s + 1)), 950);
-    return () => clearInterval(id);
-  }, []);
-  const regions = [
-    { file: 'auth.py', bidsAt: 1, bidders: ['A', 'B'], owner: 'A', allocAt: 5 },
-    { file: 'api.py', bidsAt: 2, bidders: ['B', 'C'], owner: 'B', allocAt: 6 },
-    { file: 'utils.py', bidsAt: 3, bidders: ['A', 'C'], owner: 'C', allocAt: 7 },
-  ];
-  const allocating = step >= 4 && step < 8;
-  const done = step >= 8;
-  return (
-    <div style={panelStyle}>
-      <PanelBar label="orchestrator · ownership auction" />
-      <div className="px-5 py-5" style={{ minHeight: 296 }}>
-        <div className="flex items-center gap-2 mb-4" style={{ fontSize: '0.72rem' }}>
-          <motion.span animate={{ opacity: done ? 1 : [1, 0.3, 1] }} transition={{ duration: 1, repeat: done ? 0 : Infinity }}
-            style={{ width: 7, height: 7, borderRadius: '50%', background: done ? '#34d399' : '#6b8fff', display: 'inline-block' }} />
-          <span style={{ color: 'rgba(255,255,255,0.55)' }}>
-            {done ? 'all regions assigned · no overlap' : allocating ? 'orchestrator allocating…' : 'collecting bids…'}
-          </span>
+    <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px rgba(0,0,0,0.45)' }}>
+      <div ref={ref} className="relative select-none" style={{ aspectRatio: '16 / 9', cursor: 'ew-resize', touchAction: 'pan-y' }}
+        onPointerDown={(e) => { dragging.current = true; (e.target as Element).setPointerCapture?.(e.pointerId); move(e.clientX); }}
+        onPointerMove={(e) => { if (dragging.current) move(e.clientX); }}
+        onPointerUp={() => { dragging.current = false; }}
+        onPointerCancel={() => { dragging.current = false; }}>
+        <img src={after} alt={afterLabel} draggable={false}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img src={before} alt={beforeLabel} draggable={false}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', clipPath: `inset(0 ${100 - pos}% 0 0)` }} />
+        <div className="absolute top-0 bottom-0" style={{ left: `${pos}%`, width: 2, marginLeft: -1, background: '#ffffff', boxShadow: '0 0 12px rgba(0,0,0,0.5)' }}>
+          <div className="absolute top-1/2 left-1/2 flex items-center justify-center rounded-full"
+            style={{ width: 42, height: 42, transform: 'translate(-50%, -50%)', background: '#ffffff', color: BG, boxShadow: '0 6px 20px rgba(0,0,0,0.4)' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="m9 6-6 6 6 6M15 6l6 6-6 6" />
+            </svg>
+          </div>
         </div>
-        <div className="space-y-2.5">
-          {regions.map((r) => {
-            const allocated = step >= r.allocAt;
-            const bidding = step >= r.bidsAt && !allocated;
-            return (
-              <div key={r.file} className="flex items-center justify-between rounded-lg px-3 py-2.5"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                <span style={{ ...monoFont, color: 'rgba(255,255,255,0.80)', fontSize: '0.8rem' }}>{r.file}</span>
-                {allocated ? (
-                  <motion.span initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }}
-                    className="flex items-center gap-1.5 rounded-full px-2.5 py-1"
-                    style={{ background: `${AG[r.owner]}22`, border: `1px solid ${AG[r.owner]}55`, fontSize: '0.7rem', color: '#fff' }}>
-                    <Letter who={r.owner} /> owns ✓
-                  </motion.span>
-                ) : bidding ? (
-                  <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-1.5">
-                    {r.bidders.map((b) => <Letter key={b} who={b} />)}
-                    <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: '0.68rem' }}>bidding</span>
-                  </motion.div>
-                ) : (
-                  <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.7rem' }}>waiting</span>
-                )}
-              </div>
-            );
-          })}
-        </div>
+        <span className="absolute left-3 top-3 rounded-full px-3 py-1" style={{ background: 'rgba(9,15,37,0.80)', color: TEXT, fontSize: '0.72rem', fontWeight: 600 }}>{beforeLabel}</span>
+        <span className="absolute right-3 top-3 rounded-full px-3 py-1" style={{ background: 'rgba(9,15,37,0.80)', color: GREEN, fontSize: '0.72rem', fontWeight: 600 }}>{afterLabel}</span>
       </div>
-    </div>
-  );
-}
-
-/* ── Shared memory reuse ─────────────────────────────────── */
-function MemoryPanel() {
-  const TOTAL = 5;
-  const [step, setStep] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setStep((s) => (s >= TOTAL ? 0 : s + 1)), 1100);
-    return () => clearInterval(id);
-  }, []);
-  const entries = [
-    { at: 1, by: 'A', text: 'login() → Session' },
-    { at: 2, by: 'B', text: 'JWT ttl = 900s' },
-  ];
-  const recallAt = 3;
-  const noteAt = 4;
-  return (
-    <div style={panelStyle}>
-      <PanelBar label="shared memory" />
-      <div className="px-5 py-5 flex flex-col" style={{ minHeight: 296 }}>
-        <div style={{ color: 'rgba(255,255,255,0.30)', fontSize: '0.62rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>
-          recorded insights
-        </div>
-        <div className="space-y-2.5 mb-4">
-          {entries.map((e, i) => {
-            if (step < e.at) return <div key={i} style={{ height: 42 }} />;
-            const highlight = i === 0 && step >= recallAt;
-            return (
-              <motion.div key={i} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-2.5 rounded-lg px-3 py-2.5"
-                style={{
-                  background: highlight ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${highlight ? 'rgba(52,211,153,0.40)' : 'rgba(255,255,255,0.07)'}`,
-                  transition: 'background 0.3s, border-color 0.3s',
-                }}>
-                <Letter who={e.by} />
-                <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.7rem' }}>wrote</span>
-                <span style={{ ...monoFont, color: 'rgba(255,255,255,0.85)', fontSize: '0.78rem' }}>{e.text}</span>
-                {highlight && <span className="ml-auto" style={{ color: '#6ee7b7', fontSize: '0.64rem', fontWeight: 700, letterSpacing: '0.05em' }}>REUSED</span>}
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {step >= recallAt && (
-          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2.5">
-            <Letter who="C" />
-            <span style={{ color: 'rgba(255,255,255,0.60)', fontSize: '0.78rem' }}>
-              recalls <span style={{ ...monoFont, color: '#cdd9ff' }}>login()</span> instead of re-deriving it
-            </span>
-          </motion.div>
-        )}
-
-        {step >= noteAt && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-auto pt-4">
-            <span className="flex items-center gap-2 rounded-full px-3 py-1.5 w-fit"
-              style={{ background: 'rgba(52,211,153,0.12)', border: '1px solid rgba(52,211,153,0.35)', color: '#6ee7b7', fontSize: '0.72rem', fontWeight: 600 }}>
-              2 insights shared · 0 re-derived
-            </span>
-          </motion.div>
-        )}
-      </div>
+      <input type="range" min={0} max={100} value={pos} onChange={(e) => setPos(Number(e.target.value))}
+        aria-label="Compare base render and enhanced image" className="sr-only" />
     </div>
   );
 }
@@ -351,8 +252,8 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: 'rgba(255,255,255,0.05)',
-        border: `1px solid ${hovered ? 'rgba(107,143,255,0.55)' : 'rgba(255,255,255,0.12)'}`,
+        background: 'rgba(255,255,255,0.04)',
+        border: `1px solid ${hovered ? 'rgba(107,143,255,0.55)' : LINE}`,
         borderRadius: 20,
         padding: '36px 32px',
         display: 'flex',
@@ -360,7 +261,7 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
         alignItems: 'center',
         textAlign: 'center',
         transition: 'all 0.25s ease',
-        boxShadow: hovered ? '0 20px 50px rgba(0,38,164,0.35)' : '0 1px 3px rgba(0,0,0,0.20)',
+        boxShadow: hovered ? '0 20px 50px rgba(0,0,0,0.40)' : '0 1px 3px rgba(0,0,0,0.20)',
         transform: hovered ? 'translateY(-6px)' : 'none',
       }}
     >
@@ -374,7 +275,7 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
         <h3 style={{ color: '#ffffff', fontWeight: 800, fontSize: 20 }}>{name}</h3>
-        <a href={linkedin} target="_blank" rel="noopener noreferrer"
+        <a href={linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${name} on LinkedIn`}
           style={{ display: 'flex', flexShrink: 0, color: 'rgba(255,255,255,0.50)', transition: 'color 0.2s' }}
           onMouseEnter={e => (e.currentTarget.style.color = '#8ab0ff')}
           onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.50)')}
@@ -385,53 +286,32 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
         </a>
       </div>
       <p style={{ color: '#8ab0ff', fontSize: 13, fontWeight: 600, marginBottom: 16, letterSpacing: '0.02em' }}>{role}</p>
-      <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: 14, lineHeight: 1.7 }}>{bio}</p>
+      <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.7 }}>{bio}</p>
     </div>
   );
 }
 
-/* ── Motion + layout helpers ─────────────────────────────── */
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (delay = 0) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as any, delay },
-  }),
-};
-function FadeUp({ children, delay = 0, style, className }: {
-  children: React.ReactNode; delay?: number; style?: React.CSSProperties; className?: string;
-}) {
+/* ── Showcase stage header ───────────────────────────────── */
+function StageHeader({ n, tag, title, lead }: { n: string; tag: string; title: string; lead: string }) {
   return (
-    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }}
-      custom={delay} variants={fadeUp} style={style} className={className}>
-      {children}
-    </motion.div>
-  );
-}
-function Eyebrow({ children, light }: { children: React.ReactNode; light?: boolean }) {
-  return (
-    <p className="font-semibold uppercase tracking-widest text-xs mb-4"
-      style={{ color: light ? '#8ab0ff' : G_LIGHT }}>
-      {children}
-    </p>
-  );
-}
-function IconChip({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 text-white transition-transform duration-300 group-hover:scale-110"
-      style={{ background: ACCENT_GRAD, boxShadow: '0 8px 20px rgba(0,38,164,0.30)' }}>
-      {children}
-    </div>
+    <FadeUp className="mb-10 md:mb-12 max-w-3xl">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="font-bold" style={{ color: ACCENT, fontSize: '0.8rem', fontFamily: "'JetBrains Mono','Fira Code',monospace" }}>{n}</span>
+        <span style={{ width: 28, height: 1, background: LINE }} />
+        <span className="font-semibold uppercase tracking-widest text-xs" style={{ color: MUTED }}>{tag}</span>
+      </div>
+      <h3 className="font-bold mb-3" style={h3Style}>{title}</h3>
+      <p style={leadStyle}>{lead}</p>
+    </FadeUp>
   );
 }
 
-const h2Style: React.CSSProperties = { color: HEADING, fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 };
-const leadStyle: React.CSSProperties = { color: BODY, lineHeight: 1.7, fontSize: '1.05rem' };
-const PIPELINE = [
-  { icon: ICONS.plan, label: 'Planner' },
-  { icon: ICONS.code, label: 'Coders' },
-  { icon: ICONS.review, label: 'Reviewer' },
-  { icon: ICONS.fix, label: 'Fixer' },
+const WORKFLOW = [
+  { id: '#plan', label: 'Bubble diagram', caption: 'Spatial planning intent', src: '/work/bubble-diagram.webp', paper: true },
+  { id: '#plan', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
+  { id: '#render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
+  { id: '#enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
+  { id: '#walkthrough', label: 'Walkthrough', caption: 'Reviewed visual sequence', src: '/work/walkthrough-poster.webp' },
 ];
 
 export default function Home() {
@@ -448,300 +328,280 @@ export default function Home() {
     }
   }, [location.pathname, location.hash]);
 
+  const sectionDivider: React.CSSProperties = { borderTop: `1px solid rgba(38,57,87,0.6)` };
+
   return (
     <>
       {/* Hero */}
-      <section className="relative pt-36 pb-20 md:pt-44 md:pb-28 overflow-hidden z-10" id="hero">
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden z-10" id="hero">
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background:
-            'radial-gradient(ellipse 70% 55% at 80% 0%, rgba(59,111,255,0.14) 0%, transparent 60%),' +
-            'radial-gradient(ellipse 60% 50% at 10% 20%, rgba(0,38,164,0.08) 0%, transparent 55%)',
+            'radial-gradient(ellipse 60% 55% at 85% 10%, rgba(107,143,255,0.18) 0%, transparent 60%),' +
+            'radial-gradient(ellipse 50% 50% at 5% 30%, rgba(59,111,255,0.10) 0%, transparent 55%)',
         }} />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-14 items-center">
+          <div className="grid lg:grid-cols-[1fr_1.15fr] gap-12 lg:gap-14 items-center">
             <FadeUp>
+              <Eyebrow>Companion for architectural work</Eyebrow>
               <h1 className="font-extrabold mb-6 tracking-tight"
-                style={{ color: HEADING, fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.06 }}>
-                Multiple coding agents. One codebase.{' '}
-                <span className="gradient-text">Zero merge chaos.</span>
+                style={{ color: TEXT, fontSize: 'clamp(2.5rem, 5.2vw, 4.1rem)', lineHeight: 1.05 }}>
+                From drawing intent{' '}
+                <span className="gradient-text">to visual impact.</span>
               </h1>
-              <p className="mb-9" style={{ color: BODY, fontSize: '1.15rem', lineHeight: 1.7, maxWidth: 560 }}>
-                When several AI agents edit the same repository in parallel, they duplicate work, overwrite each other, and produce patches that don't merge. Cipherra gives them a shared coordination layer: ownership, shared memory, and structured hand-offs, so a team of agents behaves like a coordinated engineering team instead of colliding individuals.
+              <p className="mb-9" style={{ color: MUTED, fontSize: '1.15rem', lineHeight: 1.7, maxWidth: 540 }}>
+                Cipherra is your companion for drawing, visualization, and walkthroughs. Describe what you need in architectural language, let it work with your drawings, and review every result before it moves forward.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+              <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-start">
                 <a href="#contact"
-                  className="px-7 py-3.5 rounded-full text-white font-semibold text-base transition-all hover:-translate-y-0.5"
-                  style={{ background: ACCENT_GRAD, boxShadow: '0 8px 24px rgba(0,38,164,0.30)' }}>
+                  className="px-7 py-3.5 rounded-full text-white font-semibold text-base text-center transition-all hover:-translate-y-0.5"
+                  style={{ background: ACCENT_GRAD, boxShadow: '0 8px 28px rgba(107,143,255,0.35)' }}>
                   Get Early Access
                 </a>
-                <a href="#how-it-works"
-                  className="px-7 py-3.5 rounded-full font-semibold text-base transition-all"
-                  style={{ background: '#ffffff', color: G, border: '1px solid rgba(0,38,164,0.25)' }}>
-                  See How It Works
+                <a href="#workflow"
+                  className="px-7 py-3.5 rounded-full font-semibold text-base text-center transition-all hover:-translate-y-0.5"
+                  style={{ background: 'rgba(255,255,255,0.04)', color: TEXT, border: `1px solid ${LINE}` }}>
+                  See the Workflow
                 </a>
               </div>
             </FadeUp>
 
             <FadeUp delay={0.15}>
-              <CoordinationPanel />
+              <StageShowcase />
             </FadeUp>
           </div>
         </div>
       </section>
 
-      {/* Problem */}
-      <section className="py-20 md:py-28 relative z-10" id="problem">
+      {/* Companion */}
+      <section className="py-20 md:py-28 relative z-10" id="companion" style={sectionDivider}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-14">
-            <Eyebrow>The problem</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>More agents shouldn't mean more chaos</h2>
+            <Eyebrow>The companion</Eyebrow>
+            <h2 className="font-bold mb-4" style={h2Style}>A companion for architectural work.</h2>
             <p className="max-w-2xl mx-auto" style={leadStyle}>
-              Frontier coding runs multiple agents in parallel, but they have no way to coordinate on shared code. Adding more agents often makes runs worse, not better. Coordination, not raw model power, is the bottleneck.
+              Describe what you need. Work with architectural tools. Review the result.
             </p>
           </FadeUp>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto mb-12">
             {[
-              { icon: ICONS.duplicate, title: 'Duplicated effort', body: 'Agents re-derive the same facts and re-read the same files, over and over.' },
-              { icon: ICONS.collision, title: 'Collisions', body: 'Two agents edit the same function; their patches conflict at merge time.' },
-              { icon: ICONS.warn, title: 'Silent build breaks', body: 'Each adds the same new helper; the merge is "clean" but doesn\'t compile.' },
-              { icon: ICONS.plug, title: 'Interface mismatches', body: 'One agent expects a signature the other never delivered.' },
-            ].map((p, i) => (
-              <FadeUp key={p.title} delay={i * 0.08}>
-                <div className={`${cardClass} p-6 h-full`} style={{ color: G }}>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 text-white"
-                      style={{ background: ACCENT_GRAD, boxShadow: '0 6px 16px rgba(0,38,164,0.28)' }}>
-                      <Svg>{p.icon}</Svg>
+              { icon: ICONS.chat, title: 'Describe the task', body: 'Use architectural language: shops around the atrium, refined stair cores, updated grids and schedules.' },
+              { icon: ICONS.drawing, title: 'Work with the drawing', body: 'The companion uses supported CAD tools to edit and generate drawings in place, layer by layer.' },
+              { icon: ICONS.review, title: 'Stay in the loop', body: 'Inspect every change, compare it against the source, and refine the request until it is right.' },
+            ].map((s, i) => (
+              <FadeUp key={s.title} delay={i * 0.08}>
+                <div className="group rounded-2xl p-7 h-full transition-all duration-300 hover:-translate-y-1.5"
+                  style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 text-white transition-transform duration-300 group-hover:scale-110"
+                    style={{ background: ACCENT_GRAD, boxShadow: '0 8px 20px rgba(107,143,255,0.25)' }}>
+                    <Svg>{s.icon}</Svg>
+                  </div>
+                  <h4 className="text-lg font-bold mb-2" style={{ color: TEXT }}>{s.title}</h4>
+                  <p style={{ color: MUTED, fontSize: '0.95rem', lineHeight: 1.65 }}>{s.body}</p>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+
+          <FadeUp delay={0.1}>
+            <div className="max-w-6xl mx-auto rounded-2xl overflow-hidden"
+              style={{ border: `1px solid ${LINE}`, boxShadow: '0 40px 90px rgba(0,0,0,0.5), 0 0 60px rgba(107,143,255,0.08)' }}>
+              <img src="/work/companion-interface.webp" alt="The Cipherra companion: a conversation alongside the open CAD drawing"
+                loading="lazy" style={{ width: '100%', display: 'block' }} />
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* Workflow overview */}
+      <section className="py-20 md:py-28 relative overflow-hidden z-10" id="workflow"
+        style={{ background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`, ...sectionDivider }}>
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 45% 50% at 50% 0%, rgba(107,143,255,0.14) 0%, transparent 60%)',
+        }} />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+          <FadeUp className="text-center mb-14">
+            <Eyebrow>The workflow</Eyebrow>
+            <h2 className="font-bold mb-4" style={h2Style}>Turn architectural inputs into useful outputs.</h2>
+            <p className="max-w-2xl mx-auto" style={leadStyle}>
+              A transformation at each stage, with review built into the process.
+            </p>
+          </FadeUp>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {WORKFLOW.map((w, i) => (
+              <FadeUp key={w.label} delay={i * 0.07} className={i === WORKFLOW.length - 1 ? 'col-span-2 md:col-span-1' : ''}>
+                <a href={w.id} className="group block h-full rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5"
+                  style={{ background: BG, border: `1px solid ${LINE}` }}
+                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'rgba(107,143,255,0.6)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = LINE)}>
+                  <div style={{ aspectRatio: '4 / 3', background: w.paper ? '#ffffff' : SURFACE, overflow: 'hidden' }}>
+                    <img src={w.src} alt={w.label} loading="lazy"
+                      className="transition-transform duration-500 group-hover:scale-105"
+                      style={{ width: '100%', height: '100%', objectFit: w.paper ? 'contain' : 'cover', padding: w.paper ? 8 : 0 }} />
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-bold" style={{ color: ACCENT, fontSize: '0.72rem', fontFamily: "'JetBrains Mono','Fira Code',monospace" }}>0{i + 1}</span>
+                      <span className="font-bold" style={{ color: TEXT, fontSize: '0.95rem' }}>{w.label}</span>
+                    </div>
+                    <p style={{ color: MUTED, fontSize: '0.82rem' }}>{w.caption}</p>
+                  </div>
+                </a>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Showcase */}
+      <section className="py-20 md:py-28 relative z-10" id="showcase" style={sectionDivider}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <FadeUp className="text-center mb-16 md:mb-20">
+            <Eyebrow>Showcase</Eyebrow>
+            <h2 className="font-bold mb-4" style={h2Style}>Real work, stage by stage.</h2>
+            <p className="max-w-2xl mx-auto" style={leadStyle}>
+              Every example below comes from an actual project session, shown as it was reviewed.
+            </p>
+          </FadeUp>
+
+          {/* 01 Plan */}
+          <div id="plan" className="scroll-mt-24 mb-24 md:mb-32">
+            <StageHeader n="01" tag="Plan"
+              title="From a bubble diagram to a generated CAD plan."
+              lead="Turn labeled spatial intent and requirements into supported plan geometry, then review allocation and circulation before continuing in CAD." />
+            <FadeUp>
+              <Transformation arrow="Generate CAD"
+                before={<Frame src="/work/bubble-diagram.webp" alt="Labeled bubble diagram for a retail plan" label="Supported bubble input" paper aspect="1 / 1" />}
+                after={<Frame src="/work/generated-plan.webp" alt="Generated retail floor plan in CAD" label="Generated CAD plan" labelColor={GREEN} paper aspect="1 / 1" />} />
+            </FadeUp>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
+              {[
+                { icon: ICONS.schedule, title: 'Allocation and schedule', body: 'Requirements and reviewed planning decisions drive the layout and its schedule.' },
+                { icon: ICONS.check, title: 'Geometry checks', body: 'Review circulation and advisories before anything moves downstream.' },
+                { icon: ICONS.layers, title: 'Layered CAD output', body: 'Continue in your authoring workflow with a layered drawing, not a flat image.' },
+              ].map((c, i) => (
+                <FadeUp key={c.title} delay={i * 0.08}>
+                  <div className="flex items-start gap-4 rounded-2xl p-6 h-full" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ color: ACCENT, background: 'rgba(107,143,255,0.12)', border: '1px solid rgba(107,143,255,0.25)' }}>
+                      <Svg size={20}>{c.icon}</Svg>
                     </div>
                     <div>
-                      <h4 className="text-lg font-bold mb-1.5" style={{ color: HEADING }}>{p.title}</h4>
-                      <p style={{ color: BODY, fontSize: '0.92rem', lineHeight: 1.65 }}>{p.body}</p>
+                      <h4 className="font-bold mb-1.5" style={{ color: TEXT }}>{c.title}</h4>
+                      <p style={{ color: MUTED, fontSize: '0.9rem', lineHeight: 1.6 }}>{c.body}</p>
                     </div>
                   </div>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How it works (dark band) */}
-      <section className="py-20 md:py-28 relative overflow-hidden z-10" id="how-it-works"
-        style={{ background: 'linear-gradient(160deg, #05081c 0%, #0c1233 100%)' }}>
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background:
-            'radial-gradient(ellipse 45% 45% at 12% 8%, rgba(107,143,255,0.18) 0%, transparent 60%),' +
-            'radial-gradient(ellipse 45% 45% at 90% 92%, rgba(0,38,164,0.30) 0%, transparent 60%)',
-        }} />
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          <FadeUp className="text-center mb-16">
-            <Eyebrow light>How it works</Eyebrow>
-            <h2 className="font-bold mb-4" style={{ color: '#ffffff', fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 }}>A coordination layer agents share</h2>
-            <p className="max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontSize: '1.05rem' }}>
-              Cipherra borrows the model of cache coherence, how CPU cores share memory without corrupting it, and applies it to agents sharing a codebase. It's model-agnostic and drops in as a shared service the agents talk to.
+                </FadeUp>
+              ))}
+            </div>
+            <p className="mt-6" style={noteStyle}>
+              Works from labeled CAD bubbles, requirements, and reviewed decisions. Checks and advisories support review; they do not establish code compliance.
             </p>
-          </FadeUp>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
-            {[
-              { icon: ICONS.memory, title: 'Shared memory', body: 'An agent records a derived insight (a signature, a contract, a gotcha) and teammates recall exactly what they need instead of re-deriving it. Stale premises are invalidated automatically.' },
-              { icon: ICONS.lock, title: 'Ownership', body: 'An agent claims a code region before editing it. If it\'s unowned, it becomes the sole writer; if a teammate owns it, the agent asks instead of editing, so patches merge cleanly by construction.' },
-              { icon: ICONS.merge, title: 'New-symbol coordination', body: 'Catches the case where two agents independently add the same new function or symbol (a clean git merge that fails to compile) and routes them to reuse one definition.' },
-            ].map((step, i) => (
-              <FadeUp key={step.title} delay={i * 0.08}>
-                <div className="group rounded-2xl p-8 h-full border border-white/10 transition-all duration-300 hover:-translate-y-1.5 hover:border-[rgba(107,143,255,0.45)] hover:shadow-[0_20px_50px_rgba(0,38,164,0.35)]"
-                  style={{ background: 'rgba(255,255,255,0.05)' }}>
-                  <IconChip><Svg>{step.icon}</Svg></IconChip>
-                  <h3 className="text-xl font-bold mb-3" style={{ color: '#ffffff' }}>{step.title}</h3>
-                  <p style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontSize: '0.95rem' }}>{step.body}</p>
-                </div>
-              </FadeUp>
-            ))}
           </div>
 
-          {/* Structured hand-offs pipeline */}
-          <FadeUp delay={0.1}>
-            <div className="max-w-5xl mx-auto rounded-2xl p-8 md:p-10"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)' }}>
-              <div className="text-center mb-8">
-                <h3 className="text-xl font-bold mb-2" style={{ color: '#ffffff' }}>Structured hand-offs</h3>
-                <p className="max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.95rem', lineHeight: 1.65 }}>
-                  Each role's findings pass automatically to the next through the shared layer.
+          {/* 02 Edit */}
+          <div id="edit" className="scroll-mt-24 mb-24 md:mb-32">
+            <StageHeader n="02" tag="Edit and refine"
+              title="From a basic layout to a refined CAD drawing."
+              lead="A real drawing-edit session, developed through successive requests." />
+            <FadeUp>
+              <Transformation arrow="Edit and refine"
+                before={<Frame src="/work/cad-before.webp" alt="Starting mall CAD drawing with an empty atrium" label="Starting CAD drawing" paper aspect="1 / 1" />}
+                after={<Frame src="/work/cad-after.webp" alt="Refined mall CAD drawing with shops, cores and grids" label="Final CAD drawing" labelColor={GREEN} paper aspect="1 / 1" />} />
+            </FadeUp>
+            <FadeUp delay={0.1}>
+              <div className="mt-8 rounded-2xl p-6 md:p-7" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
+                <div className="font-semibold uppercase tracking-widest mb-3" style={{ color: ACCENT, fontSize: '0.68rem' }}>
+                  Example prompt · summary of the shown changes
+                </div>
+                <p style={{ color: TEXT, fontSize: 'clamp(1rem, 1.6vw, 1.15rem)', lineHeight: 1.6 }}>
+                  “Develop this basic mall plan: add shops around the atrium, refine stairs, toilets and lift lobbies, and update grids, dimensions and the shop schedule.”
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-1">
-                {PIPELINE.map((s, i) => (
-                  <div key={s.label} className="flex items-center gap-3 sm:gap-1">
-                    <div className="flex flex-col items-center gap-2 px-2">
-                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white"
-                        style={{ background: ACCENT_GRAD, boxShadow: '0 10px 24px rgba(0,38,164,0.30)' }}>
-                        <Svg>{s.icon}</Svg>
-                      </div>
-                      <span className="font-semibold text-sm" style={{ color: '#ffffff' }}>{s.label}</span>
-                    </div>
-                    {i < PIPELINE.length - 1 && (
-                      <svg className="rotate-90 sm:rotate-0 mx-1" width="34" height="18" viewBox="0 0 34 18" fill="none">
-                        <path d="M2 9h28m0 0-6-6m6 6-6 6" stroke="#8ab0ff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
-                      </svg>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FadeUp>
-        </div>
-      </section>
+            </FadeUp>
+          </div>
 
-      {/* Coordination in action */}
-      <section className="py-20 md:py-28 relative z-10" id="in-action">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <FadeUp className="text-center mb-16">
-            <Eyebrow>Coordination in action</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>Watch the layer at work</h2>
-            <p className="max-w-2xl mx-auto" style={leadStyle}>
-              From the first task assignment to reusing a teammate's work, coordination happens in the open.
-            </p>
-          </FadeUp>
-
-          {/* Row 1: ownership auction */}
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-16 md:mb-24">
+          {/* 03 Render */}
+          <div id="render" className="scroll-mt-24 mb-24 md:mb-32">
+            <StageHeader n="03" tag="Build and render"
+              title="From 2D CAD to a rendered 3D model."
+              lead="Build and render a reviewed model from the supported drawing set, with level and layer mapping checked along the way." />
             <FadeUp>
-              <Eyebrow>Ownership auction</Eyebrow>
-              <h3 className="font-bold mb-4" style={{ color: HEADING, fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)', lineHeight: 1.2 }}>
-                Agents bid, the orchestrator allocates
-              </h3>
-              <p style={leadStyle}>
-                Before any code is written, agents bid for the regions they want to work on. The orchestrator resolves the overlaps and hands each region a single owner, so no two agents ever write the same code.
-              </p>
-            </FadeUp>
-            <FadeUp delay={0.15}>
-              <BiddingPanel />
+              <Transformation arrow="Build and render"
+                before={<Frame src="/work/mall-cad.webp" alt="Mall first-floor CAD plan" label="Mall first-floor CAD plan" paper aspect="16 / 11" />}
+                after={<Frame src="/work/mall-render.webp" alt="Aerial render of the same mall" label="Rendered model of the same mall" labelColor={GREEN} aspect="16 / 11" />} />
             </FadeUp>
           </div>
 
-          {/* Row 2: shared memory (alternate) */}
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            <FadeUp className="lg:order-2">
-              <Eyebrow>Shared memory</Eyebrow>
-              <h3 className="font-bold mb-4" style={{ color: HEADING, fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)', lineHeight: 1.2 }}>
-                Reuse work instead of redoing it
-              </h3>
-              <p style={leadStyle}>
-                When one agent derives a fact, a signature, or a gotcha, it records it once. Teammates recall it on demand instead of re-deriving, cutting the redundant exploration that slows multi-agent runs down.
-              </p>
+          {/* 04 Enhance */}
+          <div id="enhance" className="scroll-mt-24 mb-24 md:mb-32">
+            <StageHeader n="04" tag="Enhance"
+              title="From a render to an enhanced image."
+              lead="Develop the atmosphere, light, and material detail, while reviewing the result against the original architecture. Drag to compare." />
+            <FadeUp>
+              <CompareSlider before="/work/gallery-base.webp" after="/work/gallery-enhanced.webp"
+                beforeLabel="Base gallery render" afterLabel="Enhanced gallery image" />
             </FadeUp>
-            <FadeUp delay={0.15} className="lg:order-1">
-              <MemoryPanel />
-            </FadeUp>
-          </div>
-        </div>
-      </section>
-
-      {/* Results (dark band) */}
-      <section className="py-20 md:py-28 relative overflow-hidden z-10" id="results"
-        style={{ background: 'linear-gradient(150deg, #030b2e 0%, #0026a4 100%)' }}>
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background:
-            'radial-gradient(ellipse 50% 50% at 85% 15%, rgba(107,143,255,0.30) 0%, transparent 60%),' +
-            'radial-gradient(ellipse 45% 45% at 10% 90%, rgba(52,211,153,0.14) 0%, transparent 60%)',
-        }} />
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          <FadeUp className="text-center mb-14">
-            <Eyebrow light>Results</Eyebrow>
-            <h2 className="font-bold mb-4" style={{ color: '#ffffff', fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 }}>
-              Coordination, not model size, closes the gap
-            </h2>
-            <p className="max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontSize: '1.05rem' }}>
-              Evaluated on CooperBench, a multi-agent software-engineering benchmark where two agents implement different features in the same codebase that conflict without coordination.
+            <p className="mt-6" style={noteStyle}>
+              Enhancement can introduce or change presentation detail, so every image is reviewed against its base render.
             </p>
-          </FadeUp>
+          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
-            {[
-              { stat: '56% → 78%', label: 'Clean-merge rate', body: 'Merge conflicts cut roughly in half.' },
-              { stat: '75% better', label: 'Task success vs. baseline', body: 'A higher success rate than the uncoordinated baseline on CooperBench.' },
-              { stat: '50% fewer', label: 'Steps to solution', body: 'Reaches the same results with half the redundant exploration.' },
-            ].map((s, i) => (
-              <FadeUp key={s.label} delay={i * 0.1}>
-                <div className="rounded-2xl p-8 text-center h-full transition-all duration-300 hover:-translate-y-1.5"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)', backdropFilter: 'blur(6px)' }}>
-                  <div className="font-extrabold mb-2 leading-none"
-                    style={{
-                      fontSize: 'clamp(2rem, 4vw, 2.7rem)',
-                      background: 'linear-gradient(135deg, #ffffff 0%, #8ab0ff 100%)',
-                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                    }}>
-                    {s.stat}
+          {/* 05 Walkthrough */}
+          <div id="walkthrough" className="scroll-mt-24">
+            <StageHeader n="05" tag="Walkthrough"
+              title="From still images to a walkthrough."
+              lead="Build the visual sequence from selected architectural views. Shown here: a wellness resort in Udaipur." />
+            <FadeUp>
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1.35fr] gap-4 lg:gap-6 items-center">
+                <div>
+                  <div className="font-semibold mb-2.5" style={{ color: ACCENT, fontSize: '0.8rem' }}>Selected architectural stills</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { src: '/work/udaipur-arrival.webp', alt: 'Arrival lounge' },
+                      { src: '/work/udaipur-dining.webp', alt: 'All-day dining' },
+                      { src: '/work/udaipur-courtyard.webp', alt: 'Garden courtyard' },
+                      { src: '/work/udaipur-aerial.webp', alt: 'Aerial overview' },
+                    ].map((im) => (
+                      <div key={im.src} className="relative rounded-xl overflow-hidden" style={{ aspectRatio: '16 / 10', border: `1px solid ${LINE}` }}>
+                        <img src={im.src} alt={im.alt} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <span className="absolute left-2 bottom-2 rounded-full px-2 py-0.5" style={{ background: 'rgba(9,15,37,0.78)', color: TEXT, fontSize: '0.65rem', fontWeight: 600 }}>{im.alt}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="font-semibold mb-1.5" style={{ color: '#ffffff' }}>{s.label}</div>
-                  <p style={{ color: 'rgba(255,255,255,0.60)', fontSize: '0.9rem', lineHeight: 1.6 }}>{s.body}</p>
                 </div>
-              </FadeUp>
-            ))}
-          </div>
-
-          <FadeUp delay={0.1}>
-            <div className="max-w-3xl mx-auto rounded-2xl p-8 text-center"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(107,143,255,0.30)' }}>
-              <p className="font-bold mb-2" style={{ color: '#ffffff', fontSize: 'clamp(1.15rem, 2.2vw, 1.5rem)', lineHeight: 1.4 }}>
-                Flash-class models, frontier-class results.
-              </p>
-              <p style={{ color: 'rgba(255,255,255,0.68)', lineHeight: 1.7, fontSize: '1rem' }}>
-                With strong coordination, teams of fast flash models reach results on par with frontier models. Coordination, not raw scale, closes the gap. We also built a generic plan → code → review → fix pipeline that officially resolves real open-source bug-fix tasks a single agent fails to complete.
-              </p>
-            </div>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* Use cases */}
-      <section className="py-20 md:py-28 relative z-10" id="use-cases">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <FadeUp className="text-center mb-16">
-            <Eyebrow>Use cases</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>Who it's for</h2>
-            <p className="max-w-2xl mx-auto" style={leadStyle}>
-              A coordination primitive for anyone running more than one agent on a codebase.
-            </p>
-          </FadeUp>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              { icon: ICONS.platform, title: 'Multi-agent coding platforms & IDE agents', body: 'Running several agents on one repo without them stepping on each other.' },
-              { icon: ICONS.cube, title: 'Agent framework builders', body: 'Who need a coordination primitive (ownership plus shared memory) rather than reinventing it.' },
-              { icon: ICONS.route, title: 'Long-horizon SWE tasks', body: 'Decomposed across specialized agents: planner, coders, reviewer, and fixer.' },
-            ].map((u, i) => (
-              <FadeUp key={u.title} delay={i * 0.1}>
-                <div className={`${cardClass} p-8 h-full`}>
-                  <IconChip><Svg>{u.icon}</Svg></IconChip>
-                  <h4 className="text-lg font-bold mb-3" style={{ color: HEADING }}>{u.title}</h4>
-                  <p style={{ color: BODY, lineHeight: 1.7, fontSize: '0.95rem' }}>{u.body}</p>
+                <StepArrow label="Create motion" />
+                <div>
+                  <div className="font-semibold mb-2.5" style={{ color: GREEN, fontSize: '0.8rem' }}>Walkthrough video</div>
+                  <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px rgba(0,0,0,0.45)', background: BG }}>
+                    <video src="/work/walkthrough-clip.mp4" poster="/work/walkthrough-poster.webp"
+                      autoPlay muted loop playsInline preload="metadata"
+                      style={{ width: '100%', display: 'block', aspectRatio: '16 / 9', objectFit: 'cover' }} />
+                  </div>
                 </div>
-              </FadeUp>
-            ))}
+              </div>
+            </FadeUp>
           </div>
         </div>
       </section>
 
-      {/* Team (dark band) */}
+      {/* Team */}
       <section className="py-20 md:py-28 relative overflow-hidden z-10" id="team"
-        style={{ background: 'linear-gradient(160deg, #05081c 0%, #0c1233 100%)' }}>
+        style={{ background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`, ...sectionDivider }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background:
-            'radial-gradient(ellipse 45% 45% at 88% 8%, rgba(107,143,255,0.16) 0%, transparent 60%),' +
-            'radial-gradient(ellipse 45% 45% at 8% 92%, rgba(0,38,164,0.28) 0%, transparent 60%)',
+            'radial-gradient(ellipse 45% 45% at 88% 8%, rgba(107,143,255,0.14) 0%, transparent 60%),' +
+            'radial-gradient(ellipse 45% 45% at 8% 92%, rgba(59,111,255,0.12) 0%, transparent 60%)',
         }} />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <FadeUp className="text-center mb-14">
-            <Eyebrow light>Founding Team</Eyebrow>
-            <h2 className="font-bold mb-4" style={{ color: '#ffffff', fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 }}>Built by people who've done this before</h2>
-            <p className="max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, fontSize: '1.05rem' }}>
-              We've worked inside the systems we're replacing, at Qualcomm, Microsoft, and IIT Madras.
+            <Eyebrow>Founding Team</Eyebrow>
+            <h2 className="font-bold mb-4" style={h2Style}>The team behind Cipherra</h2>
+            <p className="max-w-xl mx-auto" style={leadStyle}>
+              Engineers from Qualcomm, Microsoft, and IIT Madras, building tools for the people who design buildings.
             </p>
           </FadeUp>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8" style={{ maxWidth: 760, margin: '0 auto' }}>
@@ -755,24 +615,24 @@ export default function Home() {
       </section>
 
       {/* CTA / Contact */}
-      <section className="py-24 md:py-32 relative overflow-hidden z-10" id="contact">
+      <section className="py-24 md:py-32 relative overflow-hidden z-10" id="contact" style={sectionDivider}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse at center, rgba(0,38,164,0.09) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at center, rgba(107,143,255,0.12) 0%, transparent 70%)',
         }} />
         <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center relative z-10">
           <FadeUp>
-            <h2 className="font-bold mb-4" style={{ color: HEADING, fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
-              Give your agents a way to <span style={{ color: G }}>work together.</span>
+            <h2 className="font-bold mb-4" style={{ color: TEXT, fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.15 }}>
+              Bring Cipherra into <span className="gradient-text">your next project.</span>
             </h2>
             <p className="mb-10 max-w-xl mx-auto" style={leadStyle}>
-              We're working with early partners running multiple agents on real codebases. Get early access and help shape the coordination layer.
+              We're working with early architecture and design partners on real drawings and real projects. Get early access and help shape the companion.
             </p>
           </FadeUp>
           <FadeUp delay={0.1}>
             <div style={{
-              background: '#ffffff', border: '1px solid rgba(0,38,164,0.18)', borderRadius: 16,
-              padding: '8px 24px 16px', boxShadow: '0 20px 50px rgba(0,38,164,0.10)',
+              background: '#ffffff', border: `1px solid ${LINE}`, borderRadius: 16,
+              padding: '8px 24px 16px', boxShadow: '0 20px 50px rgba(0,0,0,0.35)',
             }}>
               <iframe
                 src="https://tally.so/embed/ja0baa?alignLeft=1&hideTitle=1&transparentBackground=1"
