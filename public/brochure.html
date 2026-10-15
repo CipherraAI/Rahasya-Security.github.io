@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cipherra Brochure</title>
+<link rel="icon" type="image/png" href="/cipherra_logo_thumbnail.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #090f25;
+    --surface: #121d37;
+    --line: #263957;
+    --accent: #6b8fff;
+    --muted: #a6b4d2;
+    --text: #f4f7ff;
+    --green: #69e6ae;
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #2a2f3d;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    margin: 24px auto;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  @media print {
+    html, body { background: var(--bg); }
+    .page { margin: 0; box-shadow: none; }
+    .toolbar { display: none !important; }
+  }
+
+  /* Toolbar (screen only) */
+  .toolbar {
+    max-width: 210mm; margin: 20px auto 0; display: flex; justify-content: space-between; align-items: center;
+    color: #c9d3ea; font-size: 13px; gap: 12px; padding: 0 4px;
+  }
+  .toolbar button {
+    background: linear-gradient(135deg, #3b6fff, #6b8fff); color: #fff; border: 0; border-radius: 999px;
+    padding: 8px 18px; font: 600 13px Inter, sans-serif; cursor: pointer;
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    padding: 8mm 12mm 6mm;
+    display: grid;
+    grid-template-columns: 1fr 70mm;
+    gap: 8mm;
+    align-items: center;
+    background:
+      radial-gradient(ellipse 70% 80% at 95% 0%, rgba(107,143,255,0.22) 0%, transparent 60%),
+      linear-gradient(160deg, #0c1533 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--line);
+  }
+  .logo { height: 6mm; display: block; margin-bottom: 5mm; }
+  .eyebrow { color: var(--accent); font-size: 7.5pt; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 3mm; }
+  h1 { font-size: 23pt; line-height: 1.04; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4mm; }
+  .grad {
+    background: linear-gradient(135deg, #8ab0ff 0%, #6b8fff 45%, #69e6ae 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .lead { color: var(--muted); font-size: 8.6pt; line-height: 1.5; }
+  .chips { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.9mm; margin-top: 3.5mm; font-size: 6.3pt; white-space: nowrap; font-weight: 600; }
+  .chips span.c { border: 1px solid var(--line); background: rgba(107,143,255,0.10); border-radius: 999px; padding: 0.7mm 1.9mm; color: var(--text); }
+  .chips span.a { color: var(--accent); }
+  .hero-img {
+    border-radius: 3mm; overflow: hidden; border: 1px solid var(--line);
+    box-shadow: 0 10mm 20mm rgba(0,0,0,0.45);
+    aspect-ratio: 16 / 10;
+  }
+  .hero-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .body { padding: 4mm 12mm 2.5mm; flex: 1; display: flex; flex-direction: column; gap: 3.6mm; }
+  .section-title { display: flex; align-items: baseline; gap: 3mm; margin-bottom: 2.4mm; }
+  .section-title .k { color: var(--accent); font-size: 7pt; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+  .section-title h2 { font-size: 11pt; font-weight: 700; }
+
+  /* Steps */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
+  .step { background: var(--surface); border: 1px solid var(--line); border-radius: 2.5mm; padding: 2.8mm 3.2mm; display: flex; gap: 3mm; }
+  .step .ic {
+    width: 7.5mm; height: 7.5mm; border-radius: 1.8mm; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #3b6fff, #6b8fff); color: #fff;
+  }
+  .step h3 { font-size: 9pt; font-weight: 700; margin-bottom: 1mm; }
+  .step p { color: var(--muted); font-size: 7.1pt; line-height: 1.4; }
+
+  /* Workflow strip */
+  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2.4mm; position: relative; }
+  .stage { background: var(--surface); border: 1px solid var(--line); border-radius: 2.2mm; overflow: hidden; }
+  .stage .th { aspect-ratio: 4 / 3; background: #fff; }
+  .stage .th img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .stage .th.paper img { object-fit: contain; padding: 1.2mm; }
+  .stage .cap { padding: 2mm 2.4mm 2.4mm; }
+  .stage .n { color: var(--accent); font: 700 6.5pt 'JetBrains Mono', ui-monospace, monospace; }
+  .stage .t { font-size: 8pt; font-weight: 700; margin-left: 1mm; }
+  .stage .d { color: var(--muted); font-size: 6.8pt; margin-top: 0.6mm; }
+
+  /* Showcase */
+  .show { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 2.5mm; padding: 2.6mm 3mm 2.4mm; }
+  .card .n { color: var(--accent); font: 700 7pt 'JetBrains Mono', ui-monospace, monospace; margin-right: 1.2mm; }
+  .card h3 { font-size: 8.4pt; font-weight: 700; margin-bottom: 1.8mm; }
+  .pair { display: grid; grid-template-columns: 1fr 6mm 1fr; align-items: center; }
+  .pair .im { aspect-ratio: 16 / 10; border-radius: 1.5mm; overflow: hidden; background: #fff; }
+  .pair .im.wide { aspect-ratio: 16 / 10; }
+  .pair .im img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pair .im.paper img { object-fit: contain; padding: 1mm; }
+  .pair .arr { color: var(--accent); display: flex; justify-content: center; }
+  .labels { display: grid; grid-template-columns: 1fr 6mm 1fr; margin-top: 1.4mm; font-size: 6.5pt; font-weight: 600; }
+  .labels .a { color: var(--muted); }
+  .labels .b { color: var(--green); }
+
+  .walk { display: grid; grid-template-columns: 3fr 6mm 1fr; align-items: center; }
+  .stills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2mm; }
+  .stills img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; border-radius: 1mm; }
+  .film { position: relative; border-radius: 1.5mm; overflow: hidden; aspect-ratio: 16 / 9; }
+  .film img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .film .play {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 8mm; height: 8mm; border-radius: 50%; background: rgba(9,15,37,0.75); border: 1px solid rgba(255,255,255,0.5);
+    display: flex; align-items: center; justify-content: center; color: #fff;
+  }
+
+  .note { color: rgba(166,180,210,0.75); font-size: 6.6pt; line-height: 1.5; }
+
+  /* Footer */
+  .foot {
+    margin-top: auto;
+    border-top: 1px solid var(--line);
+    background: #070c1e;
+    padding: 4mm 12mm 4.5mm;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr 1fr;
+    gap: 6mm;
+    align-items: center;
+  }
+  .cta h3 { font-size: 10.5pt; font-weight: 800; line-height: 1.2; margin-bottom: 1.5mm; }
+  .cta p { color: var(--muted); font-size: 7.4pt; line-height: 1.45; }
+  .person { display: flex; gap: 2.5mm; align-items: center; }
+  .person img { width: 10mm; height: 10mm; border-radius: 50%; object-fit: cover; object-position: top; border: 1px solid var(--line); }
+  .person .nm { font-size: 8.2pt; font-weight: 700; }
+  .person .rl { color: #8ab0ff; font-size: 6.8pt; font-weight: 600; }
+  .person .bio { color: var(--muted); font-size: 6.4pt; line-height: 1.35; margin-top: 0.4mm; }
+  .contact { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding-top: 3mm; border-top: 1px solid rgba(38,57,87,0.7); font-size: 7.6pt; color: var(--muted); }
+  .contact b { color: var(--text); font-weight: 600; }
+  .pill { background: linear-gradient(135deg, #3b6fff, #6b8fff); color: #fff; border-radius: 999px; padding: 1.6mm 4mm; font-weight: 700; font-size: 7.6pt; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span>One-page A4 brochure. In the print dialog: Save as PDF, Margins: None, enable Background graphics.</span>
+  <button onclick="window.print()">Save as PDF</button>
+</div>
+
+<div class="page">
+  <!-- Hero -->
+  <header class="hero">
+    <div>
+      <img class="logo" src="/cipherra-logo-white.png" alt="Cipherra" />
+      <div class="eyebrow">Companion for architectural work</div>
+      <h1>From drawing intent <span class="grad">to visual impact.</span></h1>
+      <p class="lead">Cipherra is your companion for drawing, visualization, and walkthroughs. Describe what you need in architectural language, let it work with your drawings, and review every result before it moves forward.</p>
+      <div class="chips"><span class="c">Bubble diagram</span><span class="a">→</span><span class="c">2D CAD</span><span class="a">→</span><span class="c">Rendered 3D</span><span class="a">→</span><span class="c">Enhanced stills</span><span class="a">→</span><span class="c">Walkthrough</span></div>
+    </div>
+    <div class="hero-img"><img src="/work/gallery-enhanced.webp" alt="Enhanced mall gallery image" /></div>
+  </header>
+
+  <main class="body">
+    <!-- Companion -->
+    <section>
+      <div class="section-title"><span class="k">The companion</span><h2>Describe it. Work the drawing. Review the result.</h2></div>
+      <div class="steps">
+        <div class="step">
+          <div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div><h3>Describe the task</h3><p>Use architectural language: shops around the atrium, refined cores, updated grids.</p></div>
+        </div>
+        <div class="step">
+          <div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
+          <div><h3>Work with the drawing</h3><p>Supported CAD tools edit and generate drawings in place, layer by layer.</p></div>
+        </div>
+        <div class="step">
+          <div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div><h3>Stay in the loop</h3><p>Inspect every change against the source and refine until it is right.</p></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Showcase -->
+    <section>
+      <div class="section-title"><span class="k">The workflow</span><h2>Real project work, stage by stage, with review built in.</h2></div>
+      <div class="show">
+        <div class="card">
+          <h3><span class="n">01</span>Bubble diagram to generated CAD plan</h3>
+          <div class="pair">
+            <div class="im"><img src="/work/bubble-diagram.webp" alt="" /></div>
+            <div class="arr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
+            <div class="im paper"><img src="/work/generated-plan.webp" alt="" /></div>
+          </div>
+          <div class="labels"><span class="a">Bubble diagram</span><span></span><span class="b">Generated CAD plan</span></div>
+        </div>
+        <div class="card">
+          <h3><span class="n">02</span>Basic layout to refined CAD drawing</h3>
+          <div class="pair">
+            <div class="im paper"><img src="/work/cad-before.webp" alt="" /></div>
+            <div class="arr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
+            <div class="im paper"><img src="/work/cad-after.webp" alt="" /></div>
+          </div>
+          <div class="labels"><span class="a">Starting CAD drawing</span><span></span><span class="b">Final CAD drawing</span></div>
+        </div>
+        <div class="card">
+          <h3><span class="n">03</span>2D CAD to rendered 3D model</h3>
+          <div class="pair">
+            <div class="im wide paper"><img src="/work/mall-cad.webp" alt="" /></div>
+            <div class="arr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
+            <div class="im wide"><img src="/work/mall-render.webp" alt="" /></div>
+          </div>
+          <div class="labels"><span class="a">Mall first-floor plan</span><span></span><span class="b">Rendered model</span></div>
+        </div>
+        <div class="card">
+          <h3><span class="n">04</span>Render to enhanced image</h3>
+          <div class="pair">
+            <div class="im wide"><img src="/work/gallery-base.webp" alt="" /></div>
+            <div class="arr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
+            <div class="im wide"><img src="/work/gallery-enhanced.webp" alt="" /></div>
+          </div>
+          <div class="labels"><span class="a">Base gallery render</span><span></span><span class="b">Enhanced gallery image</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:3mm">
+        <h3><span class="n">05</span>Still images to a walkthrough &nbsp;<span style="color:var(--muted);font-weight:500">Wellness resort, Udaipur</span></h3>
+        <div class="walk">
+          <div class="stills">
+            <img src="/work/udaipur-arrival.webp" alt="" />
+            <img src="/work/udaipur-dining.webp" alt="" />
+            <img src="/work/udaipur-courtyard.webp" alt="" />
+            <img src="/work/udaipur-aerial.webp" alt="" />
+          </div>
+          <div class="arr" style="color:var(--accent);display:flex;justify-content:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
+          <div class="film">
+            <img src="/work/walkthrough-poster.webp" alt="" />
+            <div class="play"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8V4Z"/></svg></div>
+          </div>
+        </div>
+        <div class="labels" style="grid-template-columns:3fr 6mm 1fr"><span class="a">Selected architectural stills</span><span></span><span class="b">Walkthrough video</span></div>
+      </div>
+
+      <p class="note" style="margin-top:2.5mm">Review is built into every stage. Plan generation works from labeled CAD bubbles, requirements, and reviewed decisions (sketch shown for illustration); checks and advisories support review and do not establish code compliance. Enhanced images are reviewed against their base render.</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="foot">
+    <div class="cta">
+      <h3>Bring Cipherra into <span class="grad">your next project.</span></h3>
+      <p>We're working with early architecture and design partners on real drawings and real projects.</p>
+    </div>
+    <div class="person">
+      <img src="/dhruv-profile.jpeg" alt="Dhruv Chopra" />
+      <div><div class="nm">Dhruv Chopra</div><div class="rl">Co-founder &amp; CEO</div><div class="bio">Ex-ML Researcher, Qualcomm · IIT Madras</div></div>
+    </div>
+    <div class="person">
+      <img src="/nithesh-profile.jpeg" alt="Nithesh Hariharan" />
+      <div><div class="nm">Nithesh Hariharan</div><div class="rl">Co-founder &amp; CTO</div><div class="bio">Ex-Software Engineer, Microsoft · IIT Madras</div></div>
+    </div>
+    <div class="contact">
+      <span><b>cipherra.ai</b> &nbsp;·&nbsp; nithesh@cipherra.ai &nbsp;·&nbsp; dhruv@cipherra.ai</span>
+      <span class="pill">Get early access at cipherra.ai</span>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
