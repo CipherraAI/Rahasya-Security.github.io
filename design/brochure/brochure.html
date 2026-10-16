@@ -129,12 +129,8 @@
   .walk { display: grid; grid-template-columns: 3fr 6mm 1fr; align-items: center; }
   .stills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2mm; }
   .stills img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; border-radius: 1mm; }
-  .narr {
-    min-height: 22mm; border-radius: 1.5mm; padding: 2.4mm 3mm; display: flex; flex-direction: column; justify-content: center;
-    background: linear-gradient(160deg, rgba(107,143,255,0.16) 0%, rgba(105,230,174,0.08) 100%); border: 1px solid var(--line);
-  }
-  .narr .t { font-size: 8pt; font-weight: 700; margin-bottom: 1mm; }
-  .narr .d { color: var(--muted); font-size: 6.6pt; line-height: 1.4; }
+  .narr { aspect-ratio: 16 / 9; border-radius: 1.5mm; overflow: hidden; border: 1px solid var(--line); }
+  .narr img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .note { color: rgba(166,180,210,0.75); font-size: 6.6pt; line-height: 1.5; }
 
@@ -245,21 +241,18 @@
       </div>
 
       <div class="card" style="margin-top:3mm">
-        <h3><span class="n">05</span>Still images to a narrated walkthrough &nbsp;<span style="color:var(--muted);font-weight:500">Wellness resort, Udaipur</span></h3>
+        <h3><span class="n">05</span>Still images to a narrated walkthrough &nbsp;<span style="color:var(--muted);font-weight:500">Same mall project</span></h3>
         <div class="walk">
           <div class="stills">
-            <img src="../../public/work/udaipur-arrival.webp" alt="" />
-            <img src="../../public/work/udaipur-dining.webp" alt="" />
-            <img src="../../public/work/udaipur-courtyard.webp" alt="" />
-            <img src="../../public/work/udaipur-aerial.webp" alt="" />
+            <img src="../../public/work/mall-street.webp" alt="" />
+            <img src="../../public/work/mall-concourse.webp" alt="" />
+            <img src="../../public/work/mall-skylight.webp" alt="" />
+            <img src="../../public/work/mall-upper-corridor.webp" alt="" />
           </div>
           <div class="arr" style="color:var(--accent);display:flex;justify-content:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
-          <div class="narr">
-            <div class="t">Professional walkthroughs, narrated.</div>
-            <div class="d">Voice-over narration over your approved views, at any preferred duration.</div>
-          </div>
+          <div class="narr"><img src="../../public/work/mall-atrium.webp" alt="Mall atrium, enhanced still" /></div>
         </div>
-        <div class="labels" style="grid-template-columns:3fr 6mm 1fr"><span class="a">Selected architectural stills</span><span></span><span class="b">Narrated walkthrough</span></div>
+        <div class="labels" style="grid-template-columns:3fr 6mm 1fr"><span class="a">Selected architectural stills</span><span></span><span class="b">Narrated walkthrough, any duration</span></div>
       </div>
 
       <p class="note" style="margin-top:2.5mm">Review is built into every stage. Plan generation works from labeled CAD bubbles, requirements, and reviewed decisions (sketch shown for illustration); checks and advisories support review and do not establish code compliance. Enhanced images are reviewed against their base render.</p>
