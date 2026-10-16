@@ -120,12 +120,13 @@ function Transformation({ before, after, arrow }: {
 }
 
 /* ── Hero: cycling stage showcase ────────────────────────── */
-const STAGES = [
+type Stage = { key: string; label: string; caption: string; src: string; paper?: boolean; video?: string; ms?: number };
+const STAGES: Stage[] = [
   { key: 'bubble', label: 'Bubble diagram', caption: 'Spatial planning intent', src: '/work/bubble-diagram.webp', paper: true },
   { key: 'cad', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
   { key: 'render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
   { key: 'enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
-  { key: 'walk', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/mall-atrium.webp' },
+  { key: 'walk', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/walkthrough-arrival-poster.webp', video: '/work/walkthrough-arrival.mp4', ms: 8000 },
 ];
 
 function StageShowcase() {
@@ -133,9 +134,9 @@ function StageShowcase() {
   const [paused, setPaused] = useState(false);
   useEffect(() => {
     if (paused) return;
-    const id = window.setInterval(() => setActive((a) => (a + 1) % STAGES.length), 3200);
-    return () => clearInterval(id);
-  }, [paused]);
+    const id = window.setTimeout(() => setActive((a) => (a + 1) % STAGES.length), STAGES[active].ms ?? 3200);
+    return () => clearTimeout(id);
+  }, [paused, active]);
   const s = STAGES[active];
 
   return (
@@ -147,13 +148,21 @@ function StageShowcase() {
       }}>
       <div className="relative" style={{ aspectRatio: '16 / 10', background: s.paper ? '#ffffff' : BG }}>
         <AnimatePresence mode="wait">
-          <motion.img key={s.key} src={s.src} alt={`${s.label}: ${s.caption}`}
-            initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{
-              position: 'absolute', inset: 0, width: '100%', height: '100%',
-              objectFit: s.paper ? 'contain' : 'cover', padding: s.paper ? 14 : 0,
-            }} />
+          {s.video ? (
+            <motion.video key={s.key} src={s.video} poster={s.src} aria-label={`${s.label}: ${s.caption}`}
+              autoPlay muted loop playsInline
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+          ) : (
+            <motion.img key={s.key} src={s.src} alt={`${s.label}: ${s.caption}`}
+              initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%',
+                objectFit: s.paper ? 'contain' : 'cover', padding: s.paper ? 14 : 0,
+              }} />
+          )}
         </AnimatePresence>
         <div className="absolute left-4 bottom-4 rounded-full px-3.5 py-1.5 flex items-center gap-2"
           style={{ background: 'rgba(9,15,37,0.82)', border: `1px solid ${LINE}`, backdropFilter: 'blur(6px)' }}>
@@ -310,7 +319,7 @@ const WORKFLOW = [
   { id: '#plan', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
   { id: '#render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
   { id: '#enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
-  { id: '#walkthrough', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/mall-atrium.webp' },
+  { id: '#walkthrough', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/walkthrough-arrival-poster.webp' },
 ];
 
 export default function Home() {
@@ -551,17 +560,17 @@ export default function Home() {
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
               title="From still images to a narrated walkthrough."
-              lead="Turn selected architectural views into a professional walkthrough film. Shown here: enhanced stills from the same mall, and a clip from one of our resort walkthroughs." />
+              lead="Turn selected architectural views into a professional walkthrough film. Shown here: stills and a walkthrough clip from a wellness resort in Udaipur." />
             <FadeUp>
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1.35fr] gap-4 lg:gap-6 items-center">
                 <div>
                   <div className="font-semibold mb-2.5" style={{ color: ACCENT, fontSize: '0.8rem' }}>Selected architectural stills</div>
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { src: '/work/mall-street.webp', alt: 'Street frontage' },
-                      { src: '/work/mall-concourse.webp', alt: 'Ground-floor concourse' },
-                      { src: '/work/mall-skylight.webp', alt: 'Atrium skylight' },
-                      { src: '/work/mall-upper-corridor.webp', alt: 'Upper-floor corridor' },
+                      { src: '/work/resort-arrival.webp', alt: 'Arrival lounge' },
+                      { src: '/work/resort-pavilion.webp', alt: 'Central pavilion' },
+                      { src: '/work/resort-dining.webp', alt: 'All-day dining' },
+                      { src: '/work/resort-maharaja.webp', alt: 'Maharaja suite' },
                     ].map((im) => (
                       <div key={im.src} className="relative rounded-xl overflow-hidden" style={{ aspectRatio: '16 / 10', border: `1px solid ${LINE}` }}>
                         <img src={im.src} alt={im.alt} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
