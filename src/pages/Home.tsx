@@ -28,7 +28,8 @@ const ICONS = {
   schedule: <><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 10h18M9 4v17" /></>,
   check: <><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>,
   layers: <><path d="m12 2 10 5-10 5L2 7l10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></>,
-  play: <><path d="M6 4l14 8-14 8V4Z" /></>,
+  film: <><rect x="2" y="5" width="14" height="14" rx="2" /><path d="m22 8-6 4 6 4V8Z" /></>,
+  tick: <><path d="M20 6 9 17l-5-5" /></>,
 };
 
 /* ── Motion + layout helpers ─────────────────────────────── */
@@ -125,7 +126,7 @@ const STAGES = [
   { key: 'cad', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
   { key: 'render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
   { key: 'enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
-  { key: 'walk', label: 'Walkthrough', caption: 'Reviewed visual sequence', src: '/work/walkthrough-poster.webp' },
+  { key: 'walk', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/walkthrough-poster.webp' },
 ];
 
 function StageShowcase() {
@@ -311,7 +312,7 @@ const WORKFLOW = [
   { id: '#plan', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
   { id: '#render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
   { id: '#enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
-  { id: '#walkthrough', label: 'Walkthrough', caption: 'Reviewed visual sequence', src: '/work/walkthrough-poster.webp' },
+  { id: '#walkthrough', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/walkthrough-poster.webp' },
 ];
 
 export default function Home() {
@@ -552,8 +553,8 @@ export default function Home() {
           {/* 05 Walkthrough */}
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
-              title="From still images to a walkthrough."
-              lead="Build the visual sequence from selected architectural views. Shown here: a wellness resort in Udaipur." />
+              title="From still images to a narrated walkthrough."
+              lead="Turn selected architectural views into a professional walkthrough film. Shown here: stills from a wellness resort in Udaipur." />
             <FadeUp>
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1.35fr] gap-4 lg:gap-6 items-center">
                 <div>
@@ -574,11 +575,34 @@ export default function Home() {
                 </div>
                 <StepArrow label="Create motion" />
                 <div>
-                  <div className="font-semibold mb-2.5" style={{ color: GREEN, fontSize: '0.8rem' }}>Walkthrough video</div>
-                  <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${LINE}`, boxShadow: '0 30px 70px rgba(0,0,0,0.45)', background: BG }}>
-                    <video src="/work/walkthrough-clip.mp4" poster="/work/walkthrough-poster.webp"
-                      autoPlay muted loop playsInline preload="metadata"
-                      style={{ width: '100%', display: 'block', aspectRatio: '16 / 9', objectFit: 'cover' }} />
+                  <div className="font-semibold mb-2.5" style={{ color: GREEN, fontSize: '0.8rem' }}>Narrated walkthrough</div>
+                  <div className="rounded-2xl p-6 md:p-7" style={{
+                    background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`,
+                    border: `1px solid ${LINE}`, boxShadow: '0 30px 70px rgba(0,0,0,0.45)',
+                  }}>
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 text-white"
+                      style={{ background: ACCENT_GRAD, boxShadow: '0 8px 20px rgba(107,143,255,0.25)' }}>
+                      <Svg>{ICONS.film}</Svg>
+                    </div>
+                    <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: '1.25rem', lineHeight: 1.3 }}>
+                      Professional walkthroughs, narrated.
+                    </h4>
+                    <p className="mb-5" style={{ color: MUTED, fontSize: '0.95rem', lineHeight: 1.7 }}>
+                      We produce professional walkthrough films from your reviewed architectural views, with voice-over narration that tells the story of the space. Choose any duration you prefer, from a short teaser to a full presentation film.
+                    </p>
+                    <ul className="space-y-2.5">
+                      {[
+                        'Voice-over narration written for your project',
+                        'Any preferred duration',
+                        'Sequenced from the views you approve',
+                        'Presentation-ready for clients and reviews',
+                      ].map((item) => (
+                        <li key={item} className="flex items-start gap-2.5" style={{ color: TEXT, fontSize: '0.9rem', lineHeight: 1.5 }}>
+                          <span className="shrink-0 mt-0.5" style={{ color: GREEN }}><Svg size={16}>{ICONS.tick}</Svg></span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>

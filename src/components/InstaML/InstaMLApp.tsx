@@ -57,7 +57,7 @@ const FEATURES = [
   {
     icon: '💸',
     title: 'Pay Per Token',
-    description: 'Zero idle GPU costs. Deploy as many models as you need and pay only when they serve requests — no wasted spend.',
+    description: 'Zero idle GPU costs. Deploy as many models as you need and pay only when they serve requests, with no wasted spend.',
   },
   {
     icon: '🚀',
@@ -72,7 +72,7 @@ const FEATURES = [
   {
     icon: '🔧',
     title: 'Developer-First API',
-    description: 'OpenAI-compatible API. Drop-in replacement — no code changes needed. SDKs for Python, TypeScript, and REST clients.',
+    description: 'OpenAI-compatible API. Drop-in replacement: no code changes needed. SDKs for Python, TypeScript, and REST clients.',
   },
   {
     icon: '🇮🇳',
@@ -158,7 +158,7 @@ function TerminalBlock() {
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57', display: 'inline-block' }} />
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e', display: 'inline-block' }} />
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: G, display: 'inline-block' }} />
-        <span style={{ color: '#4a8a5a', marginLeft: 8, fontSize: 11 }}>instaml — terminal</span>
+        <span style={{ color: '#4a8a5a', marginLeft: 8, fontSize: 11 }}>instaml · terminal</span>
       </div>
       {/* lines */}
       <div ref={scrollRef} className="instaml-terminal-inner" style={{ padding: '20px 24px', minHeight: 340, maxHeight: 380, overflowY: 'auto' }}>
@@ -284,7 +284,7 @@ print(response.choices[0].message.content)`;
         alignItems: 'center',
         justifyContent: 'space-between',
       }}>
-        <span style={{ color: '#4a8a5a', fontSize: 12, fontFamily: 'monospace' }}>python — openai-compatible</span>
+        <span style={{ color: '#4a8a5a', fontSize: 12, fontFamily: 'monospace' }}>python · openai-compatible</span>
         <button
           onClick={handleCopy}
           style={{
@@ -380,7 +380,7 @@ export default function InstaMLApp() {
 
   useEffect(() => {
     const prevTitle = document.title;
-    document.title = 'InstaML — Your AI Model, Live in Minutes.';
+    document.title = 'InstaML | Your AI Model, Live in Minutes.';
 
     let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
     if (!meta) {
@@ -548,7 +548,7 @@ const showToast = (e: React.MouseEvent) => {
 
         <div className="instaml-section">
           <div className="instaml-grid-2 instaml-hero-grid" style={{ alignItems: 'center' }}>
-            {/* Left: copy — staggered entrance */}
+            {/* Left: copy, staggered entrance */}
             <motion.div initial="hidden" animate="visible" variants={staggerContainer(0.13)}>
               <motion.div variants={fadeUp} custom={0} style={{ marginBottom: 20 }}>
                 <Badge>🇮🇳 India-first &nbsp;·&nbsp; Early Access</Badge>
@@ -574,7 +574,7 @@ const showToast = (e: React.MouseEvent) => {
               </motion.div>
             </motion.div>
 
-            {/* Right: terminal — slides in from right */}
+            {/* Right: terminal, slides in from right */}
             <motion.div initial={{ opacity: 0, x: 48 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}>
               <TerminalBlock />
             </motion.div>
@@ -652,7 +652,7 @@ const showToast = (e: React.MouseEvent) => {
                 subtitle={undefined}
               />
               <p style={{ color: '#6e8f74', fontSize: 16, lineHeight: 1.7, marginBottom: 24, marginTop: -32 }}>
-                Change one line of code — <code style={{ color: G_LIGHT, background: G_DIM, padding: '2px 8px', borderRadius: 4, fontSize: 13 }}>base_url</code> — and your existing OpenAI integrations route through InstaML on Indian GPUs.
+                Change one line of code: <code style={{ color: G_LIGHT, background: G_DIM, padding: '2px 8px', borderRadius: 4, fontSize: 13 }}>base_url</code>, and your existing OpenAI integrations route through InstaML on Indian GPUs.
               </p>
               <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {['Python & TypeScript SDKs', 'Streaming responses', 'Function calling & tool use', 'Custom model endpoints', 'Token usage tracking'].map(item => (
@@ -712,7 +712,7 @@ const showToast = (e: React.MouseEvent) => {
                 Your data never leaves India.
               </h2>
               <p style={{ color: '#6e8f74', fontSize: 16, lineHeight: 1.7, marginBottom: 28 }}>
-                Every token processed on InstaML runs on GPUs physically located inside Indian data centers. We deploy the inference engine directly inside partner facilities — data residency is a first-class guarantee, not an afterthought.
+                Every token processed on InstaML runs on GPUs physically located inside Indian data centers. We deploy the inference engine directly inside partner facilities, so data residency is a first-class guarantee, not an afterthought.
               </p>
               <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {[
@@ -738,7 +738,7 @@ const showToast = (e: React.MouseEvent) => {
           <SectionTitle
             badge="Founding Team"
             title="Built by people who've done this before"
-            subtitle="We've worked inside the systems we're replacing — at Qualcomm, Microsoft, and IIT Madras."
+            subtitle="We've worked inside the systems we're replacing, at Qualcomm, Microsoft, and IIT Madras."
           />
           <div style={{
             display: 'grid',
