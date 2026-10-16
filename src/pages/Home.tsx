@@ -551,7 +551,7 @@ export default function Home() {
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
               title="From still images to a narrated walkthrough."
-              lead="Turn selected architectural views into a professional walkthrough film. Shown here: enhanced stills from the same mall, and a clip from one of our resort walkthroughs." />
+              lead="Turn selected architectural views into a professional walkthrough film. Shown here: enhanced stills from the same mall." />
             <FadeUp>
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1.35fr] gap-4 lg:gap-6 items-center">
                 <div>
@@ -577,9 +577,8 @@ export default function Home() {
                     background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`,
                     border: `1px solid ${LINE}`, boxShadow: '0 30px 70px rgba(0,0,0,0.45)',
                   }}>
-                    <video src="/work/walkthrough-arrival.mp4" poster="/work/walkthrough-arrival-poster.webp"
-                      autoPlay muted loop playsInline preload="metadata" aria-label="Walkthrough clip: arrival lounge exterior"
-                      style={{ width: '100%', display: 'block', aspectRatio: '16 / 9', objectFit: 'cover' }} />
+                    <img src="/work/mall-atrium.webp" alt="Enhanced still of the mall atrium, first floor" loading="lazy"
+                      style={{ width: '100%', display: 'block', aspectRatio: '2 / 1', objectFit: 'cover' }} />
                     <div className="p-6 md:p-7">
                     <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: '1.25rem', lineHeight: 1.3 }}>
                       Professional walkthroughs, narrated.
