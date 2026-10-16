@@ -342,11 +342,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-[1fr_1.15fr] gap-12 lg:gap-14 items-center">
             <FadeUp>
-              <Eyebrow>Companion for architectural work</Eyebrow>
               <h1 className="font-extrabold mb-6 tracking-tight"
                 style={{ color: TEXT, fontSize: 'clamp(2.5rem, 5.2vw, 4.1rem)', lineHeight: 1.05 }}>
-                From drawing intent{' '}
-                <span className="gradient-text">to visual impact.</span>
+                An Architect’s{' '}
+                <span className="gradient-text">Companion</span>
               </h1>
               <p className="mb-9" style={{ color: MUTED, fontSize: '1.15rem', lineHeight: 1.7, maxWidth: 540 }}>
                 Cipherra is your companion for drawing, visualization, and walkthroughs. Describe what you need in architectural language, let it work with your drawings, and review every result before it moves forward.
@@ -552,7 +551,7 @@ export default function Home() {
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
               title="From still images to a narrated walkthrough."
-              lead="Turn selected architectural views into a professional walkthrough film. Shown here: enhanced stills from the same mall." />
+              lead="Turn selected architectural views into a professional walkthrough film. Shown here: enhanced stills from the same mall, and a clip from one of our resort walkthroughs." />
             <FadeUp>
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1.35fr] gap-4 lg:gap-6 items-center">
                 <div>
@@ -578,8 +577,9 @@ export default function Home() {
                     background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`,
                     border: `1px solid ${LINE}`, boxShadow: '0 30px 70px rgba(0,0,0,0.45)',
                   }}>
-                    <img src="/work/mall-atrium.webp" alt="Enhanced still of the mall atrium, first floor" loading="lazy"
-                      style={{ width: '100%', display: 'block', aspectRatio: '2 / 1', objectFit: 'cover' }} />
+                    <video src="/work/walkthrough-arrival.mp4" poster="/work/walkthrough-arrival-poster.webp"
+                      autoPlay muted loop playsInline preload="metadata" aria-label="Walkthrough clip: arrival lounge exterior"
+                      style={{ width: '100%', display: 'block', aspectRatio: '16 / 9', objectFit: 'cover' }} />
                     <div className="p-6 md:p-7">
                     <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: '1.25rem', lineHeight: 1.3 }}>
                       Professional walkthroughs, narrated.
