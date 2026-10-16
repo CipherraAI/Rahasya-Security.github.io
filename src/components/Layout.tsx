@@ -175,7 +175,9 @@ export default function Layout() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <nav className="flex justify-between items-center h-20">
             <Link to="/" className="flex items-center" aria-label="Cipherra home">
-              <img src="/cipherra-logo-white.png" alt="Cipherra" className="logo-img" />
+              <span className="logo-box">
+                <img src="/Cipherra_logo.jpeg" alt="Cipherra" className="logo-img" />
+              </span>
             </Link>
             <ul className="hidden md:flex items-center gap-8 list-none">
               {NAV.map((n) => (
@@ -255,8 +257,10 @@ export default function Layout() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-12">
             <div>
-              <div className="h-10 mb-4 flex items-center">
-                <img src="/cipherra-logo-white.png" alt="Cipherra" className="h-7 w-auto" />
+              <div className="mb-5 flex items-center">
+                <span className="logo-box">
+                  <img src="/Cipherra_logo.jpeg" alt="Cipherra" className="logo-img" />
+                </span>
               </div>
               <p style={{ color: 'rgba(166,180,210,0.70)', fontSize: '0.85rem', lineHeight: 1.65 }}>
                 A companion for architectural work. From bubble diagrams and CAD drawings to renders, enhanced stills, and walkthroughs, with review built in.

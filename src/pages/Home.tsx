@@ -295,10 +295,9 @@ function TeamCard({ name, role, photo, bio, linkedin }: (typeof TEAM)[0]) {
 function StageHeader({ n, tag, title, lead }: { n: string; tag: string; title: string; lead: string }) {
   return (
     <FadeUp className="mb-10 md:mb-12 max-w-3xl">
-      <div className="flex items-center gap-3 mb-4">
-        <span className="font-bold" style={{ color: ACCENT, fontSize: '0.8rem', fontFamily: "'JetBrains Mono','Fira Code',monospace" }}>{n}</span>
-        <span style={{ width: 28, height: 1, background: LINE }} />
-        <span className="font-semibold uppercase tracking-widest text-xs" style={{ color: MUTED }}>{tag}</span>
+      <div className="flex items-baseline gap-2 mb-4" style={{ fontSize: '0.95rem' }}>
+        <span className="font-bold" style={{ color: ACCENT, fontFamily: "'JetBrains Mono','Fira Code',monospace" }}>{n}</span>
+        <span className="font-semibold" style={{ color: MUTED }}>{tag}</span>
       </div>
       <h3 className="font-bold mb-3" style={h3Style}>{title}</h3>
       <p style={leadStyle}>{lead}</p>
