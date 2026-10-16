@@ -1,16 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
+import EarlyAccessForm from '../components/EarlyAccessForm';
+import { ACCENT, ACCENT_GRAD, BG, GREEN, LINE, MUTED, SURFACE, TEXT } from '../theme';
 
-/* ── Palette (matches the architecture pitch deck) ───────── */
-const BG = '#090f25';
-const SURFACE = '#121d37';
-const LINE = '#263957';
-const ACCENT = '#6b8fff';
-const MUTED = '#a6b4d2';
-const TEXT = '#f4f7ff';
-const GREEN = '#69e6ae';
-const ACCENT_GRAD = 'linear-gradient(135deg, #3b6fff 0%, #6b8fff 100%)';
 
 /* ── SVG icon system ─────────────────────────────────────── */
 function Svg({ children, size = 22 }: { children: React.ReactNode; size?: number }) {
@@ -346,10 +339,10 @@ export default function Home() {
                 An Architect’s{' '}
                 <span className="gradient-text">Companion</span>
               </h1>
-              <p className="mb-9" style={{ color: MUTED, fontSize: '1.15rem', lineHeight: 1.7, maxWidth: 540 }}>
+              <p className="sm:mb-9" style={{ color: MUTED, fontSize: '1.15rem', lineHeight: 1.7, maxWidth: 540 }}>
                 Cipherra is your companion for drawing, visualization, and walkthroughs. Describe what you need in architectural language, let it work with your drawings, and review every result before it moves forward.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-start">
+              <div className="hidden sm:flex sm:flex-row gap-4 sm:items-start">
                 <a href="#contact"
                   className="px-7 py-3.5 rounded-full text-white font-semibold text-base text-center transition-all hover:-translate-y-0.5"
                   style={{ background: ACCENT_GRAD, boxShadow: '0 8px 28px rgba(107,143,255,0.35)' }}>
@@ -634,16 +627,7 @@ export default function Home() {
             </p>
           </FadeUp>
           <FadeUp delay={0.1}>
-            <div style={{
-              background: '#ffffff', border: `1px solid ${LINE}`, borderRadius: 16,
-              padding: '8px 24px 16px', boxShadow: '0 20px 50px rgba(0,0,0,0.35)',
-            }}>
-              <iframe
-                src="https://tally.so/embed/ja0baa?alignLeft=1&hideTitle=1&transparentBackground=1"
-                loading="lazy" width="100%" frameBorder="0" title="Cipherra Early Access"
-                style={{ display: 'block', height: 168, marginTop: 10 }}
-              />
-            </div>
+            <EarlyAccessForm />
           </FadeUp>
         </div>
       </section>
