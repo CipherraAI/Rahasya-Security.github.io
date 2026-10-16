@@ -383,7 +383,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto mb-12">
             {[
-              { icon: ICONS.chat, title: 'Describe the task', body: 'Use architectural language: shops around the atrium, refined stair cores, updated grids and schedules.' },
+              { icon: ICONS.chat, title: 'Describe the task', body: 'Explain what you need in your own architectural language, the way you would brief a colleague.' },
               { icon: ICONS.drawing, title: 'Work with the drawing', body: 'The companion uses supported CAD tools to edit and generate drawings in place, layer by layer.' },
               { icon: ICONS.review, title: 'Stay in the loop', body: 'Inspect every change, compare it against the source, and refine the request until it is right.' },
             ].map((s, i) => (
@@ -504,16 +504,6 @@ export default function Home() {
               <Transformation arrow="Edit and refine"
                 before={<Frame src="/work/cad-before.webp" alt="Starting mall CAD drawing with an empty atrium" label="Starting CAD drawing" paper aspect="1 / 1" />}
                 after={<Frame src="/work/cad-after.webp" alt="Refined mall CAD drawing with shops, cores and grids" label="Final CAD drawing" labelColor={GREEN} paper aspect="1 / 1" />} />
-            </FadeUp>
-            <FadeUp delay={0.1}>
-              <div className="mt-8 rounded-2xl p-6 md:p-7" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
-                <div className="font-semibold uppercase tracking-widest mb-3" style={{ color: ACCENT, fontSize: '0.68rem' }}>
-                  Example prompt · summary of the shown changes
-                </div>
-                <p style={{ color: TEXT, fontSize: 'clamp(1rem, 1.6vw, 1.15rem)', lineHeight: 1.6 }}>
-                  “Develop this basic mall plan: add shops around the atrium, refine stairs, toilets and lift lobbies, and update grids, dimensions and the shop schedule.”
-                </p>
-              </div>
             </FadeUp>
           </div>
 
