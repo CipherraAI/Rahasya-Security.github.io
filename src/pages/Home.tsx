@@ -60,7 +60,6 @@ function Eyebrow({ children, color = ACCENT }: { children: React.ReactNode; colo
 const h2Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 };
 const h3Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.5rem, 2.6vw, 2rem)', lineHeight: 1.2 };
 const leadStyle: React.CSSProperties = { color: MUTED, lineHeight: 1.7, fontSize: '1.05rem' };
-const noteStyle: React.CSSProperties = { color: 'rgba(166,180,210,0.70)', fontSize: '0.82rem', lineHeight: 1.6 };
 
 /* ── Framed image (deck-style panel) ─────────────────────── */
 function Frame({ src, alt, label, labelColor = ACCENT, paper, aspect = '4 / 3', fit }: {
@@ -494,9 +493,6 @@ export default function Home() {
                 </FadeUp>
               ))}
             </div>
-            <p className="mt-6" style={noteStyle}>
-              Sketch shown for illustration: generation works from the same zoning drawn as labeled CAD bubbles, plus requirements and reviewed decisions. Checks and advisories support review; they do not establish code compliance.
-            </p>
           </div>
 
           {/* 02 Edit */}
@@ -542,9 +538,6 @@ export default function Home() {
               <CompareSlider before="/work/gallery-base.webp" after="/work/gallery-enhanced.webp"
                 beforeLabel="Base gallery render" afterLabel="Enhanced gallery image" />
             </FadeUp>
-            <p className="mt-6" style={noteStyle}>
-              Enhancement can introduce or change presentation detail, so every image is reviewed against its base render.
-            </p>
           </div>
 
           {/* 05 Walkthrough */}
