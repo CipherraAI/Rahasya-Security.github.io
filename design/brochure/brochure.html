@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Cipherra Brochure</title>
-<link rel="icon" type="image/png" href="/cipherra_logo_thumbnail.png" />
+<link rel="icon" type="image/png" href="../../public/cipherra_logo_thumbnail.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -59,7 +59,7 @@
     position: relative;
     padding: 8mm 12mm 6mm;
     display: grid;
-    grid-template-columns: 1fr 70mm;
+    grid-template-columns: minmax(0, 1fr) 70mm;
     gap: 8mm;
     align-items: center;
     background:
@@ -129,13 +129,12 @@
   .walk { display: grid; grid-template-columns: 3fr 6mm 1fr; align-items: center; }
   .stills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2mm; }
   .stills img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; border-radius: 1mm; }
-  .film { position: relative; border-radius: 1.5mm; overflow: hidden; aspect-ratio: 16 / 9; }
-  .film img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .film .play {
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    width: 8mm; height: 8mm; border-radius: 50%; background: rgba(9,15,37,0.75); border: 1px solid rgba(255,255,255,0.5);
-    display: flex; align-items: center; justify-content: center; color: #fff;
+  .narr {
+    min-height: 22mm; border-radius: 1.5mm; padding: 2.4mm 3mm; display: flex; flex-direction: column; justify-content: center;
+    background: linear-gradient(160deg, rgba(107,143,255,0.16) 0%, rgba(105,230,174,0.08) 100%); border: 1px solid var(--line);
   }
+  .narr .t { font-size: 8pt; font-weight: 700; margin-bottom: 1mm; }
+  .narr .d { color: var(--muted); font-size: 6.6pt; line-height: 1.4; }
 
   .note { color: rgba(166,180,210,0.75); font-size: 6.6pt; line-height: 1.5; }
 
@@ -173,13 +172,13 @@
   <!-- Hero -->
   <header class="hero">
     <div>
-      <img class="logo" src="/cipherra-logo-white.png" alt="Cipherra" />
+      <img class="logo" src="../../public/cipherra-logo-white.png" alt="Cipherra" />
       <div class="eyebrow">Companion for architectural work</div>
       <h1>From drawing intent <span class="grad">to visual impact.</span></h1>
       <p class="lead">Cipherra is your companion for drawing, visualization, and walkthroughs. Describe what you need in architectural language, let it work with your drawings, and review every result before it moves forward.</p>
       <div class="chips"><span class="c">Bubble diagram</span><span class="a">→</span><span class="c">2D CAD</span><span class="a">→</span><span class="c">Rendered 3D</span><span class="a">→</span><span class="c">Enhanced stills</span><span class="a">→</span><span class="c">Walkthrough</span></div>
     </div>
-    <div class="hero-img"><img src="/work/gallery-enhanced.webp" alt="Enhanced mall gallery image" /></div>
+    <div class="hero-img"><img src="../../public/work/gallery-enhanced.webp" alt="Enhanced mall gallery image" /></div>
   </header>
 
   <main class="body">
@@ -210,57 +209,57 @@
         <div class="card">
           <h3><span class="n">01</span>Bubble diagram to generated CAD plan</h3>
           <div class="pair">
-            <div class="im"><img src="/work/bubble-diagram.webp" alt="" /></div>
+            <div class="im"><img src="../../public/work/bubble-diagram.webp" alt="" /></div>
             <div class="arr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
-            <div class="im paper"><img src="/work/generated-plan.webp" alt="" /></div>
+            <div class="im paper"><img src="../../public/work/generated-plan.webp" alt="" /></div>
           </div>
           <div class="labels"><span class="a">Bubble diagram</span><span></span><span class="b">Generated CAD plan</span></div>
         </div>
         <div class="card">
           <h3><span class="n">02</span>Basic layout to refined CAD drawing</h3>
           <div class="pair">
-            <div class="im paper"><img src="/work/cad-before.webp" alt="" /></div>
+            <div class="im paper"><img src="../../public/work/cad-before.webp" alt="" /></div>
             <div class="arr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
-            <div class="im paper"><img src="/work/cad-after.webp" alt="" /></div>
+            <div class="im paper"><img src="../../public/work/cad-after.webp" alt="" /></div>
           </div>
           <div class="labels"><span class="a">Starting CAD drawing</span><span></span><span class="b">Final CAD drawing</span></div>
         </div>
         <div class="card">
           <h3><span class="n">03</span>2D CAD to rendered 3D model</h3>
           <div class="pair">
-            <div class="im wide paper"><img src="/work/mall-cad.webp" alt="" /></div>
+            <div class="im wide paper"><img src="../../public/work/mall-cad.webp" alt="" /></div>
             <div class="arr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
-            <div class="im wide"><img src="/work/mall-render.webp" alt="" /></div>
+            <div class="im wide"><img src="../../public/work/mall-render.webp" alt="" /></div>
           </div>
           <div class="labels"><span class="a">Mall first-floor plan</span><span></span><span class="b">Rendered model</span></div>
         </div>
         <div class="card">
           <h3><span class="n">04</span>Render to enhanced image</h3>
           <div class="pair">
-            <div class="im wide"><img src="/work/gallery-base.webp" alt="" /></div>
+            <div class="im wide"><img src="../../public/work/gallery-base.webp" alt="" /></div>
             <div class="arr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
-            <div class="im wide"><img src="/work/gallery-enhanced.webp" alt="" /></div>
+            <div class="im wide"><img src="../../public/work/gallery-enhanced.webp" alt="" /></div>
           </div>
           <div class="labels"><span class="a">Base gallery render</span><span></span><span class="b">Enhanced gallery image</span></div>
         </div>
       </div>
 
       <div class="card" style="margin-top:3mm">
-        <h3><span class="n">05</span>Still images to a walkthrough &nbsp;<span style="color:var(--muted);font-weight:500">Wellness resort, Udaipur</span></h3>
+        <h3><span class="n">05</span>Still images to a narrated walkthrough &nbsp;<span style="color:var(--muted);font-weight:500">Wellness resort, Udaipur</span></h3>
         <div class="walk">
           <div class="stills">
-            <img src="/work/udaipur-arrival.webp" alt="" />
-            <img src="/work/udaipur-dining.webp" alt="" />
-            <img src="/work/udaipur-courtyard.webp" alt="" />
-            <img src="/work/udaipur-aerial.webp" alt="" />
+            <img src="../../public/work/udaipur-arrival.webp" alt="" />
+            <img src="../../public/work/udaipur-dining.webp" alt="" />
+            <img src="../../public/work/udaipur-courtyard.webp" alt="" />
+            <img src="../../public/work/udaipur-aerial.webp" alt="" />
           </div>
           <div class="arr" style="color:var(--accent);display:flex;justify-content:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0-6-6m6 6-6 6"/></svg></div>
-          <div class="film">
-            <img src="/work/walkthrough-poster.webp" alt="" />
-            <div class="play"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8V4Z"/></svg></div>
+          <div class="narr">
+            <div class="t">Professional walkthroughs, narrated.</div>
+            <div class="d">Voice-over narration over your approved views, at any preferred duration.</div>
           </div>
         </div>
-        <div class="labels" style="grid-template-columns:3fr 6mm 1fr"><span class="a">Selected architectural stills</span><span></span><span class="b">Walkthrough video</span></div>
+        <div class="labels" style="grid-template-columns:3fr 6mm 1fr"><span class="a">Selected architectural stills</span><span></span><span class="b">Narrated walkthrough</span></div>
       </div>
 
       <p class="note" style="margin-top:2.5mm">Review is built into every stage. Plan generation works from labeled CAD bubbles, requirements, and reviewed decisions (sketch shown for illustration); checks and advisories support review and do not establish code compliance. Enhanced images are reviewed against their base render.</p>
@@ -274,11 +273,11 @@
       <p>We're working with early architecture and design partners on real drawings and real projects.</p>
     </div>
     <div class="person">
-      <img src="/dhruv-profile.jpeg" alt="Dhruv Chopra" />
+      <img src="../../public/dhruv-profile.jpeg" alt="Dhruv Chopra" />
       <div><div class="nm">Dhruv Chopra</div><div class="rl">Co-founder &amp; CEO</div><div class="bio">Ex-ML Researcher, Qualcomm · IIT Madras</div></div>
     </div>
     <div class="person">
-      <img src="/nithesh-profile.jpeg" alt="Nithesh Hariharan" />
+      <img src="../../public/nithesh-profile.jpeg" alt="Nithesh Hariharan" />
       <div><div class="nm">Nithesh Hariharan</div><div class="rl">Co-founder &amp; CTO</div><div class="bio">Ex-Software Engineer, Microsoft · IIT Madras</div></div>
     </div>
     <div class="contact">
