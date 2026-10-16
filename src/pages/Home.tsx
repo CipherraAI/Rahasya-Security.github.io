@@ -28,7 +28,6 @@ const ICONS = {
   schedule: <><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 10h18M9 4v17" /></>,
   check: <><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>,
   layers: <><path d="m12 2 10 5-10 5L2 7l10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></>,
-  film: <><rect x="2" y="5" width="14" height="14" rx="2" /><path d="m22 8-6 4 6 4V8Z" /></>,
   tick: <><path d="M20 6 9 17l-5-5" /></>,
 };
 
@@ -126,7 +125,7 @@ const STAGES = [
   { key: 'cad', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
   { key: 'render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
   { key: 'enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
-  { key: 'walk', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/walkthrough-poster.webp' },
+  { key: 'walk', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/mall-atrium.webp' },
 ];
 
 function StageShowcase() {
@@ -312,7 +311,7 @@ const WORKFLOW = [
   { id: '#plan', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
   { id: '#render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
   { id: '#enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
-  { id: '#walkthrough', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/walkthrough-poster.webp' },
+  { id: '#walkthrough', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/mall-atrium.webp' },
 ];
 
 export default function Home() {
@@ -554,17 +553,17 @@ export default function Home() {
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
               title="From still images to a narrated walkthrough."
-              lead="Turn selected architectural views into a professional walkthrough film. Shown here: stills from a wellness resort in Udaipur." />
+              lead="Turn selected architectural views into a professional walkthrough film. Shown here: enhanced stills from the same mall." />
             <FadeUp>
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1.35fr] gap-4 lg:gap-6 items-center">
                 <div>
                   <div className="font-semibold mb-2.5" style={{ color: ACCENT, fontSize: '0.8rem' }}>Selected architectural stills</div>
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { src: '/work/udaipur-arrival.webp', alt: 'Arrival lounge' },
-                      { src: '/work/udaipur-dining.webp', alt: 'All-day dining' },
-                      { src: '/work/udaipur-courtyard.webp', alt: 'Garden courtyard' },
-                      { src: '/work/udaipur-aerial.webp', alt: 'Aerial overview' },
+                      { src: '/work/mall-street.webp', alt: 'Street frontage' },
+                      { src: '/work/mall-concourse.webp', alt: 'Ground-floor concourse' },
+                      { src: '/work/mall-skylight.webp', alt: 'Atrium skylight' },
+                      { src: '/work/mall-upper-corridor.webp', alt: 'Upper-floor corridor' },
                     ].map((im) => (
                       <div key={im.src} className="relative rounded-xl overflow-hidden" style={{ aspectRatio: '16 / 10', border: `1px solid ${LINE}` }}>
                         <img src={im.src} alt={im.alt} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -576,14 +575,13 @@ export default function Home() {
                 <StepArrow label="Create motion" />
                 <div>
                   <div className="font-semibold mb-2.5" style={{ color: GREEN, fontSize: '0.8rem' }}>Narrated walkthrough</div>
-                  <div className="rounded-2xl p-6 md:p-7" style={{
+                  <div className="rounded-2xl overflow-hidden" style={{
                     background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`,
                     border: `1px solid ${LINE}`, boxShadow: '0 30px 70px rgba(0,0,0,0.45)',
                   }}>
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 text-white"
-                      style={{ background: ACCENT_GRAD, boxShadow: '0 8px 20px rgba(107,143,255,0.25)' }}>
-                      <Svg>{ICONS.film}</Svg>
-                    </div>
+                    <img src="/work/mall-atrium.webp" alt="Enhanced still of the mall atrium, first floor" loading="lazy"
+                      style={{ width: '100%', display: 'block', aspectRatio: '2 / 1', objectFit: 'cover' }} />
+                    <div className="p-6 md:p-7">
                     <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: '1.25rem', lineHeight: 1.3 }}>
                       Professional walkthroughs, narrated.
                     </h4>
@@ -603,6 +601,7 @@ export default function Home() {
                         </li>
                       ))}
                     </ul>
+                    </div>
                   </div>
                 </div>
               </div>
