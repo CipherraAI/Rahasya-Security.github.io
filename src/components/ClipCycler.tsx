@@ -88,9 +88,10 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className, nar
   const toggleSound = () => {
     setHinted(true);
     setSoundOn((on) => {
+      // Unmute in the click handler itself (browsers allow sound only from a user gesture);
+      // playback simply continues from where it is.
       const v = refs.current[active];
-      // Restart the clip on unmute so the narration is heard from its start.
-      if (!on && v) { v.muted = false; v.currentTime = 0; v.play().catch(() => {}); }
+      if (v) v.muted = on;
       return !on;
     });
   };
