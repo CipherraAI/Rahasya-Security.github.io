@@ -36,8 +36,10 @@ function usePageLoaded() {
  * Nothing downloads until the page has loaded and the player is near the viewport;
  * the next clip is fetched only shortly before the current one ends.
  */
-export default function ClipCycler({ clips, fadeMs = 1200, style, className }: {
+export default function ClipCycler({ clips, fadeMs = 1200, style, className, narration = false }: {
   clips: Clip[]; fadeMs?: number; style?: React.CSSProperties; className?: string;
+  /** Clips carry a narration track: show a mute/unmute control (muted by default). */
+  narration?: boolean;
 }) {
   const [active, setActive] = useState(0);
   const [still] = useState(prefersReducedMotion);
@@ -45,6 +47,8 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className }: {
   const [prefetch, setPrefetch] = useState(false);
   // Clips that have rendered a frame; until then their poster shows instead.
   const [playing, setPlaying] = useState<Set<number>>(() => new Set());
+  const [soundOn, setSoundOn] = useState(false);
+  const [hinted, setHinted] = useState(false);
   const pageLoaded = usePageLoaded();
   const box = useRef<HTMLDivElement>(null);
   const refs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -75,6 +79,22 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className }: {
     return () => { window.clearTimeout(fallback); window.clearTimeout(pause); };
   }, [active, clips.length, fadeMs, single, ready]);
 
+  // Only the clip on screen is audible, so narration follows the crossfade.
+  // (Set as a property: React does not keep the muted attribute in sync after mount.)
+  useEffect(() => {
+    refs.current.forEach((v, i) => { if (v) v.muted = !(soundOn && i === active); });
+  }, [soundOn, active]);
+
+  const toggleSound = () => {
+    setHinted(true);
+    setSoundOn((on) => {
+      const v = refs.current[active];
+      // Restart the clip on unmute so the narration is heard from its start.
+      if (!on && v) { v.muted = false; v.currentTime = 0; v.play().catch(() => {}); }
+      return !on;
+    });
+  };
+
   const next = (active + 1) % clips.length;
   // Clips that have been given a src keep it, so a clip fading out never blanks.
   const attached = useRef(new Set<number>());
@@ -90,14 +110,14 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className }: {
   // mobile browsers draw poster attributes letterboxed, ignoring object-fit, so the frame
   // would jump when playback starts. The video fades in only once it is actually playing.
   return (
-    <div ref={box} className={className} style={{ position: 'relative', overflow: 'hidden', ...style }} aria-hidden="true">
+    <div ref={box} className={className} style={{ position: 'relative', overflow: 'hidden', ...style }}>
       {clips.map((c, i) => {
-        if (still) return i === 0 && <img key={c.src} src={c.poster} alt="" style={fill} />;
+        if (still) return i === 0 && <img key={c.src} src={c.poster} alt="" aria-hidden="true" style={fill} />;
         const hasSrc = ready && (i === active || preloadFor(i) === 'auto' || attached.current.has(i));
         if (hasSrc) attached.current.add(i);
         const showPoster = i === active || i === next || attached.current.has(i);
         return (
-          <div key={c.src} data-active={i === active || undefined}
+          <div key={c.src} data-active={i === active || undefined} aria-hidden="true"
             style={{ position: 'absolute', inset: 0, opacity: i === active ? 1 : 0, transition: `opacity ${fadeMs}ms ease` }}>
             {showPoster && <img src={c.poster} alt="" style={fill} />}
             <video ref={(el) => { refs.current[i] = el; }}
@@ -116,6 +136,31 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className }: {
           </div>
         );
       })}
+      {narration && !still && (
+        <div className="absolute left-3 bottom-3 flex items-center gap-2" style={{ zIndex: 2 }}>
+          <button type="button" onClick={toggleSound}
+            aria-label={soundOn ? 'Mute narration' : 'Unmute to hear narration'} aria-pressed={soundOn}
+            className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-105"
+            style={{ background: 'rgba(9,15,37,0.78)', border: '1px solid rgba(255,255,255,0.22)', color: '#fff', backdropFilter: 'blur(6px)' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 5 6 9H3v6h3l5 4V5z" />
+              {soundOn
+                ? <><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M18.5 5.5a9 9 0 0 1 0 13" /></>
+                : <><path d="m16 9 5 6" /><path d="m21 9-5 6" /></>}
+            </svg>
+          </button>
+          {!hinted && (
+            <span className="relative text-xs font-semibold px-2.5 py-1.5 rounded-md pointer-events-none"
+              style={{ background: 'rgba(255,255,255,0.94)', color: '#0b1430', boxShadow: '0 4px 14px rgba(0,0,0,0.3)' }}>
+              <span aria-hidden="true" style={{
+                position: 'absolute', left: -5, top: '50%', transform: 'translateY(-50%)',
+                borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderRight: '5px solid rgba(255,255,255,0.94)',
+              }} />
+              Tap to hear narration
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
