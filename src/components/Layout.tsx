@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import BackgroundClips from './BackgroundClips';
 
 declare global {
   interface Window {
@@ -163,6 +164,7 @@ export default function Layout() {
 
   return (
     <div className="antialiased relative" style={{ background: '#090f25', minHeight: '100vh' }}>
+      <BackgroundClips />
       <div id="animated-background" ref={backgroundRef} />
 
       <header
@@ -253,7 +255,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="py-16 relative z-10" style={{ background: '#070c1e', borderTop: `1px solid ${LINE}` }}>
+      <footer className="py-16 relative z-10" style={{ background: '#070c1e' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-12">
             <div>
