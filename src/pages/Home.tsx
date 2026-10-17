@@ -385,26 +385,31 @@ export default function Home() {
           <FadeUp delay={0.1}>
             <div className="max-w-6xl mx-auto rounded-2xl overflow-hidden"
               style={{ border: `1px solid ${LINE}`, boxShadow: '0 40px 90px rgba(0,0,0,0.5), 0 0 60px rgba(107,143,255,0.08)' }}>
-              <img src="/work/companion-interface.webp" alt="The Cipherra companion: a conversation alongside the open CAD drawing"
-                loading="lazy" style={{ width: '100%', display: 'block' }} />
+              {/* Phones get a crop without the file panel, so the chat and drawing stay legible. */}
+              <picture>
+                <source media="(max-width: 767px)" srcSet="/work/companion-interface-mobile.webp" />
+                <img src="/work/companion-interface.webp" alt="The Cipherra companion: a conversation alongside the open CAD drawing"
+                  loading="lazy" style={{ width: '100%', display: 'block' }} />
+              </picture>
             </div>
           </FadeUp>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 max-w-5xl mx-auto mt-6 md:mt-12 rounded-2xl md:rounded-none overflow-hidden md:overflow-visible bg-[#121d37] md:bg-transparent border border-[#263957] md:border-0 divide-y divide-[#263957] md:divide-y-0">
             {[
               { icon: ICONS.chat, title: 'Describe the task', body: 'Explain what you need in your own architectural language, the way you would brief a colleague.' },
               { icon: ICONS.drawing, title: 'Work with the drawing', body: 'The companion uses supported CAD tools to edit and generate drawings in place, layer by layer.' },
               { icon: ICONS.review, title: 'Stay in the loop', body: 'Inspect every change, compare it against the source, and refine the request until it is right.' },
             ].map((s, i) => (
               <FadeUp key={s.title} delay={i * 0.08}>
-                <div className="group rounded-2xl p-7 h-full transition-all duration-300 hover:-translate-y-1.5"
-                  style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 text-white transition-transform duration-300 group-hover:scale-110"
+                <div className="group md:rounded-2xl px-4 py-3.5 md:p-7 h-full flex md:block items-start gap-3.5 transition-all duration-300 md:hover:-translate-y-1.5 md:bg-[#121d37] md:border md:border-[#263957]">
+                  <div className="w-8 h-8 md:w-11 md:h-11 shrink-0 rounded-lg md:rounded-xl flex items-center justify-center md:mb-5 text-white transition-transform duration-300 group-hover:scale-110"
                     style={{ background: ACCENT_GRAD, boxShadow: '0 8px 20px rgba(107,143,255,0.25)' }}>
-                    <Svg>{s.icon}</Svg>
+                    <Svg size={20}>{s.icon}</Svg>
                   </div>
-                  <h4 className="text-lg font-bold mb-2" style={{ color: TEXT }}>{s.title}</h4>
-                  <p style={{ color: MUTED, fontSize: '0.95rem', lineHeight: 1.65 }}>{s.body}</p>
+                  <div>
+                    <h4 className="text-[0.95rem] md:text-lg font-bold mb-0.5 md:mb-2" style={{ color: TEXT }}>{s.title}</h4>
+                    <p className="text-[0.82rem] md:text-[0.95rem] leading-snug md:leading-relaxed" style={{ color: MUTED }}>{s.body}</p>
+                  </div>
                 </div>
               </FadeUp>
             ))}
