@@ -435,7 +435,7 @@ export default function Home() {
                   style={{ background: BG, border: `1px solid ${LINE}` }}
                   onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'rgba(107,143,255,0.6)')}
                   onMouseLeave={(e) => (e.currentTarget.style.borderColor = LINE)}>
-                  <div style={{ aspectRatio: '4 / 3', background: w.paper ? '#ffffff' : SURFACE, overflow: 'hidden' }}>
+                  <div style={{ aspectRatio: '16 / 10', background: w.paper ? '#ffffff' : SURFACE, overflow: 'hidden' }}>
                     <img src={w.src} alt={w.label} loading="lazy"
                       className="transition-transform duration-500 group-hover:scale-105"
                       style={{ width: '100%', height: '100%', objectFit: w.paper ? 'contain' : 'cover', padding: w.paper ? 8 : 0 }} />
