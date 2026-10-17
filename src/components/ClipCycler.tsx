@@ -44,6 +44,7 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className, nar
   const [active, setActive] = useState(0);
   const [still] = useState(prefersReducedMotion);
   const [near, setNear] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [prefetch, setPrefetch] = useState(false);
   // Clips that have rendered a frame; until then their poster shows instead.
   const [playing, setPlaying] = useState<Set<number>>(() => new Set());
@@ -63,21 +64,42 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className, nar
     return () => io.disconnect();
   }, [near]);
 
+  // Whether the player is actually on screen (at least a fifth of it) in a visible tab.
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    let onScreen = false;
+    const update = () => setVisible(onScreen && document.visibilityState === 'visible');
+    const io = new IntersectionObserver(([e]) => { onScreen = e.intersectionRatio >= 0.2; update(); }, { threshold: [0, 0.2, 0.5] });
+    io.observe(el);
+    document.addEventListener('visibilitychange', update);
+    return () => { io.disconnect(); document.removeEventListener('visibilitychange', update); };
+  }, []);
+
+  // A newly active clip starts from the top.
   useEffect(() => {
     if (!ready) return;
     setPrefetch(false);
     const v = refs.current[active];
-    if (!v) return;
-    v.currentTime = 0;
-    v.play().catch(() => {});
-    // Fallback in case 'ended' never fires (e.g. autoplay blocked).
-    const fallback = single ? undefined : window.setTimeout(() => setActive((a) => (a + 1) % clips.length), 15000);
+    if (v) v.currentTime = 0;
     // Pause the previous clip once it has faded out.
     const pause = window.setTimeout(() => {
       refs.current.forEach((other, i) => { if (other && i !== active) other.pause(); });
     }, fadeMs);
-    return () => { window.clearTimeout(fallback); window.clearTimeout(pause); };
-  }, [active, clips.length, fadeMs, single, ready]);
+    return () => window.clearTimeout(pause);
+  }, [active, fadeMs, ready]);
+
+  // Play only while on screen; scrolling back resumes from where it paused.
+  useEffect(() => {
+    if (!ready) return;
+    const v = refs.current[active];
+    if (!v) return;
+    if (!visible) { v.pause(); return; }
+    v.play().catch(() => {});
+    // Fallback in case 'ended' never fires (e.g. autoplay blocked).
+    const fallback = single ? undefined : window.setTimeout(() => setActive((a) => (a + 1) % clips.length), 15000);
+    return () => window.clearTimeout(fallback);
+  }, [active, clips.length, single, ready, visible]);
 
   // Only the clip on screen is audible, so narration follows the crossfade.
   // (Set as a property: React does not keep the muted attribute in sync after mount.)
