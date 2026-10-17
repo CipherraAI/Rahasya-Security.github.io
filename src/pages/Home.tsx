@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import EarlyAccessForm from '../components/EarlyAccessForm';
+import ClipCycler, { CLIPS } from '../components/ClipCycler';
 import { ACCENT, ACCENT_GRAD, BG, GREEN, LINE, MUTED, SURFACE, TEXT } from '../theme';
 
 
@@ -112,12 +113,13 @@ function Transformation({ before, after, arrow }: {
 }
 
 /* ── Hero: cycling stage showcase ────────────────────────── */
-const STAGES = [
+type Stage = { key: string; label: string; caption: string; src: string; paper?: boolean; clip?: boolean; ms?: number };
+const STAGES: Stage[] = [
   { key: 'bubble', label: 'Bubble diagram', caption: 'Spatial planning intent', src: '/work/bubble-diagram.webp', paper: true },
   { key: 'cad', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
   { key: 'render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
   { key: 'enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
-  { key: 'walk', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/mall-atrium.webp' },
+  { key: 'walk', label: 'Walkthrough', caption: 'Narrated, any duration', src: CLIPS.arrival.poster, clip: true, ms: 8000 },
 ];
 
 function StageShowcase() {
@@ -125,9 +127,9 @@ function StageShowcase() {
   const [paused, setPaused] = useState(false);
   useEffect(() => {
     if (paused) return;
-    const id = window.setInterval(() => setActive((a) => (a + 1) % STAGES.length), 3200);
-    return () => clearInterval(id);
-  }, [paused]);
+    const id = window.setTimeout(() => setActive((a) => (a + 1) % STAGES.length), STAGES[active].ms ?? 3200);
+    return () => clearTimeout(id);
+  }, [paused, active]);
   const s = STAGES[active];
 
   return (
@@ -139,13 +141,20 @@ function StageShowcase() {
       }}>
       <div className="relative" style={{ aspectRatio: '16 / 10', background: s.paper ? '#ffffff' : BG }}>
         <AnimatePresence mode="wait">
-          <motion.img key={s.key} src={s.src} alt={`${s.label}: ${s.caption}`}
-            initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{
-              position: 'absolute', inset: 0, width: '100%', height: '100%',
-              objectFit: s.paper ? 'contain' : 'cover', padding: s.paper ? 14 : 0,
-            }} />
+          {s.clip ? (
+            <motion.div key={s.key} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }} style={{ position: 'absolute', inset: 0 }}>
+              <ClipCycler clips={[CLIPS.arrival]} style={{ position: 'absolute', inset: 0 }} />
+            </motion.div>
+          ) : (
+            <motion.img key={s.key} src={s.src} alt={`${s.label}: ${s.caption}`}
+              initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%',
+                objectFit: s.paper ? 'contain' : 'cover', padding: s.paper ? 14 : 0,
+              }} />
+          )}
         </AnimatePresence>
         <div className="absolute left-4 bottom-4 rounded-full px-3.5 py-1.5 flex items-center gap-2"
           style={{ background: 'rgba(9,15,37,0.82)', border: `1px solid ${LINE}`, backdropFilter: 'blur(6px)' }}>
@@ -302,7 +311,7 @@ const WORKFLOW = [
   { id: '#plan', label: '2D CAD', caption: 'Generated floor plan', src: '/work/generated-plan.webp', paper: true },
   { id: '#render', label: 'Rendered 3D', caption: 'Model + render', src: '/work/mall-render.webp' },
   { id: '#enhance', label: 'Enhanced stills', caption: 'Developed visual detail', src: '/work/gallery-enhanced.webp' },
-  { id: '#walkthrough', label: 'Walkthrough', caption: 'Narrated, any duration', src: '/work/mall-atrium.webp' },
+  { id: '#walkthrough', label: 'Walkthrough', caption: 'Narrated, any duration', src: CLIPS.arrival.poster },
 ];
 
 export default function Home() {
@@ -319,7 +328,6 @@ export default function Home() {
     }
   }, [location.pathname, location.hash]);
 
-  const sectionDivider: React.CSSProperties = { borderTop: `1px solid rgba(38,57,87,0.6)` };
 
   return (
     <>
@@ -364,7 +372,7 @@ export default function Home() {
       </section>
 
       {/* Companion */}
-      <section className="py-20 md:py-28 relative z-10" id="companion" style={sectionDivider}>
+      <section className="py-20 md:py-28 relative z-10" id="companion">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-14">
             <Eyebrow>The companion</Eyebrow>
@@ -406,7 +414,7 @@ export default function Home() {
 
       {/* Workflow overview */}
       <section className="py-20 md:py-28 relative overflow-hidden z-10" id="workflow"
-        style={{ background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`, ...sectionDivider }}>
+        style={{ background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)` }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'radial-gradient(ellipse 45% 50% at 50% 0%, rgba(107,143,255,0.14) 0%, transparent 60%)',
@@ -447,7 +455,7 @@ export default function Home() {
       </section>
 
       {/* Showcase */}
-      <section className="py-20 md:py-28 relative z-10" id="showcase" style={sectionDivider}>
+      <section className="py-20 md:py-28 relative z-10" id="showcase">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-16 md:mb-20">
             <Eyebrow>Showcase</Eyebrow>
@@ -527,56 +535,35 @@ export default function Home() {
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
               title="From still images to a narrated walkthrough."
-              lead="Turn selected architectural views into a professional walkthrough film. Shown here: enhanced stills from the same mall." />
+              lead="Turn selected architectural views into a professional walkthrough film. Shown here: clips from two of our hospitality projects." />
             <FadeUp>
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1.35fr] gap-4 lg:gap-6 items-center">
-                <div>
-                  <div className="font-semibold mb-2.5" style={{ color: ACCENT, fontSize: '0.8rem' }}>Selected architectural stills</div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { src: '/work/mall-street.webp', alt: 'Street frontage' },
-                      { src: '/work/mall-concourse.webp', alt: 'Ground-floor concourse' },
-                      { src: '/work/mall-skylight.webp', alt: 'Atrium skylight' },
-                      { src: '/work/mall-upper-corridor.webp', alt: 'Upper-floor corridor' },
-                    ].map((im) => (
-                      <div key={im.src} className="relative rounded-xl overflow-hidden" style={{ aspectRatio: '16 / 10', border: `1px solid ${LINE}` }}>
-                        <img src={im.src} alt={im.alt} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        <span className="absolute left-2 bottom-2 rounded-full px-2 py-0.5" style={{ background: 'rgba(9,15,37,0.78)', color: TEXT, fontSize: '0.65rem', fontWeight: 600 }}>{im.alt}</span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-8 lg:gap-12 items-center">
+                <div className="rounded-2xl overflow-hidden" style={{
+                  border: `1px solid ${LINE}`, background: BG,
+                  boxShadow: '0 40px 90px rgba(0,0,0,0.5), 0 0 60px rgba(107,143,255,0.08)',
+                }}>
+                  <ClipCycler clips={[CLIPS.passage, CLIPS.villas, CLIPS.rishikesh]} style={{ width: '100%', aspectRatio: '16 / 9' }} />
                 </div>
-                <StepArrow label="Create motion" />
                 <div>
-                  <div className="font-semibold mb-2.5" style={{ color: GREEN, fontSize: '0.8rem' }}>Narrated walkthrough</div>
-                  <div className="rounded-2xl overflow-hidden" style={{
-                    background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`,
-                    border: `1px solid ${LINE}`, boxShadow: '0 30px 70px rgba(0,0,0,0.45)',
-                  }}>
-                    <img src="/work/mall-atrium.webp" alt="Enhanced still of the mall atrium, first floor" loading="lazy"
-                      style={{ width: '100%', display: 'block', aspectRatio: '2 / 1', objectFit: 'cover' }} />
-                    <div className="p-6 md:p-7">
-                    <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: '1.25rem', lineHeight: 1.3 }}>
-                      Professional walkthroughs, narrated.
-                    </h4>
-                    <p className="mb-5" style={{ color: MUTED, fontSize: '0.95rem', lineHeight: 1.7 }}>
-                      We produce professional walkthrough films from your reviewed architectural views, with voice-over narration that tells the story of the space. Choose any duration you prefer, from a short teaser to a full presentation film.
-                    </p>
-                    <ul className="space-y-2.5">
-                      {[
-                        'Voice-over narration written for your project',
-                        'Any preferred duration',
-                        'Sequenced from the views you approve',
-                        'Presentation-ready for clients and reviews',
-                      ].map((item) => (
-                        <li key={item} className="flex items-start gap-2.5" style={{ color: TEXT, fontSize: '0.9rem', lineHeight: 1.5 }}>
-                          <span className="shrink-0 mt-0.5" style={{ color: GREEN }}><Svg size={16}>{ICONS.tick}</Svg></span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    </div>
-                  </div>
+                  <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: 'clamp(1.3rem, 2vw, 1.6rem)', lineHeight: 1.25 }}>
+                    Professional walkthroughs, narrated.
+                  </h4>
+                  <p className="mb-6" style={{ color: MUTED, fontSize: '1rem', lineHeight: 1.7 }}>
+                    We produce professional walkthrough films from your reviewed architectural views, with voice-over narration that tells the story of the space. Choose any duration you prefer, from a short teaser to a full presentation film.
+                  </p>
+                  <ul className="space-y-3">
+                    {[
+                      'Voice-over narration written for your project',
+                      'Any preferred duration',
+                      'Sequenced from the views you approve',
+                      'Presentation-ready for clients and reviews',
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-2.5" style={{ color: TEXT, fontSize: '0.95rem', lineHeight: 1.5 }}>
+                        <span className="shrink-0 mt-0.5" style={{ color: GREEN }}><Svg size={16}>{ICONS.tick}</Svg></span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </FadeUp>
@@ -586,7 +573,7 @@ export default function Home() {
 
       {/* Team */}
       <section className="py-20 md:py-28 relative overflow-hidden z-10" id="team"
-        style={{ background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)`, ...sectionDivider }}>
+        style={{ background: `linear-gradient(160deg, ${SURFACE} 0%, ${BG} 100%)` }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background:
@@ -612,7 +599,7 @@ export default function Home() {
       </section>
 
       {/* CTA / Contact */}
-      <section className="py-24 md:py-32 relative overflow-hidden z-10" id="contact" style={sectionDivider}>
+      <section className="py-24 md:py-32 relative overflow-hidden z-10" id="contact">
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'radial-gradient(ellipse at center, rgba(107,143,255,0.12) 0%, transparent 70%)',
