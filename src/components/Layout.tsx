@@ -222,7 +222,7 @@ export default function Layout() {
                 </span>
               </Link>
               <p style={{ color: 'rgba(166,180,210,0.70)', fontSize: '0.85rem', lineHeight: 1.65 }}>
-                A companion for architectural work. From bubble diagrams and CAD drawings to renders, enhanced stills, and walkthroughs, with review built in.
+                A companion for architectural work. From bubble diagrams and CAD drawings to renders, enhanced stills, and walkthroughs.
               </p>
             </div>
             <div>
