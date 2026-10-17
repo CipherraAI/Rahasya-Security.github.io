@@ -376,13 +376,21 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-14">
             <Eyebrow>The companion</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>A companion for architectural work.</h2>
+            <h2 className="font-bold mb-4" style={h2Style}>A companion for architectural work</h2>
             <p className="max-w-2xl mx-auto" style={leadStyle}>
               Describe what you need. Work with architectural tools. Review the result.
             </p>
           </FadeUp>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto mb-12">
+          <FadeUp delay={0.1}>
+            <div className="max-w-6xl mx-auto rounded-2xl overflow-hidden"
+              style={{ border: `1px solid ${LINE}`, boxShadow: '0 40px 90px rgba(0,0,0,0.5), 0 0 60px rgba(107,143,255,0.08)' }}>
+              <img src="/work/companion-interface.webp" alt="The Cipherra companion: a conversation alongside the open CAD drawing"
+                loading="lazy" style={{ width: '100%', display: 'block' }} />
+            </div>
+          </FadeUp>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto mt-12">
             {[
               { icon: ICONS.chat, title: 'Describe the task', body: 'Explain what you need in your own architectural language, the way you would brief a colleague.' },
               { icon: ICONS.drawing, title: 'Work with the drawing', body: 'The companion uses supported CAD tools to edit and generate drawings in place, layer by layer.' },
@@ -401,14 +409,6 @@ export default function Home() {
               </FadeUp>
             ))}
           </div>
-
-          <FadeUp delay={0.1}>
-            <div className="max-w-6xl mx-auto rounded-2xl overflow-hidden"
-              style={{ border: `1px solid ${LINE}`, boxShadow: '0 40px 90px rgba(0,0,0,0.5), 0 0 60px rgba(107,143,255,0.08)' }}>
-              <img src="/work/companion-interface.webp" alt="The Cipherra companion: a conversation alongside the open CAD drawing"
-                loading="lazy" style={{ width: '100%', display: 'block' }} />
-            </div>
-          </FadeUp>
         </div>
       </section>
 
@@ -422,7 +422,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <FadeUp className="text-center mb-14">
             <Eyebrow>The workflow</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>Turn architectural inputs into useful outputs.</h2>
+            <h2 className="font-bold mb-4" style={h2Style}>Turn architectural inputs into useful outputs</h2>
             <p className="max-w-2xl mx-auto" style={leadStyle}>
               A transformation at each stage, with review built into the process.
             </p>
@@ -459,7 +459,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <FadeUp className="text-center mb-16 md:mb-20">
             <Eyebrow>Showcase</Eyebrow>
-            <h2 className="font-bold mb-4" style={h2Style}>Real work, stage by stage.</h2>
+            <h2 className="font-bold mb-4" style={h2Style}>Real work, stage by stage</h2>
             <p className="max-w-2xl mx-auto" style={leadStyle}>
               Every example below comes from an actual project session, shown as it was reviewed.
             </p>
@@ -468,7 +468,7 @@ export default function Home() {
           {/* 01 Plan */}
           <div id="plan" className="scroll-mt-24 mb-24 md:mb-32">
             <StageHeader n="01" tag="Plan"
-              title="From a bubble diagram to a generated CAD plan."
+              title="From a bubble diagram to a generated CAD plan"
               lead="Turn labeled spatial intent and requirements into supported plan geometry, then review allocation and circulation before continuing in CAD." />
             <FadeUp>
               <Transformation arrow="Generate CAD"
@@ -499,7 +499,7 @@ export default function Home() {
           {/* 02 Edit */}
           <div id="edit" className="scroll-mt-24 mb-24 md:mb-32">
             <StageHeader n="02" tag="Edit and refine"
-              title="From a basic layout to a refined CAD drawing."
+              title="From a basic layout to a refined CAD drawing"
               lead="A real drawing-edit session, developed through successive requests." />
             <FadeUp>
               <Transformation arrow="Edit and refine"
@@ -511,8 +511,8 @@ export default function Home() {
           {/* 03 Render */}
           <div id="render" className="scroll-mt-24 mb-24 md:mb-32">
             <StageHeader n="03" tag="Build and render"
-              title="From 2D CAD to a rendered 3D model."
-              lead="Build and render a reviewed model from the supported drawing set, with level and layer mapping checked along the way." />
+              title="From 2D CAD to a rendered 3D model"
+              lead="Build and render a reviewed model from the supported drawing set. Pick the textures, flooring, lighting, and furnishings." />
             <FadeUp>
               <Transformation arrow="Build and render"
                 before={<Frame src="/work/mall-cad.webp" alt="Mall first-floor CAD plan" label="Mall first-floor CAD plan" paper aspect="16 / 11" />}
@@ -523,7 +523,7 @@ export default function Home() {
           {/* 04 Enhance */}
           <div id="enhance" className="scroll-mt-24 mb-24 md:mb-32">
             <StageHeader n="04" tag="Enhance"
-              title="From a render to an enhanced image."
+              title="From a render to an enhanced image"
               lead="Develop the atmosphere, light, and material detail, while reviewing the result against the original architecture. Drag to compare." />
             <FadeUp>
               <CompareSlider before="/work/gallery-base.webp" after="/work/gallery-enhanced.webp"
@@ -534,7 +534,7 @@ export default function Home() {
           {/* 05 Walkthrough */}
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
-              title="From still images to a narrated walkthrough."
+              title="From still images to a narrated walkthrough"
               lead="Turn selected architectural views into a professional walkthrough film. Shown here: clips from two of our hospitality projects." />
             <FadeUp>
               <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-8 lg:gap-12 items-center">
@@ -544,9 +544,9 @@ export default function Home() {
                 }}>
                   <ClipCycler clips={[CLIPS.passage, CLIPS.villas, CLIPS.rishikesh]} style={{ width: '100%', aspectRatio: '16 / 9' }} />
                 </div>
-                <div>
+                <div className="rounded-2xl p-7 md:p-8" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
                   <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: 'clamp(1.3rem, 2vw, 1.6rem)', lineHeight: 1.25 }}>
-                    Professional walkthroughs, narrated.
+                    Professional walkthroughs, narrated
                   </h4>
                   <p className="mb-6" style={{ color: MUTED, fontSize: '1rem', lineHeight: 1.7 }}>
                     We produce professional walkthrough films from your reviewed architectural views, with voice-over narration that tells the story of the space. Choose any duration you prefer, from a short teaser to a full presentation film.
@@ -607,7 +607,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center relative z-10">
           <FadeUp>
             <h2 className="font-bold mb-4" style={{ color: TEXT, fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.15 }}>
-              Bring Cipherra into <span className="gradient-text">your next project.</span>
+              Bring Cipherra into <span className="gradient-text">your next project</span>
             </h2>
             <p className="mb-10 max-w-xl mx-auto" style={leadStyle}>
               We're working with early architecture and design partners on real drawings and real projects. Get early access and help shape the companion.
