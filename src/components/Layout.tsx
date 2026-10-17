@@ -244,8 +244,8 @@ export default function Layout() {
             <div>
               <h4 className="font-semibold mb-4" style={{ color: '#f4f7ff' }}>Contact</h4>
               <ul className="space-y-3">
-                <li>{footerLink('Email', { href: 'mailto:nithesh@cipherra.ai,dhruv@cipherra.ai' })}</li>
-                <li>{footerLink('LinkedIn', { href: '#', onClick: (e) => { e.preventDefault(); showToast(); } })}</li>
+                <li>{footerLink('Email', { href: 'mailto:contact@cipherra.ai' })}</li>
+                <li>{footerLink('LinkedIn', { href: 'https://www.linkedin.com/company/cipherra', target: '_blank', rel: 'noopener noreferrer' })}</li>
                 <li>{footerLink('Twitter', { href: '#', onClick: (e) => { e.preventDefault(); showToast(); } })}</li>
               </ul>
             </div>
