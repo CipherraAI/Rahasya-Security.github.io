@@ -50,6 +50,18 @@ export default function Layout() {
     loadGSAP();
   }, []);
 
+  // Discourage casual saving: no right-click menu or drag-out on images and videos.
+  useEffect(() => {
+    const isMedia = (t: EventTarget | null) => t instanceof HTMLImageElement || t instanceof HTMLVideoElement;
+    const block = (e: Event) => { if (isMedia(e.target)) e.preventDefault(); };
+    document.addEventListener('contextmenu', block);
+    document.addEventListener('dragstart', block);
+    return () => {
+      document.removeEventListener('contextmenu', block);
+      document.removeEventListener('dragstart', block);
+    };
+  }, []);
+
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
     const target = document.querySelector(targetId);

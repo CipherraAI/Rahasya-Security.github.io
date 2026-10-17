@@ -124,3 +124,10 @@ html {
   }
 }
 
+
+/* Discourage casual saving of media (long-press menu on iOS, drag-out on desktop). */
+img, video {
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
