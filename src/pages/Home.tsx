@@ -517,7 +517,7 @@ export default function Home() {
           <div id="render" className="scroll-mt-24 mb-24 md:mb-32">
             <StageHeader n="03" tag="Build and render"
               title="From 2D CAD to a rendered 3D model"
-              lead="Build and render a reviewed model from the supported drawing set. Pick the textures, flooring, lighting, and furnishings." />
+              lead="Build and render a reviewed model from the supported drawing set. Make the interiors look closer to your vision for the project." />
             <FadeUp>
               <Transformation arrow="Build and render"
                 before={<Frame src="/work/mall-cad.webp" alt="Mall first-floor CAD plan" label="Mall first-floor CAD plan" paper aspect="16 / 11" />}
