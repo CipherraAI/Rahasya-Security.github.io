@@ -8,7 +8,7 @@ const BG_CLIPS: Clip[] = ['arrival', 'passage', 'villas', 'rishikesh'].map((k) =
 /* Full-screen walkthrough clips behind the page, faded so content stays readable. */
 export default function BackgroundClips() {
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+    <div className="bg-clips">
       <ClipCycler clips={BG_CLIPS} fadeMs={1600}
         style={{ position: 'absolute', inset: 0, opacity: 0.34 }} />
       <div style={{
