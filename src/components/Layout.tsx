@@ -21,7 +21,6 @@ const NAV = [
 
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const backgroundRef = useRef<HTMLDivElement>(null);
   const toastRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -48,69 +47,7 @@ export default function Layout() {
       });
     };
 
-    loadGSAP().then(() => {
-      if (backgroundRef.current && window.gsap) {
-        const container = backgroundRef.current;
-        const dotCount = 80;
-        const lineCount = 25;
-
-        for (let i = 0; i < dotCount; i++) {
-          const dot = document.createElement('div');
-          dot.className = 'animated-dot';
-          const size = Math.random() * 4 + 2;
-          dot.style.width = size + 'px';
-          dot.style.height = size + 'px';
-          dot.style.left = Math.random() * 100 + '%';
-          dot.style.top = Math.random() * 100 + '%';
-          dot.style.opacity = String(Math.random() * 0.35 + 0.1);
-          container.appendChild(dot);
-
-          window.gsap.to(dot, {
-            x: (Math.random() - 0.5) * 280,
-            y: (Math.random() - 0.5) * 280,
-            duration: Math.random() * 30 + 20,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-            delay: Math.random() * 3,
-          });
-        }
-
-        for (let i = 0; i < lineCount; i++) {
-          const line = document.createElement('div');
-          line.className = 'animated-line';
-          const length = Math.random() * 180 + 60;
-          const angle = Math.random() * 360;
-          line.style.width = length + 'px';
-          line.style.height = '1px';
-          line.style.left = Math.random() * 100 + '%';
-          line.style.top = Math.random() * 100 + '%';
-          line.style.transform = `rotate(${angle}deg)`;
-          line.style.transformOrigin = 'left center';
-          container.appendChild(line);
-
-          window.gsap.to(line, {
-            rotation: angle + 360,
-            duration: Math.random() * 50 + 30,
-            repeat: -1,
-            ease: 'none',
-          });
-        }
-
-        if (window.gsap && window.ScrollTrigger) {
-          window.gsap.to(container, {
-            yPercent: -25,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: 'body',
-              start: 'top top',
-              end: 'bottom top',
-              scrub: true,
-            },
-          });
-        }
-      }
-    });
+    loadGSAP();
   }, []);
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -165,7 +102,6 @@ export default function Layout() {
   return (
     <div className="antialiased relative" style={{ background: '#090f25', minHeight: '100vh' }}>
       <BackgroundClips />
-      <div id="animated-background" ref={backgroundRef} />
 
       <header
         className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg"
