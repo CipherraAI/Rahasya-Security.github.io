@@ -547,7 +547,7 @@ export default function Home() {
                   border: `1px solid ${LINE}`, background: BG,
                   boxShadow: '0 40px 90px rgba(0,0,0,0.5), 0 0 60px rgba(107,143,255,0.08)',
                 }}>
-                  <ClipCycler clips={[CLIPS.passage, CLIPS.villas, CLIPS.rishikesh]} style={{ width: '100%', aspectRatio: '16 / 9' }} />
+                  <ClipCycler narration clips={[CLIPS.passage, CLIPS.villas, CLIPS.rishikesh]} style={{ width: '100%', aspectRatio: '16 / 9' }} />
                 </div>
                 <div className="rounded-2xl p-7 md:p-8" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
                   <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: 'clamp(1.3rem, 2vw, 1.6rem)', lineHeight: 1.25 }}>
