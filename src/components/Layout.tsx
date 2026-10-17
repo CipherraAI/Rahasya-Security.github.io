@@ -62,6 +62,15 @@ export default function Layout() {
     };
   }, []);
 
+  // The logo always returns to the top of the home page.
+  const goTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    setMobileMenuOpen(false);
+    if (!isHome) return;
+    e.preventDefault();
+    if (window.location.hash) window.history.replaceState(null, '', '/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
     const target = document.querySelector(targetId);
@@ -124,7 +133,7 @@ export default function Layout() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <nav className="flex justify-between items-center h-20">
-            <Link to="/" className="flex items-center" aria-label="Cipherra home">
+            <Link to="/" onClick={goTop} className="flex items-center" aria-label="Back to top">
               <span className="logo-box">
                 <img src="/Cipherra_logo.jpeg" alt="Cipherra" className="logo-img" />
               </span>
@@ -207,11 +216,11 @@ export default function Layout() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-12">
             <div>
-              <div className="mb-5 flex items-center">
+              <Link to="/" onClick={goTop} className="mb-5 inline-flex items-center" aria-label="Back to top">
                 <span className="logo-box">
                   <img src="/Cipherra_logo.jpeg" alt="Cipherra" className="logo-img" />
                 </span>
-              </div>
+              </Link>
               <p style={{ color: 'rgba(166,180,210,0.70)', fontSize: '0.85rem', lineHeight: 1.65 }}>
                 A companion for architectural work. From bubble diagrams and CAD drawings to renders, enhanced stills, and walkthroughs, with review built in.
               </p>
@@ -229,7 +238,6 @@ export default function Layout() {
               <h4 className="font-semibold mb-4" style={{ color: '#f4f7ff' }}>Company</h4>
               <ul className="space-y-3">
                 <li>{footerLink('Team', { href: '#team', onClick: (e) => handleNavClick(e, '#team') })}</li>
-                <li>{footerLink('InstaML', { href: 'https://instaml.cipherra.ai' })}</li>
                 <li>{footerLink('Careers', { href: '#', onClick: (e) => { e.preventDefault(); showToast(); } })}</li>
               </ul>
             </div>
