@@ -540,7 +540,7 @@ export default function Home() {
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
               title="From still images to a narrated walkthrough"
-              lead="Turn selected architectural views into a professional walkthrough film. Shown here: clips from two of our hospitality projects." />
+              lead="Turn selected architectural views into a professional walkthrough film. Shown here: clips from two of our luxury 5-star projects." />
             <FadeUp>
               <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-8 lg:gap-12 items-center">
                 <div className="rounded-2xl overflow-hidden" style={{
