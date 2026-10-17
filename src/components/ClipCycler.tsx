@@ -43,6 +43,8 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className }: {
   const [still] = useState(prefersReducedMotion);
   const [near, setNear] = useState(false);
   const [prefetch, setPrefetch] = useState(false);
+  // Clips that have rendered a frame; until then their poster shows instead.
+  const [playing, setPlaying] = useState<Set<number>>(() => new Set());
   const pageLoaded = usePageLoaded();
   const box = useRef<HTMLDivElement>(null);
   const refs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -84,27 +86,36 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className }: {
     return 'none';
   };
 
+  // The poster is a plain <img> under the video rather than the video's poster attribute:
+  // mobile browsers draw poster attributes letterboxed, ignoring object-fit, so the frame
+  // would jump when playback starts. The video fades in only once it is actually playing.
   return (
     <div ref={box} className={className} style={{ position: 'relative', overflow: 'hidden', ...style }} aria-hidden="true">
-      {clips.map((c, i) => (
-        still ? (
-          i === 0 && <img key={c.src} src={c.poster} alt="" style={fill} />
-        ) : (
-          <video key={c.src} ref={(el) => { refs.current[i] = el; }}
-            // No src until ready, so the browser cannot start fetching early.
-            src={ready && (i === active || preloadFor(i) === 'auto' || attached.current.has(i))
-              ? (attached.current.add(i), c.src) : undefined}
-            poster={c.poster} muted playsInline loop={single}
-            preload={preloadFor(i)}
-            onTimeUpdate={(e) => {
-              if (i !== active || single || prefetch) return;
-              const v = e.currentTarget;
-              if (v.duration && v.duration - v.currentTime < PREFETCH_LEAD) setPrefetch(true);
-            }}
-            onEnded={() => { if (i === active) setActive(next); }}
-            style={{ ...fill, opacity: i === active ? 1 : 0, transition: `opacity ${fadeMs}ms ease` }} />
-        )
-      ))}
+      {clips.map((c, i) => {
+        if (still) return i === 0 && <img key={c.src} src={c.poster} alt="" style={fill} />;
+        const hasSrc = ready && (i === active || preloadFor(i) === 'auto' || attached.current.has(i));
+        if (hasSrc) attached.current.add(i);
+        const showPoster = i === active || i === next || attached.current.has(i);
+        return (
+          <div key={c.src} data-active={i === active || undefined}
+            style={{ position: 'absolute', inset: 0, opacity: i === active ? 1 : 0, transition: `opacity ${fadeMs}ms ease` }}>
+            {showPoster && <img src={c.poster} alt="" style={fill} />}
+            <video ref={(el) => { refs.current[i] = el; }}
+              // No src until ready, so the browser cannot start fetching early.
+              src={hasSrc ? c.src : undefined}
+              muted playsInline loop={single}
+              preload={preloadFor(i)}
+              onPlaying={() => setPlaying((p) => (p.has(i) ? p : new Set(p).add(i)))}
+              onTimeUpdate={(e) => {
+                if (i !== active || single || prefetch) return;
+                const v = e.currentTarget;
+                if (v.duration && v.duration - v.currentTime < PREFETCH_LEAD) setPrefetch(true);
+              }}
+              onEnded={() => { if (i === active) setActive(next); }}
+              style={{ ...fill, opacity: playing.has(i) ? 1 : 0, transition: 'opacity 400ms ease' }} />
+          </div>
+        );
+      })}
     </div>
   );
 }
