@@ -3,7 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 export type Clip = { src: string; poster: string };
 
 /* Walkthrough clips, muted and without labels. Posters are each clip's first frame. */
-export const CLIPS: Record<'arrival' | 'passage' | 'villas' | 'rishikesh', Clip> = {
+export const CLIPS: Record<'arrival' | 'passage' | 'villas' | 'rishikesh' | 'cadEdit', Clip> = {
+  // Sped-up recording of a CAD edit session (house plans), shown in the Edit stage.
+  cadEdit: { src: '/work/clip-cad-edit.mp4', poster: '/work/clip-cad-edit-poster.webp' },
   arrival: { src: '/work/clip-arrival.mp4', poster: '/work/clip-arrival-poster.webp' },
   passage: { src: '/work/clip-passage.mp4', poster: '/work/clip-passage-poster.webp' },
   villas: { src: '/work/clip-villas.mp4', poster: '/work/clip-villas-poster.webp' },

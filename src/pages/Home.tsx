@@ -507,9 +507,12 @@ export default function Home() {
               title="From a basic layout to a refined CAD drawing"
               lead="A real drawing-edit session, developed through successive requests." />
             <FadeUp>
-              <Transformation arrow="Edit and refine"
-                before={<Frame src="/work/cad-before.webp" alt="Starting mall CAD drawing with an empty atrium" label="Starting CAD drawing" paper aspect="1 / 1" />}
-                after={<Frame src="/work/cad-after.webp" alt="Refined mall CAD drawing with shops, cores and grids" label="Final CAD drawing" labelColor={GREEN} paper aspect="1 / 1" />} />
+              <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden" style={{
+                border: `1px solid ${LINE}`, background: '#ffffff',
+                boxShadow: '0 40px 90px rgba(0,0,0,0.5), 0 0 60px rgba(107,143,255,0.08)',
+              }}>
+                <ClipCycler clips={[CLIPS.cadEdit]} style={{ width: '100%', aspectRatio: '16 / 9' }} />
+              </div>
             </FadeUp>
           </div>
 
