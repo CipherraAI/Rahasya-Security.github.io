@@ -112,22 +112,15 @@ function CompareSlider({ before, after, beforeLabel, afterLabel }: {
 }
 
 /* ── Showcase stage header ───────────────────────────────── */
-function StageHeader({ n, tag, title, lead }: { n: string; tag: string; title: string; lead: string }) {
+function StageHeader({ tag, title, lead }: { tag: string; title: string; lead: string }) {
   return (
-    <FadeUp className="mb-10 md:mb-12 max-w-4xl">
-      <div className="flex items-start gap-4 md:gap-7">
-        <span className="stage-num" aria-hidden="true">{n}</span>
-        <div className="pt-1 md:pt-3 min-w-0">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="font-semibold uppercase tracking-widest text-xs" style={{ color: ACCENT }}>
-              <span className="sr-only">Stage {n}: </span>{tag}
-            </span>
-            <span className="h-px w-14 md:w-20" style={{ background: 'linear-gradient(90deg, rgba(107,143,255,0.8), transparent)' }} />
-          </div>
-          <h3 className="font-bold mb-3" style={h3Style}>{title}</h3>
-          <p style={leadStyle}>{lead}</p>
-        </div>
+    <FadeUp className="mb-10 md:mb-12 max-w-3xl">
+      <div className="flex items-center gap-3 mb-3">
+        <span className="font-semibold uppercase tracking-widest text-xs" style={{ color: ACCENT }}>{tag}</span>
+        <span className="h-px w-14 md:w-20" style={{ background: 'linear-gradient(90deg, rgba(107,143,255,0.8), transparent)' }} />
       </div>
+      <h3 className="font-bold mb-3" style={h3Style}>{title}</h3>
+      <p style={leadStyle}>{lead}</p>
     </FadeUp>
   );
 }
@@ -182,7 +175,7 @@ export default function Showcase() {
 
         {/* 01 Plan */}
         <div id="plan" className="scroll-mt-24 mb-24 md:mb-32">
-          <StageHeader n="01" tag="Plan"
+          <StageHeader tag="Plan"
             title="From a bubble diagram to a generated CAD plan"
             lead="Turn labeled spatial intent and requirements into supported plan geometry, then review allocation and circulation before continuing in CAD." />
           <FadeUp>
@@ -213,7 +206,7 @@ export default function Showcase() {
 
         {/* 02 Edit */}
         <div id="edit" className="scroll-mt-24 mb-24 md:mb-32">
-          <StageHeader n="02" tag="Edit and refine"
+          <StageHeader tag="Edit and refine"
             title="From a basic layout to a refined CAD drawing"
             lead="A real drawing-edit session, developed through successive requests." />
           <FadeUp>
@@ -228,7 +221,7 @@ export default function Showcase() {
 
         {/* 03 Render */}
         <div id="render" className="scroll-mt-24 mb-24 md:mb-32">
-          <StageHeader n="03" tag="Build and render"
+          <StageHeader tag="Build and render"
             title="From 2D CAD to a rendered 3D model"
             lead="Build and render a reviewed model from the supported drawing set. Make the interiors look closer to your vision for the project." />
           <FadeUp>
@@ -240,7 +233,7 @@ export default function Showcase() {
 
         {/* 04 Enhance */}
         <div id="enhance" className="scroll-mt-24 mb-24 md:mb-32">
-          <StageHeader n="04" tag="Enhance"
+          <StageHeader tag="Enhance"
             title="From a render to an enhanced image"
             lead="Develop the atmosphere, light, and material detail, while reviewing the result against the original architecture. Drag to compare." />
           <FadeUp>
@@ -250,9 +243,9 @@ export default function Showcase() {
               <SidePanel title="Enhanced stills, ready to present"
                 body="We take your base renders further, developing light, atmosphere and material detail while keeping the architecture true to the original. Every enhanced image is reviewed side by side with its render."
                 items={[
-                  'Richer light, atmosphere and materials',
+                  'High quality photorealistic images',
                   'Architecture kept true to the base render',
-                  'Reviewed side by side before delivery',
+                  'Visualize different textures, materials, styles, themes',
                   'High-resolution, presentation-ready output',
                 ]} />
             </div>
@@ -261,7 +254,7 @@ export default function Showcase() {
 
         {/* 05 Walkthrough */}
         <div id="walkthrough" className="scroll-mt-24">
-          <StageHeader n="05" tag="Walkthrough"
+          <StageHeader tag="Walkthrough"
             title="From still images to a narrated walkthrough"
             lead="Turn selected architectural views into a professional walkthrough film." />
           <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-8 lg:gap-12 items-start">
