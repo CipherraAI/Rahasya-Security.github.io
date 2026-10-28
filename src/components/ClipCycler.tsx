@@ -58,6 +58,8 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className, nar
   const [playing, setPlaying] = useState<Set<number>>(() => new Set());
   const [soundOn, setSoundOn] = useState(false);
   const [hinted, setHinted] = useState(false);
+  // Mouse users click, touch users tap.
+  const [verb] = useState(() => (window.matchMedia?.('(hover: hover) and (pointer: fine)').matches ? 'Click' : 'Tap'));
   const pageLoaded = usePageLoaded();
   const box = useRef<HTMLDivElement>(null);
   const refs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -196,7 +198,7 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className, nar
                 position: 'absolute', left: -5, top: '50%', transform: 'translateY(-50%)',
                 borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderRight: '5px solid rgba(255,255,255,0.94)',
               }} />
-              Tap to hear narration
+              {verb} to hear narration
             </span>
           )}
         </div>

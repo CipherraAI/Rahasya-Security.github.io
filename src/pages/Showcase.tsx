@@ -114,14 +114,41 @@ function CompareSlider({ before, after, beforeLabel, afterLabel }: {
 /* ── Showcase stage header ───────────────────────────────── */
 function StageHeader({ n, tag, title, lead }: { n: string; tag: string; title: string; lead: string }) {
   return (
-    <FadeUp className="mb-10 md:mb-12 max-w-3xl">
-      <div className="flex items-baseline gap-2 mb-4" style={{ fontSize: '0.95rem' }}>
-        <span className="font-bold" style={{ color: ACCENT, fontFamily: "'JetBrains Mono','Fira Code',monospace" }}>{n}</span>
-        <span className="font-semibold" style={{ color: MUTED }}>{tag}</span>
+    <FadeUp className="mb-10 md:mb-12 max-w-4xl">
+      <div className="flex items-start gap-4 md:gap-7">
+        <span className="stage-num" aria-hidden="true">{n}</span>
+        <div className="pt-1 md:pt-3 min-w-0">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="font-semibold uppercase tracking-widest text-xs" style={{ color: ACCENT }}>
+              <span className="sr-only">Stage {n}: </span>{tag}
+            </span>
+            <span className="h-px w-14 md:w-20" style={{ background: 'linear-gradient(90deg, rgba(107,143,255,0.8), transparent)' }} />
+          </div>
+          <h3 className="font-bold mb-3" style={h3Style}>{title}</h3>
+          <p style={leadStyle}>{lead}</p>
+        </div>
       </div>
-      <h3 className="font-bold mb-3" style={h3Style}>{title}</h3>
-      <p style={leadStyle}>{lead}</p>
     </FadeUp>
+  );
+}
+
+/* Text panel beside a stage's media: a heading, a paragraph and a ticked list. */
+function SidePanel({ title, body, items, sticky }: { title: string; body: string; items: string[]; sticky?: boolean }) {
+  return (
+    <div className={'rounded-2xl p-7 md:p-8' + (sticky ? ' lg:sticky lg:top-28' : '')} style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
+      <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: 'clamp(1.3rem, 2vw, 1.6rem)', lineHeight: 1.25 }}>
+        {title}
+      </h4>
+      <p className="mb-6" style={{ color: MUTED, fontSize: '1rem', lineHeight: 1.7 }}>{body}</p>
+      <ul className="space-y-3">
+        {items.map((item) => (
+          <li key={item} className="flex items-start gap-2.5" style={{ color: TEXT, fontSize: '0.95rem', lineHeight: 1.5 }}>
+            <span className="shrink-0 mt-0.5" style={{ color: GREEN }}><Svg size={16}>{ICONS.tick}</Svg></span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -217,8 +244,18 @@ export default function Showcase() {
             title="From a render to an enhanced image"
             lead="Develop the atmosphere, light, and material detail, while reviewing the result against the original architecture. Drag to compare." />
           <FadeUp>
-            <CompareSlider before="/work/gallery-base.webp" after="/work/gallery-enhanced.webp"
-              beforeLabel="Base gallery render" afterLabel="Enhanced gallery image" />
+            <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-8 lg:gap-12 items-center">
+              <CompareSlider before="/work/gallery-base.webp" after="/work/gallery-enhanced.webp"
+                beforeLabel="Base gallery render" afterLabel="Enhanced gallery image" />
+              <SidePanel title="Enhanced stills, ready to present"
+                body="We take your base renders further, developing light, atmosphere and material detail while keeping the architecture true to the original. Every enhanced image is reviewed side by side with its render."
+                items={[
+                  'Richer light, atmosphere and materials',
+                  'Architecture kept true to the base render',
+                  'Reviewed side by side before delivery',
+                  'High-resolution, presentation-ready output',
+                ]} />
+            </div>
           </FadeUp>
         </div>
 
@@ -250,27 +287,14 @@ export default function Showcase() {
               ))}
             </div>
             {/* Stays in view while the films scroll past. */}
-            <div className="rounded-2xl p-7 md:p-8 lg:sticky lg:top-28" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
-              <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: 'clamp(1.3rem, 2vw, 1.6rem)', lineHeight: 1.25 }}>
-                Professional walkthroughs, narrated
-              </h4>
-              <p className="mb-6" style={{ color: MUTED, fontSize: '1rem', lineHeight: 1.7 }}>
-                We produce professional walkthrough films from your reviewed architectural views, with voice-over narration that tells the story of the space. Choose any duration you prefer, from a short teaser to a full presentation film.
-              </p>
-              <ul className="space-y-3">
-                {[
-                  'Voice-over narration written for your project',
-                  'Any preferred duration',
-                  'Sequenced from the views you approve',
-                  'Presentation-ready for clients and reviews',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5" style={{ color: TEXT, fontSize: '0.95rem', lineHeight: 1.5 }}>
-                    <span className="shrink-0 mt-0.5" style={{ color: GREEN }}><Svg size={16}>{ICONS.tick}</Svg></span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <SidePanel sticky title="Professional walkthroughs, narrated"
+              body="We produce professional walkthrough films from your reviewed architectural views, with voice-over narration that tells the story of the space. Choose any duration you prefer, from a short teaser to a full presentation film."
+              items={[
+                'Voice-over narration written for your project',
+                'Any preferred duration',
+                'Sequenced from the views you approve',
+                'Presentation-ready for clients and reviews',
+              ]} />
           </div>
         </div>
       </div>
