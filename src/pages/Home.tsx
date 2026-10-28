@@ -53,12 +53,14 @@ function Eyebrow({ children, color = ACCENT }: { children: React.ReactNode; colo
 
 const h2Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 };
 const h3Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.5rem, 2.6vw, 2rem)', lineHeight: 1.2 };
-/* Project types our walkthroughs have been delivered for. */
-const SECTORS = [
-  { label: 'Luxury 5-star hotels', note: 'Arrival courts, lobbies, dining' },
-  { label: 'Resorts', note: 'Villas, pools, landscapes' },
-  { label: 'Commercial spaces', note: 'Headquarters and workplaces' },
-  { label: 'Residences', note: 'Private homes and interiors' },
+/* Project types we have delivered for (the scrolling banner under the hero). */
+const SECTORS = ['Luxury 5-star hotels', 'Resorts', 'Commercial spaces', 'Residences'];
+
+/* Narrated walkthroughs in the Walkthrough stage, one captioned player each. */
+const WALKTHROUGHS = [
+  { clips: [CLIPS.passage, CLIPS.villas, CLIPS.rishikesh], title: 'Luxury hospitality', caption: 'Clips from two of our 5-star hotel and resort projects.' },
+  { clips: [CLIPS.commercial], title: 'Commercial headquarters', caption: 'Forecourt, lobby, administration, the CEO’s office, and the boardroom.' },
+  { clips: [CLIPS.residence], title: 'Private residence', caption: 'A classical family home, from the facade through a bedroom suite to the family lounge.' },
 ];
 
 const leadStyle: React.CSSProperties = { color: MUTED, lineHeight: 1.7, fontSize: '1.05rem' };
@@ -322,6 +324,28 @@ const WORKFLOW = [
   { id: '#walkthrough', label: 'Walkthrough', caption: 'Narrated, any duration', src: CLIPS.arrival.poster },
 ];
 
+/* Sector names scrolling sideways in a loop (two copies, the track moves by one copy's width). */
+function SectorMarquee() {
+  const row = [...SECTORS, ...SECTORS];
+  return (
+    <div className="marquee mt-7" aria-label={'Delivered projects for ' + SECTORS.join(', ')}>
+      <div className="marquee-track" aria-hidden="true">
+        {[0, 1].map((copy) => (
+          <div key={copy} className="flex shrink-0 items-center">
+            {row.map((label, i) => (
+              <span key={i} className="flex items-center shrink-0 font-semibold whitespace-nowrap"
+                style={{ color: TEXT, fontSize: 'clamp(1.05rem, 2vw, 1.4rem)' }}>
+                <span className="mx-6 md:mx-9 w-1.5 h-1.5 rounded-full" style={{ background: ACCENT_GRAD }} />
+                {label}
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const location = useLocation();
 
@@ -370,10 +394,6 @@ export default function Home() {
                   See the Workflow
                 </a>
               </div>
-              <p className="mt-7 sm:mt-8 text-sm" style={{ color: MUTED, lineHeight: 1.6, maxWidth: 540 }}>
-                <span className="font-semibold" style={{ color: TEXT }}>Delivered for</span>{' '}
-                {SECTORS.map((s) => s.label.toLowerCase()).join(' · ')}
-              </p>
             </FadeUp>
 
             <FadeUp delay={0.15}>
@@ -381,6 +401,21 @@ export default function Home() {
             </FadeUp>
           </div>
         </div>
+      </section>
+
+      {/* Trusted by */}
+      <section className="py-12 md:py-16 relative z-10" aria-label="Trusted by" style={{
+        borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, background: 'rgba(18,29,55,0.55)',
+      }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+          <FadeUp>
+            <h2 className="font-bold mb-2" style={{ color: TEXT, fontSize: 'clamp(1.35rem, 2.4vw, 1.8rem)', lineHeight: 1.25 }}>
+              Trusted by architecture and interior design firms
+            </h2>
+            <p className="font-semibold uppercase tracking-widest text-xs" style={{ color: ACCENT }}>Delivered projects for</p>
+          </FadeUp>
+        </div>
+        <SectorMarquee />
       </section>
 
       {/* Companion */}
@@ -555,77 +590,49 @@ export default function Home() {
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
               title="From still images to a narrated walkthrough"
-              lead="Turn selected architectural views into a professional walkthrough film. Shown here: clips from two of our luxury 5-star projects." />
-            <FadeUp>
-              <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-8 lg:gap-12 items-center">
-                <div className="rounded-2xl overflow-hidden" style={{
-                  border: `1px solid ${LINE}`, background: BG,
-                  boxShadow: '0 40px 90px rgba(0,0,0,0.5), 0 0 60px rgba(107,143,255,0.08)',
-                }}>
-                  <ClipCycler narration clips={[CLIPS.passage, CLIPS.villas, CLIPS.rishikesh]} style={{ width: '100%', aspectRatio: '16 / 9' }} />
-                </div>
-                <div className="rounded-2xl p-7 md:p-8" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
-                  <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: 'clamp(1.3rem, 2vw, 1.6rem)', lineHeight: 1.25 }}>
-                    Professional walkthroughs, narrated
-                  </h4>
-                  <p className="mb-6" style={{ color: MUTED, fontSize: '1rem', lineHeight: 1.7 }}>
-                    We produce professional walkthrough films from your reviewed architectural views, with voice-over narration that tells the story of the space. Choose any duration you prefer, from a short teaser to a full presentation film.
-                  </p>
-                  <ul className="space-y-3">
-                    {[
-                      'Voice-over narration written for your project',
-                      'Any preferred duration',
-                      'Sequenced from the views you approve',
-                      'Presentation-ready for clients and reviews',
-                    ].map((item) => (
-                      <li key={item} className="flex items-start gap-2.5" style={{ color: TEXT, fontSize: '0.95rem', lineHeight: 1.5 }}>
-                        <span className="shrink-0 mt-0.5" style={{ color: GREEN }}><Svg size={16}>{ICONS.tick}</Svg></span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </FadeUp>
-
-            {/* Portfolio: sectors we have delivered for, and two 30 s narrated cuts */}
-            <FadeUp>
-              <div className="mt-16 md:mt-20">
-                <h4 className="font-bold mb-3 text-center" style={{ color: TEXT, fontSize: 'clamp(1.3rem, 2vw, 1.6rem)', lineHeight: 1.25 }}>
-                  Delivered for luxury hospitality, commercial, and residential projects
-                </h4>
-                <p className="max-w-2xl mx-auto text-center mb-8" style={{ color: MUTED, fontSize: '1rem', lineHeight: 1.7 }}>
-                  Our walkthroughs have been produced for luxury 5-star hotels, resorts, commercial spaces, and private residences.
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-10">
-                  {SECTORS.map((s) => (
-                    <div key={s.label} className="rounded-xl px-4 py-4 text-center" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
-                      <div className="font-semibold" style={{ color: TEXT, fontSize: '0.98rem' }}>{s.label}</div>
-                      <div className="mt-1" style={{ color: MUTED, fontSize: '0.82rem', lineHeight: 1.45 }}>{s.note}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                  {[
-                    { clip: CLIPS.commercial, title: 'Commercial headquarters', caption: 'Forecourt, lobby, administration, the CEO’s office, and the boardroom.' },
-                    { clip: CLIPS.residence, title: 'Private residence', caption: 'A classical family home, from the facade through a bedroom suite to the family lounge.' },
-                  ].map((f) => (
-                    <figure key={f.title} className="m-0">
+              lead="Turn selected architectural views into a professional walkthrough film. Shown here: luxury hospitality, a commercial headquarters, and a private residence." />
+            <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-8 lg:gap-12 items-start">
+              <div className="space-y-10 md:space-y-12">
+                {WALKTHROUGHS.map((w) => (
+                  <FadeUp key={w.title}>
+                    <figure className="m-0">
                       <div className="rounded-2xl overflow-hidden" style={{
                         border: `1px solid ${LINE}`, background: BG,
-                        boxShadow: '0 30px 70px rgba(0,0,0,0.45), 0 0 40px rgba(107,143,255,0.06)',
+                        boxShadow: '0 40px 90px rgba(0,0,0,0.5), 0 0 60px rgba(107,143,255,0.08)',
                       }}>
-                        <ClipCycler narration clips={[f.clip]} style={{ width: '100%', aspectRatio: '16 / 9' }} />
+                        <ClipCycler narration clips={w.clips} style={{ width: '100%', aspectRatio: '16 / 9' }} />
                       </div>
                       <figcaption className="mt-3 px-1">
-                        <span className="font-semibold" style={{ color: TEXT, fontSize: '0.98rem' }}>{f.title}</span>
-                        <span style={{ color: MUTED, fontSize: '0.92rem' }}> · {f.caption}</span>
+                        <span className="font-semibold" style={{ color: TEXT, fontSize: '0.98rem' }}>{w.title}</span>
+                        <span style={{ color: MUTED, fontSize: '0.92rem' }}> · {w.caption}</span>
                       </figcaption>
                     </figure>
-                  ))}
-                </div>
+                  </FadeUp>
+                ))}
               </div>
-            </FadeUp>
+              {/* Stays in view while the films scroll past. */}
+              <div className="rounded-2xl p-7 md:p-8 lg:sticky lg:top-28" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
+                <h4 className="font-bold mb-3" style={{ color: TEXT, fontSize: 'clamp(1.3rem, 2vw, 1.6rem)', lineHeight: 1.25 }}>
+                  Professional walkthroughs, narrated
+                </h4>
+                <p className="mb-6" style={{ color: MUTED, fontSize: '1rem', lineHeight: 1.7 }}>
+                  We produce professional walkthrough films from your reviewed architectural views, with voice-over narration that tells the story of the space. Choose any duration you prefer, from a short teaser to a full presentation film.
+                </p>
+                <ul className="space-y-3">
+                  {[
+                    'Voice-over narration written for your project',
+                    'Any preferred duration',
+                    'Sequenced from the views you approve',
+                    'Presentation-ready for clients and reviews',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2.5" style={{ color: TEXT, fontSize: '0.95rem', lineHeight: 1.5 }}>
+                      <span className="shrink-0 mt-0.5" style={{ color: GREEN }}><Svg size={16}>{ICONS.tick}</Svg></span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </section>
