@@ -53,6 +53,14 @@ function Eyebrow({ children, color = ACCENT }: { children: React.ReactNode; colo
 
 const h2Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 };
 const h3Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.5rem, 2.6vw, 2rem)', lineHeight: 1.2 };
+/* Project types our walkthroughs have been delivered for. */
+const SECTORS = [
+  { label: 'Luxury 5-star hotels', note: 'Arrival courts, lobbies, dining' },
+  { label: 'Resorts', note: 'Villas, pools, landscapes' },
+  { label: 'Commercial spaces', note: 'Headquarters and workplaces' },
+  { label: 'Residences', note: 'Private homes and interiors' },
+];
+
 const leadStyle: React.CSSProperties = { color: MUTED, lineHeight: 1.7, fontSize: '1.05rem' };
 
 /* ── Framed image (deck-style panel) ─────────────────────── */
@@ -362,6 +370,10 @@ export default function Home() {
                   See the Workflow
                 </a>
               </div>
+              <p className="mt-7 sm:mt-8 text-sm" style={{ color: MUTED, lineHeight: 1.6, maxWidth: 540 }}>
+                <span className="font-semibold" style={{ color: TEXT }}>Delivered for</span>{' '}
+                {SECTORS.map((s) => s.label.toLowerCase()).join(' · ')}
+              </p>
             </FadeUp>
 
             <FadeUp delay={0.15}>
@@ -572,6 +584,45 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
+                </div>
+              </div>
+            </FadeUp>
+
+            {/* Portfolio: sectors we have delivered for, and two 30 s narrated cuts */}
+            <FadeUp>
+              <div className="mt-16 md:mt-20">
+                <h4 className="font-bold mb-3 text-center" style={{ color: TEXT, fontSize: 'clamp(1.3rem, 2vw, 1.6rem)', lineHeight: 1.25 }}>
+                  Delivered for luxury hospitality, commercial, and residential projects
+                </h4>
+                <p className="max-w-2xl mx-auto text-center mb-8" style={{ color: MUTED, fontSize: '1rem', lineHeight: 1.7 }}>
+                  Our walkthroughs have been produced for luxury 5-star hotels, resorts, commercial spaces, and private residences.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-10">
+                  {SECTORS.map((s) => (
+                    <div key={s.label} className="rounded-xl px-4 py-4 text-center" style={{ background: SURFACE, border: `1px solid ${LINE}` }}>
+                      <div className="font-semibold" style={{ color: TEXT, fontSize: '0.98rem' }}>{s.label}</div>
+                      <div className="mt-1" style={{ color: MUTED, fontSize: '0.82rem', lineHeight: 1.45 }}>{s.note}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                  {[
+                    { clip: CLIPS.commercial, title: 'Commercial headquarters', caption: 'Forecourt, lobby, control room, boardroom, and roof garden, in 30 seconds.' },
+                    { clip: CLIPS.residence, title: 'Private residence', caption: 'A classical family home, from the facade to the party hall, in 30 seconds.' },
+                  ].map((f) => (
+                    <figure key={f.title} className="m-0">
+                      <div className="rounded-2xl overflow-hidden" style={{
+                        border: `1px solid ${LINE}`, background: BG,
+                        boxShadow: '0 30px 70px rgba(0,0,0,0.45), 0 0 40px rgba(107,143,255,0.06)',
+                      }}>
+                        <ClipCycler narration clips={[f.clip]} style={{ width: '100%', aspectRatio: '16 / 9' }} />
+                      </div>
+                      <figcaption className="mt-3 px-1">
+                        <span className="font-semibold" style={{ color: TEXT, fontSize: '0.98rem' }}>{f.title}</span>
+                        <span style={{ color: MUTED, fontSize: '0.92rem' }}> · {f.caption}</span>
+                      </figcaption>
+                    </figure>
+                  ))}
                 </div>
               </div>
             </FadeUp>

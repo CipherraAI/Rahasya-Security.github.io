@@ -3,14 +3,20 @@ import { useEffect, useRef, useState } from 'react';
 export type Clip = { src: string; poster: string };
 
 /* Walkthrough clips, muted and without labels. Posters are each clip's first frame. */
-export const CLIPS: Record<'arrival' | 'passage' | 'villas' | 'rishikesh' | 'cadEdit', Clip> = {
+export const CLIPS: Record<'arrival' | 'passage' | 'villas' | 'rishikesh' | 'cadEdit' | 'commercial' | 'residence', Clip> = {
   // Sped-up recording of a CAD edit session (house plans), shown in the Edit stage.
   cadEdit: { src: '/work/clip-cad-walls.mp4', poster: '/work/clip-cad-walls-poster.webp' },
   arrival: { src: '/work/clip-arrival.mp4', poster: '/work/clip-arrival-poster.webp' },
   passage: { src: '/work/clip-passage.mp4', poster: '/work/clip-passage-poster.webp' },
   villas: { src: '/work/clip-villas.mp4', poster: '/work/clip-villas-poster.webp' },
   rishikesh: { src: '/work/clip-rishikesh.mp4', poster: '/work/clip-rishikesh-poster.webp' },
+  // 30 s narrated portfolio cuts: a commercial headquarters and a private residence.
+  commercial: { src: '/work/clip-commercial.mp4', poster: '/work/clip-commercial-poster.webp' },
+  residence: { src: '/work/clip-residence.mp4', poster: '/work/clip-residence-poster.webp' },
 };
+
+/* Sent when a player's narration is unmuted, so the other players fall silent. */
+const NARRATION_EVENT = 'cipherra:narration';
 
 /* Seconds before the current clip ends at which the next one starts downloading. */
 const PREFETCH_LEAD = 5;
@@ -109,8 +115,17 @@ export default function ClipCycler({ clips, fadeMs = 1200, style, className, nar
     refs.current.forEach((v, i) => { if (v) v.muted = !(soundOn && i === active); });
   }, [soundOn, active]);
 
+  // One narration at a time: unmuting this player mutes any other on the page.
+  useEffect(() => {
+    if (!narration) return;
+    const onOther = (e: Event) => { if ((e as CustomEvent).detail !== box.current) setSoundOn(false); };
+    window.addEventListener(NARRATION_EVENT, onOther);
+    return () => window.removeEventListener(NARRATION_EVENT, onOther);
+  }, [narration]);
+
   const toggleSound = () => {
     setHinted(true);
+    if (!soundOn) window.dispatchEvent(new CustomEvent(NARRATION_EVENT, { detail: box.current }));
     setSoundOn((on) => {
       // Unmute in the click handler itself (browsers allow sound only from a user gesture);
       // playback simply continues from where it is.
