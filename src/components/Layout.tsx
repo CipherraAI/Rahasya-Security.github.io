@@ -15,7 +15,7 @@ const NAV_TEXT = 'rgba(244,247,255,0.70)';
 const NAV = [
   { href: '#companion', label: 'Companion' },
   { href: '#workflow', label: 'Workflow' },
-  { href: '#showcase', label: 'Showcase' },
+  { href: '/showcase', label: 'Showcase' },
   { href: '#team', label: 'Team' },
   { href: '/pricing', label: 'Pricing' },
 ];
