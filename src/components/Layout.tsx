@@ -17,6 +17,7 @@ const NAV = [
   { href: '#workflow', label: 'Workflow' },
   { href: '#showcase', label: 'Showcase' },
   { href: '#team', label: 'Team' },
+  { href: '/pricing', label: 'Pricing' },
 ];
 
 export default function Layout() {
@@ -84,7 +85,12 @@ export default function Layout() {
   };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    if (isHome) {
+    if (targetId.startsWith('/')) {
+      e.preventDefault();
+      navigate(targetId);
+      window.scrollTo(0, 0);
+      setMobileMenuOpen(false);
+    } else if (isHome) {
       handleSmoothScroll(e, targetId);
     } else {
       e.preventDefault();
@@ -228,7 +234,7 @@ export default function Layout() {
             <div>
               <h4 className="font-semibold mb-4" style={{ color: '#f4f7ff' }}>Product</h4>
               <ul className="space-y-3">
-                {NAV.slice(0, 3).map((n) => (
+                {[...NAV.slice(0, 3), NAV[4]].map((n) => (
                   <li key={n.href}>{footerLink(n.label, { href: n.href, onClick: (e) => handleNavClick(e, n.href) })}</li>
                 ))}
                 <li>{footerLink('Documentation', { href: '#', onClick: (e) => { e.preventDefault(); showToast(); } })}</li>
