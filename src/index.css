@@ -171,16 +171,3 @@ img, video {
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
 }
-
-/* CAD-style crosshair with a pick box (mouse only). Links, buttons and text fields keep their usual cursors. */
-@media (hover: hover) and (pointer: fine) {
-  html {
-    cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g fill='none' stroke-linecap='square'><path d='M16 1v11M16 20v11M1 16h11M20 16h11' stroke='%23090f25' stroke-width='3'/><rect x='12.5' y='12.5' width='7' height='7' stroke='%23090f25' stroke-width='3'/><path d='M16 1v11M16 20v11M1 16h11M20 16h11' stroke='%23ffffff' stroke-width='1'/><rect x='12.5' y='12.5' width='7' height='7' stroke='%23ffffff' stroke-width='1'/></g></svg>") 16 16, crosshair;
-  }
-  a, button, [role="button"], label, select, summary {
-    cursor: pointer;
-  }
-  input, textarea {
-    cursor: text;
-  }
-}
