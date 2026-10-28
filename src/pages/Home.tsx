@@ -240,7 +240,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
           <FadeUp>
             <h2 className="font-bold mb-2" style={{ color: TEXT, fontSize: 'clamp(1.35rem, 2.4vw, 1.8rem)', lineHeight: 1.25 }}>
-              Trusted by architecture and interior design firms
+              Trusted by Architecture and Interior Design Firms
             </h2>
             <p className="font-semibold uppercase tracking-widest text-xs" style={{ color: ACCENT }}>Delivered projects for</p>
           </FadeUp>

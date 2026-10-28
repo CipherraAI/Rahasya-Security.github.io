@@ -6,8 +6,8 @@ import { ACCENT, BG, GREEN, LINE, MUTED, SURFACE, TEXT } from '../theme';
 
 /* Narrated walkthroughs in the Walkthrough stage, one captioned player each. */
 const WALKTHROUGHS = [
-  { clips: [CLIPS.passage, CLIPS.villas, CLIPS.rishikesh], title: 'Luxury hospitality', caption: 'Glimpses from our 5-star resort project.' },
-  { clips: [CLIPS.commercial], title: 'Office space', caption: 'A workplace shaped by light, glass and greenery.' },
+  { clips: [CLIPS.passage, CLIPS.villas, CLIPS.rishikesh], title: 'Luxury hospitality', caption: 'A thoughtfully crafted retreat.' },
+  { clips: [CLIPS.commercial], title: 'Office space', caption: 'A sharp workspace designed for professionals.' },
   { clips: [CLIPS.residence], title: 'Private residence', caption: 'A classical family home, inside and out.' },
 ];
 
@@ -226,9 +226,12 @@ export default function Showcase() {
         <div id="walkthrough" className="scroll-mt-24">
           <StageHeader n="05" tag="Walkthrough"
             title="From still images to a narrated walkthrough"
-            lead="Turn selected architectural views into a professional walkthrough film. Shown here: luxury hospitality, an office space, and a private residence." />
+            lead="Turn selected architectural views into a professional walkthrough film." />
           <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-8 lg:gap-12 items-start">
             <div className="space-y-10 md:space-y-12">
+              <p className="font-semibold uppercase tracking-widest text-xs -mb-4 md:-mb-6" style={{ color: ACCENT }}>
+                Glimpses from our delivered projects
+              </p>
               {WALKTHROUGHS.map((w) => (
                 <FadeUp key={w.title}>
                   <figure className="m-0">
