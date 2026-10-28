@@ -608,7 +608,7 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                   {[
                     { clip: CLIPS.commercial, title: 'Commercial headquarters', caption: 'Forecourt, lobby, administration, the CEO’s office, and the boardroom, in 30 seconds.' },
-                    { clip: CLIPS.residence, title: 'Private residence', caption: 'A classical family home, from the facade through a bedroom suite to the party hall, in 30 seconds.' },
+                    { clip: CLIPS.residence, title: 'Private residence', caption: 'A classical family home, from the facade through a bedroom suite to the family lounge, in 30 seconds.' },
                   ].map((f) => (
                     <figure key={f.title} className="m-0">
                       <div className="rounded-2xl overflow-hidden" style={{
