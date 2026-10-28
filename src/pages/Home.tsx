@@ -54,13 +54,13 @@ function Eyebrow({ children, color = ACCENT }: { children: React.ReactNode; colo
 const h2Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.9rem, 3.5vw, 2.6rem)', lineHeight: 1.15 };
 const h3Style: React.CSSProperties = { color: TEXT, fontSize: 'clamp(1.5rem, 2.6vw, 2rem)', lineHeight: 1.2 };
 /* Project types we have delivered for (the scrolling banner under the hero). */
-const SECTORS = ['Luxury 5-star hotels', 'Resorts', 'Commercial spaces', 'Residences'];
+const SECTORS = ['Luxury 5-star resorts', 'Hotels', 'Commercial spaces', 'Residences'];
 
 /* Narrated walkthroughs in the Walkthrough stage, one captioned player each. */
 const WALKTHROUGHS = [
-  { clips: [CLIPS.passage, CLIPS.villas, CLIPS.rishikesh], title: 'Luxury hospitality', caption: 'Clips from two of our 5-star hotel and resort projects.' },
-  { clips: [CLIPS.commercial], title: 'Commercial headquarters', caption: 'Forecourt, lobby, administration, the CEO’s office, and the boardroom.' },
-  { clips: [CLIPS.residence], title: 'Private residence', caption: 'A classical family home, from the facade through a bedroom suite to the family lounge.' },
+  { clips: [CLIPS.passage, CLIPS.villas, CLIPS.rishikesh], title: 'Luxury hospitality', caption: 'Glimpses from our 5-star resort project.' },
+  { clips: [CLIPS.commercial], title: 'Office space', caption: 'A workplace shaped by light, glass and greenery.' },
+  { clips: [CLIPS.residence], title: 'Private residence', caption: 'A classical family home, inside and out.' },
 ];
 
 const leadStyle: React.CSSProperties = { color: MUTED, lineHeight: 1.7, fontSize: '1.05rem' };
@@ -333,9 +333,8 @@ function SectorMarquee() {
         {[0, 1].map((copy) => (
           <div key={copy} className="flex shrink-0 items-center">
             {row.map((label, i) => (
-              <span key={i} className="flex items-center shrink-0 font-semibold whitespace-nowrap"
-                style={{ color: TEXT, fontSize: 'clamp(1.05rem, 2vw, 1.4rem)' }}>
-                <span className="mx-6 md:mx-9 w-1.5 h-1.5 rounded-full" style={{ background: ACCENT_GRAD }} />
+              <span key={i} className="marquee-item flex items-center shrink-0 whitespace-nowrap" style={{ color: TEXT }}>
+                <span className="mx-7 md:mx-10 w-px h-6" style={{ background: 'rgba(166,180,210,0.35)' }} />
                 {label}
               </span>
             ))}
@@ -590,7 +589,7 @@ export default function Home() {
           <div id="walkthrough" className="scroll-mt-24">
             <StageHeader n="05" tag="Walkthrough"
               title="From still images to a narrated walkthrough"
-              lead="Turn selected architectural views into a professional walkthrough film. Shown here: luxury hospitality, a commercial headquarters, and a private residence." />
+              lead="Turn selected architectural views into a professional walkthrough film. Shown here: luxury hospitality, an office space, and a private residence." />
             <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_1fr] gap-8 lg:gap-12 items-start">
               <div className="space-y-10 md:space-y-12">
                 {WALKTHROUGHS.map((w) => (

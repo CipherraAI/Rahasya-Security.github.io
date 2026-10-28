@@ -159,6 +159,12 @@ img, video {
 .marquee:hover .marquee-track {
   animation-play-state: paused;
 }
+.marquee-item {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  letter-spacing: 0.02em;
+}
 @keyframes marquee {
   to { transform: translateX(-50%); }
 }

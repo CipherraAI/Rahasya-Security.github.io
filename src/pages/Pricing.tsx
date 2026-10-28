@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ACCENT, ACCENT_GRAD, BG, GREEN, LINE, MUTED, SURFACE, TEXT } from '../theme';
+import { ACCENT_GRAD, BG, GREEN, LINE, SURFACE, TEXT } from '../theme';
+
+/* Higher-contrast tones than the home page: this page is read closely, on a solid background. */
+const MUTED = '#c4cee6';
+const ACCENT = '#a9bcff';
+const STRUCK = '#8f9cbb';
 
 /* Services and rates, from the October 2026 pricing guide. All prices in INR, GST extra. */
 
-/* Opens the visitor's mail app with a short brief to fill in. */
-const MAILTO = 'mailto:contact@cipherra.ai'
-  + '?subject=' + encodeURIComponent('Project enquiry')
-  + '&body=' + encodeURIComponent(
-    'Hi Cipherra team,\n\nI would like a quote for:\n\n'
-    + 'Project type (residence / commercial / other):\n'
-    + 'Services (CAD drawings / 3D stills / walkthrough):\n'
-    + 'Approximate area or number of views:\n'
-    + 'Timeline:\n\nThanks,\n');
+/* Opens the visitor's mail app with the subject filled in. */
+const MAILTO = 'mailto:contact@cipherra.ai?subject=' + encodeURIComponent('Project enquiry');
 
 function Svg({ children, size = 20 }: { children: React.ReactNode; size?: number }) {
   return (
@@ -125,7 +123,7 @@ function ServiceCard({ s }: { s: Service }) {
       {s.rates.map((r) => single ? (
         <div key={r.item} className="py-4">
           <p className="font-semibold uppercase tracking-widest text-xs mb-2" style={{ color: ACCENT }}>{r.item}</p>
-          <p className="line-through text-sm" style={{ color: MUTED, opacity: 0.7 }}>{r.was}</p>
+          <p className="line-through text-sm" style={{ color: STRUCK }}>{r.was}</p>
           <p className="font-bold" style={{ color: TEXT, fontSize: 'clamp(1.6rem, 2.6vw, 2.1rem)', lineHeight: 1.2 }}><Range value={r.now} /></p>
           <p className="mt-1 text-sm" style={{ color: MUTED }}>{r.unit}</p>
         </div>
@@ -136,7 +134,7 @@ function ServiceCard({ s }: { s: Service }) {
             <p className="text-xs mt-0.5" style={{ color: MUTED }}>{r.unit}</p>
           </div>
           <div className="text-right shrink-0">
-            <p className="line-through text-xs" style={{ color: MUTED, opacity: 0.7 }}>{r.was}</p>
+            <p className="line-through text-xs" style={{ color: STRUCK }}>{r.was}</p>
             <p className="font-bold" style={{ color: TEXT, fontSize: '1.2rem' }}><Range value={r.now} /></p>
           </div>
         </div>
@@ -149,7 +147,7 @@ function ServiceCard({ s }: { s: Service }) {
             style={{ borderTop: i ? `1px solid ${LINE}` : undefined }}>
             <span style={{ color: MUTED }}>{v.label}</span>
             <span className="text-right">
-              {v.was && <span className="line-through mr-2 text-xs" style={{ color: MUTED, opacity: 0.7 }}>{v.was}</span>}
+              {v.was && <span className="line-through mr-2 text-xs" style={{ color: STRUCK }}>{v.was}</span>}
               <span className="font-semibold" style={{ color: v.now === 'Free' ? GREEN : TEXT }}>{v.now}</span>
             </span>
           </div>

@@ -128,7 +128,7 @@ export default function Layout() {
 
   return (
     <div className="antialiased relative" style={{ background: '#090f25', minHeight: '100vh' }}>
-      <BackgroundClips />
+      {isHome && <BackgroundClips />}
 
       <header
         className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg"
